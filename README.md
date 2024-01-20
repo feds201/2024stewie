@@ -46,8 +46,6 @@ This project was made possible by the hard work and dedication of the following 
 - Add Team Member
 - Add Team Member
 - Ritesh Raj
-- ...
-
 
 
 ## License
