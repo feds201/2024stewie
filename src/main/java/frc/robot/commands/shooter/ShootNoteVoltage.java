@@ -9,11 +9,11 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.Shooter;
 
-public class ShootNote extends Command {
+public class ShootNoteVoltage extends Command {
   /** Creates a new ShootNote. */
   private final Shooter c_shooter;
   private final DoubleSupplier c_shootVelocity;
-  public ShootNote(Shooter shooter, DoubleSupplier shootVelocity) {
+  public ShootNoteVoltage(Shooter shooter, DoubleSupplier shootVelocity) {
     c_shooter = shooter;
     c_shootVelocity = shootVelocity;
     addRequirements(c_shooter);
