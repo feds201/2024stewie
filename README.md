@@ -38,9 +38,17 @@ To deploy the code to the robot, connect your machine to the robot's network and
 ./gradlew deploy
 ```
 
-## Contributing
+## Credits
 
-We welcome contributions to the project. If you'd like to contribute, please fork the repository and make your changes in a separate branch. Once you're ready, open a pull request against our repository.
+This project was made possible by the hard work and dedication of the following team members:
+- We would also like to thank our mentors and sponsors for their invaluable support and guidance.
+- Add Team Member
+- Add Team Member
+- Add Team Member
+- Ritesh Raj
+- ...
+
+
 
 ## License
 
@@ -48,4 +56,5 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ## Contact
 
-If you have any questions or issues, please open an issue on the GitHub repository. We'll do our best to respond as quickly as possible.
+
+For any questions or concerns, please open an issue on the GitHub repository. We'll do our best to respond as quickly as possible.
