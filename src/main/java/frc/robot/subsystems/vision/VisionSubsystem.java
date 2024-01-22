@@ -2,8 +2,8 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Subsystems.Components.BackCamera;
-import frc.robot.Subsystems.Components.FrontCamera;
+import frc.robot.subsystems.vision.Components.BackCamera;
+import frc.robot.subsystems.vision.Components.FrontCamera;
 
 public class VisionSubsystem extends SubsystemBase {
     private final FrontCamera frontCameraData;
