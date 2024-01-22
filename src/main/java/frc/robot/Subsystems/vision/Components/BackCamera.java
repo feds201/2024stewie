@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Components;
+package frc.robot.subsystems.vision.Components;
 
 import edu.wpi.first.networktables.NetworkTable;
 
