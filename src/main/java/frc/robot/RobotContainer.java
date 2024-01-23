@@ -6,9 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.DistanceSensor.DistanceSensor;
 
 public class RobotContainer {
+  private final DistanceSensor s_DistanceSensor;
   public RobotContainer() {
+    s_DistanceSensor = new DistanceSensor();
     configureBindings();
   }
 
