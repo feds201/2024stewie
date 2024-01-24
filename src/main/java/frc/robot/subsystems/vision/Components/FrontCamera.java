@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 public class FrontCamera extends Camera {
     public FrontCamera() {
         super();
-        moduleName = "limelight";
+        moduleName = "AprilTagCamera";
     }
 
     public void Periodic() {
@@ -17,4 +17,5 @@ public class FrontCamera extends Camera {
         ta = table.getEntry("ta").getDouble(0);
         tv = table.getEntry("tv").getBoolean(false);
     }
+
 }

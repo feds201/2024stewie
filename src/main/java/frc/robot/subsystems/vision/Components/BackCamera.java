@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 public class BackCamera extends Camera {
     public BackCamera() {
         super();
-        moduleName = "limelight";
+        moduleName = "limelight-back";
     }
 
     public void Periodic() {
