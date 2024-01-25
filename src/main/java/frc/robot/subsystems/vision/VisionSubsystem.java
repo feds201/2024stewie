@@ -52,9 +52,15 @@ public class VisionSubsystem extends SubsystemBase {
         if (h2 <= h1) {
             throw new IllegalArgumentException("h2 must be greater than h1");
         }
+
         double radianA1 = Math.toRadians(a1);
         double radianA2 = Math.toRadians(a2);
         return (h2 - h1) / Math.tan(radianA1 + radianA2);
     }
+
+    public double getAprilTagId() {
+        return frontCameraData.getAprilTagId();
+    }
+
 
 }

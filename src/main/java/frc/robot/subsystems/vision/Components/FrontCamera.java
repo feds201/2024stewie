@@ -18,4 +18,16 @@ public class FrontCamera extends Camera {
         tv = table.getEntry("tv").getBoolean(false);
     }
 
+    public int getAprilTagId() {
+        return (int) table.getEntry("apriltag").getDouble(0);
+    }
+
+    public void findAprilTagId(int id) {
+        if (getAprilTagId() == id) {
+            System.out.println("April Tag Found");
+        } else {
+            System.out.println("April Tag Not Found");
+        }
+    }
+
 }
