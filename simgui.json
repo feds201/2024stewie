@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    },
     "RoboRIO": {
       "RoboRIO Input": {
         "open": true
@@ -22,10 +27,19 @@
     }
   },
   "NetworkTables Info": {
-    "Server": {
-      "Publishers": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "NT3@127.0.0.1:51236": {
+      "Subscribers": {
         "open": true
       }
+    },
+    "Server": {
+      "open": true
     },
     "visible": true
   }

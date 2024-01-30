@@ -1,52 +1,40 @@
 package frc.robot.subsystems.vision.Components;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Camera {
-    public final NetworkTableInstance table = NetworkTableInstance.getDefault();
+    public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    public class Variables {
 
-    // Properties
-    public String moduleName;
-    public double pipelineName;
-    public double ledMode;
-    public double tx;
-    double ty;
-    double ta;
-    boolean tv;
 
+        public static class FrontCam {
+            private static final String discription = "For finding AprilTags and for distance calculation";
+            public static final String name = "FrontCamera";
+            public static final String ip = "";
+            public static int tv;
+            public static double tx;
+            public static double ty;
+            public static double ta;
+            public static int tid;
+            public static Number CameraMode;
+
+       }
+       public static class BackCam {
+            private static final String discription = "For finding AprilTags and going towards them";
+            public static final String name = "FrontCamera";
+            public static final String ip = "";
+            public static int tv;
+            public static double tx;
+            public static double ty;
+            public static double ta;
+            public static int tid;
+            public static Number CameraMode;
+
+        }
+    }
     public Camera() {
     }
 
-    public void periodic() {
-        // Implementation here
-    }
 
-    // Getter methods
-    public String getModuleName() {
-        return moduleName;
-    }
-
-    public double getPipelineName() {
-        return pipelineName;
-    }
-
-    public double getLedMode() {
-        return ledMode;
-    }
-
-    public double getTx() {
-        return tx;
-    }
-
-    public double getTy() {
-        return ty;
-    }
-
-    public double getTa() {
-        return ta;
-    }
-
-    public boolean isTv() {
-        return tv;
-    }
 }
