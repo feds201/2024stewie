@@ -1,17 +1,22 @@
 package frc.robot.subsystems.vision;
 
-import frc.robot.subsystems.vision.Components.Camera;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.vision.Components.Camera;
 
 public class VisionSubsystem extends SubsystemBase {
+    private final Camera camera;
+
     public VisionSubsystem() {
-        super();
-    }
-    public void init(){
-        System.out.println("VisionSubsystem init");
+        camera = new Camera();
+        System.out.println("VisionSubsystem initiated");
     }
 
 
+    public void periodic() {
+        // Check for Note
+        SmartDashboard.putBoolean("Target Locked", camera.checkNote());
 
-//    public void periodic(){}
+
+    }
 }
