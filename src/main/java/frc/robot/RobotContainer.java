@@ -14,16 +14,19 @@ import frc.robot.commands.shooter.ShootNoteVoltage;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.DistanceSensor.DistanceSensor;
 
 public class RobotContainer {
   private final Shooter shooter;
   private final Intake intake;
+  private final DistanceSensor distanceSensor;
   
   private final CommandXboxController driverController;
   
   public RobotContainer() {
     shooter = new Shooter();
     intake = new Intake();
+    distanceSensor = new DistanceSensor();
     driverController = new CommandXboxController(0);
     configureBindings();
   }
