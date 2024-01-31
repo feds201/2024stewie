@@ -4,20 +4,40 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
+import frc.robot.commands.shooter.ShootNoteVelocity;
+import frc.robot.commands.shooter.ShootNoteVoltage;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.commands.Intake.IntakeIn;
+import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.DistanceSensor.DistanceSensor;
 
 public class RobotContainer {
-  private final DistanceSensor s_DistanceSensor;
+  private final Shooter shooter;
+  private final Intake intake;
+  private final DistanceSensor distanceSensor;
+  
+  private final CommandXboxController driverController;
+  
   public RobotContainer() {
-    s_DistanceSensor = new DistanceSensor();
+    shooter = new Shooter();
+    intake = new Intake();
+    distanceSensor = new DistanceSensor();
+    driverController = new CommandXboxController(0);
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    driverController.a().whileTrue(new ShootNoteVoltage(shooter, () -> shooter.getShooterVoltage()));
+    driverController.b().whileTrue(new ShootNoteVelocity(shooter, () -> shooter.getShooterVelocity()));
+    driverController.x().whileTrue(new IntakeIn(intake, 0.1));
+  }
 
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() { 
     return Commands.print("No autonomous command configured");
   }
 }
