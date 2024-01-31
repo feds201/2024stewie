@@ -23,7 +23,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.a().whileTrue(new ShootNoteVoltage(shooter, () -> shooter.getShooterVoltage()));
-    driverController.b().whileTrue(new ShootNoteVelocity(shooter, () -> shooter.getShooterVelocity()));
+    //driverController.b().whileTrue(new ShootNoteVelocity(shooter, () -> shooter.getShooterVelocity()));
   }
 
   public Command getAutonomousCommand() { 
