@@ -4,26 +4,37 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
+import frc.robot.commands.shooter.ShootNoteVelocity;
+import frc.robot.commands.shooter.ShootNoteVoltage;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.subsystems.Intake.Intake;
 
 public class RobotContainer {
+  private final Shooter shooter;
   private final Intake intake;
+  
   private final CommandXboxController driverController;
+  
   public RobotContainer() {
+    shooter = new Shooter();
     intake = new Intake();
     driverController = new CommandXboxController(0);
     configureBindings();
   }
 
   private void configureBindings() {
-    driverController.b().whileTrue(new IntakeIn(intake, 0.1));
+    driverController.a().whileTrue(new ShootNoteVoltage(shooter, () -> shooter.getShooterVoltage()));
+    driverController.b().whileTrue(new ShootNoteVelocity(shooter, () -> shooter.getShooterVelocity()));
+    driverController.x().whileTrue(new IntakeIn(intake, 0.1));
   }
 
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() { 
     return Commands.print("No autonomous command configured");
   }
 }
