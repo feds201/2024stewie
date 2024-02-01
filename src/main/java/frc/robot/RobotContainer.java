@@ -55,7 +55,10 @@ public class RobotContainer {
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick.b().whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-    joystick.x().onTrue(new Grab_Note(VisionSubsystem vision_sys)).onFalse(null);
+
+
+    joystick.x().onTrue(new Grab_Note(vision_sys, drivetrain)).onFalse(null);
+
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
