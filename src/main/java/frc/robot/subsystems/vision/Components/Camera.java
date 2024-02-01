@@ -2,9 +2,10 @@ package frc.robot.subsystems.vision.Components;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Camera {
-    public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+   
 
 
     public static class Variables {
@@ -34,12 +35,16 @@ public class Camera {
         }
     }
     public Camera() {
-        System.out.println("Camera instance created");
+        SmartDashboard.putString(Variables.BackCam.name, "Hello");
     }
 
     public boolean checkNote() {
-        return Variables.BackCam.tv == 1;
+        double hello = NetworkTableInstance.getDefault().getTable("limelight-notes").getEntry("tv").getNumber(0).doubleValue();
+        if (hello != 1) {
+            return false;
+        } else return true;
     }
+   
 
 
 
