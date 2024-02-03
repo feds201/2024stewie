@@ -32,7 +32,7 @@ public class RobotContainer {
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -42,19 +42,22 @@ public class RobotContainer {
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
+  private Command runAuto = drivetrain.getAutoPath("Tests");
 
   private final Shooter shooter;
   private final Intake intake;
   private final DistanceSensor distanceSensor;
+
   
   private final CommandXboxController driverController;
-  
+  private final CommandXboxController operatorController;
 
   public RobotContainer() {
     shooter = new Shooter();
     intake = new Intake();
     distanceSensor = new DistanceSensor();
     driverController = new CommandXboxController(0);
+    operatorController = new CommandXboxController(1);
     configureBindings();
   }
 
@@ -80,14 +83,16 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
     
     // Shooter
-    driverController.povUp().whileTrue(new ShootNoteVoltage(shooter, () -> shooter.getShooterVoltage()));
-    driverController.povRight().whileTrue(new ShootNoteVelocity(shooter, () -> shooter.getShooterVelocity()));
+    operatorController.leftTrigger().whileTrue(new ShootNoteVoltage(shooter, () -> shooter.getShooterVoltage()));
+    // operatorController.rightTrigger().whileTrue(new ShootNoteVelocity(shooter, () -> shooter.getShooterVelocity())); 
+    // TODO: Figure out how to work velocity control. hehe Clifford
+
     
     // Intake
     driverController.povDown().whileTrue(new IntakeIn(intake, 0.1));
   }
 
   public Command getAutonomousCommand() { 
-    return Commands.print("No autonomous command configured");
+    return runAuto;
   }
 }
