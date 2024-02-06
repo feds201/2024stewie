@@ -3,15 +3,14 @@ package frc.robot.subsystems.vision.Components;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.vision.Constants.Variables;
 
-class BackCamera extends Camera {
-    public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-notes");
+public class BackCamera extends Camera {
+    private static final String nt_key = Variables.backCam_EName;
+    public static NetworkTable table = NetworkTableInstance.getDefault().getTable(nt_key);
     public BackCamera() {}
-    public void init(){
-        System.out.println(Variables.BackCam.name +" initiating");
 
-    }
-    public void BackCamPeroidic(){
+    public void periodic() {
         System.out.println(Variables.BackCam.name +" periodic");
         Variables.BackCam.tx = table.getEntry("tx").getNumber(0).doubleValue();
         Variables.BackCam.ty = table.getEntry("ty").getNumber(0).doubleValue();
@@ -22,5 +21,9 @@ class BackCamera extends Camera {
         SmartDashboard.putNumber("Target ID", Variables.BackCam.tid);
         SmartDashboard.putBoolean("Target Locked", true);
         System.out.println(Variables.BackCam.name +" initiated");
+    }
+
+    public boolean checkNote() {
+        return Variables.BackCam.ty != 0;
     }
 }

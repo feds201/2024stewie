@@ -3,14 +3,16 @@ package frc.robot.subsystems.vision.Components;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.vision.Constants.Variables;
 
-class FrontCamera extends Camera {
-    public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-april");
-    public FrontCamera() {    }
-    public void init(){
-        System.out.println(Variables.FrontCam.name +" initiating");
+public class FrontCamera extends Camera {
+    private static final String nt_key = Variables.frontCam_EName;
+    public static NetworkTable table = NetworkTableInstance.getDefault().getTable(nt_key);
+
+    public FrontCamera() {
     }
-    public void FrontCamPeroidic(){
+
+    public void periodic() {
         System.out.println(Variables.FrontCam.name +" periodic");
         Variables.FrontCam.tv = table.getEntry("tv").getNumber(0).intValue();
         Variables.FrontCam.tx = table.getEntry("tx").getNumber(0).doubleValue();
