@@ -1,7 +1,6 @@
 package frc.robot.subsystems.vision.Components;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.vision.Constants.Variables;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class Camera {
     public static BackCamera backCam;
@@ -11,15 +10,22 @@ public class Camera {
     public Camera() {
         backCam = new BackCamera();
         frontCam = new FrontCamera();
-        SmartDashboard.putString(Variables.BackCam.name, "Hello");
     }
 
 
 
     public void periodic() {
+        backCam.periodic();
+        frontCam.periodic();
     }
 
     public boolean checkNote() {
         return backCam.checkNote();
+    }
+
+
+
+    public Translation2d getTargetLocation() {
+        return backCam.getTargetLocation();
     }
 }

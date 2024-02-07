@@ -13,8 +13,13 @@ public class Variables {
     public static final String backCam_EName = "limelight-notes";
     public static final String backCam_IP = "http://10.2.1.43:5801";
 
+    public static class ExportedVariables {
+        public static double[] Velocity = new double[3];
+        
+    }
+
     public static class FrontCam {
-        private static final String discription = "For finding AprilTags and for distance calculation";
+        // private static final String discription = "For finding AprilTags and for distance calculation";
         public static final String name = frontCam_Name;
         public static final String ip = frontCam_IP;
         public static int tv;
@@ -27,7 +32,7 @@ public class Variables {
     }
 
     public static class BackCam {
-        private static final String discription = "For finding AprilTags and going towards them";
+        // private static final String discription = "For finding AprilTags and going towards them";
         public static final String name = backCam_Name;
         public static final String ip = backCam_IP;
         public static int tv;
