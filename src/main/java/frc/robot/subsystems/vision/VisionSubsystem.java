@@ -7,8 +7,8 @@ import frc.robot.subsystems.vision.Components.Camera;
 import frc.robot.subsystems.vision.Constants.Variables;
 
 public class VisionSubsystem extends SubsystemBase {
-    private static final double MaxSpeed = 0;
-    private static final double MaxAngularRate = 0;
+    private static final double MaxSpeed = 6;
+    private static final double MaxAngularRate = 1;
     private final Camera camera;
 
     public VisionSubsystem() {
@@ -18,9 +18,8 @@ public class VisionSubsystem extends SubsystemBase {
 
     
     private double[] getVelocity(Translation2d noteCords) {
-        double deadband = 0.1; // Adjust the deadband value as needed
+        double deadband = 1.0; // Adjust the deadband value as needed
         double x = noteCords.getX();
-        double y = noteCords.getY();
         double[] velocity = new double[3];
 
         if (Math.abs(x) < deadband) {
@@ -30,15 +29,15 @@ public class VisionSubsystem extends SubsystemBase {
         } else if (x > 0) {
             velocity[0] = -0.5 * MaxSpeed;
             velocity[1] = 0.5 * MaxSpeed;
-            velocity[2] = -0.5 * MaxAngularRate;
+            velocity[2] = -0.1 * MaxAngularRate;
         } else {
             velocity[0] = 0.5 * MaxSpeed;
             velocity[1] = -0.5 * MaxSpeed;
-            velocity[2] = 0.5 * MaxAngularRate;
+            velocity[2] = 0.1 * MaxAngularRate;
         }
-        SmartDashboard.putNumber("X", velocity[0]);
-        SmartDashboard.putNumber("Y", velocity[1]);
-        SmartDashboard.putNumber("Rotational", velocity[2]);
+            SmartDashboard.putNumber("Velocity X", velocity[0]);
+            SmartDashboard.putNumber("Velocity Y", velocity[1]);
+            SmartDashboard.putNumber("Rotational", velocity[2]);
 
         return velocity;
     }
@@ -53,10 +52,9 @@ public class VisionSubsystem extends SubsystemBase {
             Translation2d targetLocation = camera.getTargetLocation();
             SmartDashboard.putNumber("Target X", targetLocation.getX());
             SmartDashboard.putNumber("Target Y", targetLocation.getY());
-            Variables.ExportedVariables.Velocity = (double[]) getVelocity(targetLocation);
-            SmartDashboard.putNumber("Velocity X", Variables.ExportedVariables.Velocity[0]);
-            SmartDashboard.putNumber("Velocity Y", Variables.ExportedVariables.Velocity[1]);
-            SmartDashboard.putNumber("Rotational", Variables.ExportedVariables.Velocity[2]);
+            // var hi = getVelocity(targetLocation);
+            Variables.ExportedVariables.Velocity = ( getVelocity(targetLocation)) ;
+
             
         }
 
@@ -66,4 +64,7 @@ public class VisionSubsystem extends SubsystemBase {
         return camera.getTargetLocation();
     }
 
+    public boolean checkNote() {
+        return camera.checkNote();
+    }
 }
