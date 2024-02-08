@@ -32,7 +32,7 @@ public class ShootNoteVelocity extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    c_shooter.rotateShooterWheelsVelocity(0.0);
+    c_shooter.rotateShooterWheelsVolts(0.0);
   }
 
   // Returns true when the command should end.
