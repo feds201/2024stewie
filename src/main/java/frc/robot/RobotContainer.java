@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Intake.IntakeIn;
+import frc.robot.commands.Intake.RotateArm;
+import frc.robot.commands.Intake.WristIn;
 import frc.robot.subsystems.Intake.Intake;
 
 public class RobotContainer {
@@ -21,6 +23,12 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.b().whileTrue(new IntakeIn(intake, 0.1));
+    
+    driverController.a().whileTrue(new RotateArm(intake, 0.5));
+
+    driverController.x().onTrue(new WristIn(intake, 5));
+
+    driverController.y().onTrue(new WristIn(intake, 5).andThen(new IntakeIn(intake, 0.1)));
   }
 
   public Command getAutonomousCommand() {
