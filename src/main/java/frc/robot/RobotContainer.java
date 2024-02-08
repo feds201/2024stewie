@@ -54,7 +54,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final ArmRotationEncoder armRotationEncoder;
   
-  // private final Intake intake;
+  private final Intake intake;
   //private final DistanceSensor distanceSensor;
   //private final DistanceSensorMXP distanceSensorMXP;
 
@@ -65,7 +65,7 @@ public class RobotContainer {
   public RobotContainer() {
     shooter = new Shooter();
     armRotationEncoder = new ArmRotationEncoder();
-    // intake = new Intake();
+    intake = new Intake();
 
     //distanceSensor = new DistanceSensor();
     //distanceSensorMXP = new DistanceSensorMXP();

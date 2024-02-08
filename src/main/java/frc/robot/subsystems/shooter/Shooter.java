@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Shooter extends SubsystemBase {
   private final TalonFX shooterMain;
   private final TalonFX shooterFollower;
-  // private final DutyCycleEncoder shooterRotateEncoder;
+  private final DutyCycleEncoder shooterRotateEncoder;
   private final TalonFX shooterRotate;
 
 
@@ -42,16 +42,15 @@ public class Shooter extends SubsystemBase {
     shooterMain = new TalonFX(3);
     shooterFollower = new TalonFX(5);
     shooterRotate = new TalonFX(0);
-    // shooterRotateEncoder = new DutyCycleEncoder(9);
-
-   
-    // shooterFollower.getConfigurator().apply(configs);
-      SignalLogger.start();
+    shooterRotateEncoder = new DutyCycleEncoder(9);
+    
+    SignalLogger.start();
     SignalLogger.setPath("/media/sda1/ctre-logs/");
+
+    configMotor();
 
     shooterFollower.setControl(new StrictFollower(shooterMain.getDeviceID()));
     setupDebug();
-  //   shooterRotateEncoder.reset();
   }
 
   public void rotateShooterWheels(double c_shootVelocity) {
