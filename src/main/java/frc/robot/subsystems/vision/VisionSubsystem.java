@@ -7,17 +7,16 @@ import frc.robot.subsystems.vision.Components.Camera;
 import frc.robot.subsystems.vision.Constants.Variables;
 
 public class VisionSubsystem extends SubsystemBase {
-    private static final double MaxSpeed = 6;
-    private static final double MaxAngularRate = 1;
+    public static final double MaxSpeed = 6;
+    public static final double MaxAngularRate = 1;
     private final Camera camera;
 
     public VisionSubsystem() {
         camera = new Camera();
-        System.out.println("VisionSubsystem initiated");
     }
 
-    
-    private double[] getVelocity(Translation2d noteCords) {
+
+    public double[] getVelocity(Translation2d noteCords) {
         double deadband = 1.0; // Adjust the deadband value as needed
         double x = noteCords.getX();
         double[] velocity = new double[3];
@@ -35,14 +34,13 @@ public class VisionSubsystem extends SubsystemBase {
             velocity[1] = -0.5 * MaxSpeed;
             velocity[2] = 0.1 * MaxAngularRate;
         }
-            SmartDashboard.putNumber("Velocity X", velocity[0]);
-            SmartDashboard.putNumber("Velocity Y", velocity[1]);
-            SmartDashboard.putNumber("Rotational", velocity[2]);
+        SmartDashboard.putNumber("Velocity X", velocity[0]);
+        SmartDashboard.putNumber("Velocity Y", velocity[1]);
+        SmartDashboard.putNumber("Rotational", velocity[2]);
 
         return velocity;
     }
 
- 
 
     public void periodic() {
         camera.periodic();
@@ -52,10 +50,9 @@ public class VisionSubsystem extends SubsystemBase {
             Translation2d targetLocation = camera.getTargetLocation();
             SmartDashboard.putNumber("Target X", targetLocation.getX());
             SmartDashboard.putNumber("Target Y", targetLocation.getY());
-            // var hi = getVelocity(targetLocation);
-            Variables.ExportedVariables.Velocity = ( getVelocity(targetLocation)) ;
+            Variables.ExportedVariables.Velocity = (getVelocity(targetLocation));
 
-            
+
         }
 
     }
