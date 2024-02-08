@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -49,31 +51,26 @@ public class Shooter extends SubsystemBase {
 
     shooterFollower.setControl(new StrictFollower(shooterMain.getDeviceID()));
     setupDebug();
-
   //   shooterRotateEncoder.reset();
   }
 
   public void rotateShooterWheels(double c_shootVelocity) {
     VelocityDutyCycle velocity = new VelocityDutyCycle(0);
-
     shooterMain.setControl(velocity.withVelocity(c_shootVelocity));
   }
 
   public void rotateShooterWheelsVolts(double power) {
     DutyCycleOut volts = new DutyCycleOut(0);
-
     shooterMain.setControl(volts.withOutput(-power));
   }
 
   public void rotateShooterWheelsVelocity(double velocity) {
     VelocityDutyCycle velocitySupplier = new VelocityDutyCycle(0);
-
     shooterMain.setControl(velocitySupplier.withVelocity(velocity));
   }
 
   public void rotateShooter(double voltage) {
     DutyCycleOut angleVolts = new DutyCycleOut(0);
-
     shooterRotate.setControl(angleVolts.withOutput(voltage));
   }
 
@@ -97,6 +94,7 @@ public class Shooter extends SubsystemBase {
   public double getShooterAngle(){
     return shooterAngle.getDouble(0);
   } 
+
   public double getShooterVoltage() {
     return voltageSlider.getDouble(0);
   }
@@ -105,10 +103,13 @@ public class Shooter extends SubsystemBase {
     return velocitySlider.getDouble(0);
   }
 
+  public double getShooterEncoderPosition() {
+    return shooterRotateEncoder.getAbsolutePosition();
+  }
 
 
   private void configMotor(){
- TalonFXConfiguration configs = new TalonFXConfiguration();
+    TalonFXConfiguration configs = new TalonFXConfiguration();
 
     /*
      * Voltage-based velocity requires a feed forward to account for the back-emf of
@@ -140,17 +141,11 @@ public class Shooter extends SubsystemBase {
     configs.TorqueCurrent.PeakForwardTorqueCurrent = 40;
     configs.TorqueCurrent.PeakReverseTorqueCurrent = -40;
 
-  
-
     shooterMain.getConfigurator().apply(configs);
-
-
   }
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
-  
-
   }
 }

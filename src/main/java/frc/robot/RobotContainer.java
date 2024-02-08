@@ -22,6 +22,9 @@ import frc.robot.commands.shooter.ShootNoteVelocity;
 import frc.robot.commands.shooter.ShootNoteVoltage;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.Intake.IntakeIn;
+
+import frc.robot.commands.Intake.RotateArm;
+import frc.robot.commands.Intake.WristIn;
 import frc.robot.commands.Test.TestSensor;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.ArmRotationEncoder.ArmRotationEncoder;
@@ -68,11 +71,7 @@ public class RobotContainer {
     //distanceSensorMXP = new DistanceSensorMXP();
     driverController = new CommandXboxController(0);
     // operatorController = new CommandXboxController(1);
-    configureBindings();
-
-    //driverController.a().whileTrue(new TestSensor(false));
-    //driverController.b().whileTrue(new TestSensor(true));
-    
+    configureBindings();    
   }
 
   private void configureBindings() {
@@ -100,11 +99,13 @@ public class RobotContainer {
     driverController.leftBumper().whileTrue(new ShootNoteVoltage(shooter, () -> shooter.getShooterVoltage()));
     driverController.rightBumper().whileTrue(new ShootNoteVelocity(shooter, () -> shooter.getShooterVelocity())); 
     driverController.povDown().onTrue(new RotateShooter(shooter, shooter.getShooterAngle(), armRotationEncoder)); 
-    // // TODO: Figure out how to work velocity control. hehe Clifford
+    driverController.b().whileTrue(new IntakeIn(intake, 0.1));
+    
+    driverController.a().whileTrue(new RotateArm(intake, 0.5));
 
-    // driverController.start().onTrue(new InstantCommand(() -> shooter.resetEncoder()));
-    // Intake
-    // driverController.povDown().whileTrue(new IntakeIn(intake, 0.1));
+    driverController.x().onTrue(new WristIn(intake, 5));
+
+    driverController.y().onTrue(new WristIn(intake, 5).andThen(new IntakeIn(intake, 0.1)));
   }
 
   public Command getAutonomousCommand() { 

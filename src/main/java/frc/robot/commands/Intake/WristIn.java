@@ -4,45 +4,57 @@
 
 package frc.robot.commands.Intake;
 
-import java.beans.Encoder;
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake.Intake;
 
-public class RotateArm extends Command {
-  /** Creates a new RotateArm. */
+import java.lang.Math;
+
+public class WristIn extends Command {
+  /** Creates a new wristIn. */
   private final Intake c_intake;
-  private final double c_angle;
+  private final PIDController pid;
+  private final double c_target;
+  private final double TOLERANCE = 0.5;
 
-  public RotateArm(Intake intake, double intakeAngle) {
+  final double kP = 0.0;
+  final double kI = 0.0;
+  final double kD = 0.0;
+
+  public WristIn(Intake intake, double target) {
     c_intake = intake;
-    c_angle = intakeAngle;
+    c_target = target;
+    pid = new PIDController(kP, kI, kD);
 
-    addRequirements(c_intake);
     // Use addRequirements() here to declare subsystem dependencies.
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    c_intake.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_intake.rotateArm(c_angle);
+    double output = pid.calculate(c_intake.getWristRotationEncoderPosition(), c_target);
+    c_intake.rotateWrist(output);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    c_intake.rotateArm(0);
+    c_intake.rotateWrist(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (Math.abs(c_intake.getWristRotationEncoderPosition() - c_target) < TOLERANCE) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
