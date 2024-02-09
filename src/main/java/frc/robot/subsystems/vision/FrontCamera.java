@@ -1,12 +1,12 @@
-package frc.robot.subsystems.vision.Components;
+package frc.robot.subsystems.vision_systems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.vision.Constants.Variables;
+import frc.robot.Constants.CameraVariables;
 
 public class FrontCamera {
-    private static final String nt_key = Variables.frontCam_EName;
+    private static final String nt_key = CameraVariables.FrontCam.kFrontCameraNetworkTablesName;
     public static NetworkTable table = NetworkTableInstance.getDefault().getTable(nt_key);
 
     public FrontCamera() {
