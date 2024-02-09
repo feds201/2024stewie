@@ -25,7 +25,7 @@ public class WristIn extends Command {
     c_intake = intake;
     c_target = target;
     pid = new PIDController(kP, kI, kD);
-
+    addRequirements(c_intake);
     // Use addRequirements() here to declare subsystem dependencies.
 
   }

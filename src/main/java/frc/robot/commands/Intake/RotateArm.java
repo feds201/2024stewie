@@ -4,20 +4,28 @@
 
 package frc.robot.commands.Intake;
 
-import java.beans.Encoder;
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ArmRotationEncoder.ArmRotationEncoder;
 import frc.robot.subsystems.Intake.Intake;
 
 public class RotateArm extends Command {
   /** Creates a new RotateArm. */
   private final Intake c_intake;
   private final double c_angle;
+  private final PIDController pid;
+  private final ArmRotationEncoder c_armRotationEncoder;
+  private final double TOLERANCE = 0.5;
 
-  public RotateArm(Intake intake, double intakeAngle) {
+  final double kP = 0.0;
+  final double kI = 0.0;
+  final double kD = 0.0;
+
+  public RotateArm(Intake intake, double intakeAngle, ArmRotationEncoder armRotationEncoder) {
     c_intake = intake;
+    c_armRotationEncoder = armRotationEncoder;
     c_angle = intakeAngle;
-
+    pid = new PIDController(kP, kI, kD);
     addRequirements(c_intake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -31,7 +39,8 @@ public class RotateArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_intake.rotateArm(c_angle);
+    double output = pid.calculate(c_armRotationEncoder.getShooterEncoderPosition(), c_angle);
+    c_intake.rotateArm(output);
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +52,10 @@ public class RotateArm extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (Math.abs(c_armRotationEncoder.getShooterEncoderPosition() - c_angle) < TOLERANCE) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

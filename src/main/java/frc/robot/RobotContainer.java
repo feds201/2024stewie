@@ -101,13 +101,13 @@ public class RobotContainer {
     driverController.povDown().onTrue(new RotateShooter(shooter, shooter.getShooterAngle(), armRotationEncoder)); 
     driverController.b().whileTrue(new IntakeIn(intake, 0.1));
     
-    driverController.a().whileTrue(new RotateArm(intake, 0.5));
+    driverController.a().whileTrue(new RotateArm(intake, 0.5, armRotationEncoder));
 
-    driverController.x().onTrue(new WristIn(intake, 5));
+    driverController.x().onTrue(new WristIn(intake, 5.0));
 
     driverController.y().onTrue(new WristIn(intake, 5).andThen(new IntakeIn(intake, 0.1)));
   }
-
+  // zayn is a monkey
   public Command getAutonomousCommand() { 
     return null;
   }
