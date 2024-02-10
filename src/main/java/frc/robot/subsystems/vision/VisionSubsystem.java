@@ -17,14 +17,19 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
 
         camera.periodic();
-        boolean targetLocked = checkNote();// If the target is locked, it will put the X and Y cords of the target on the SmartDashboard
-        if (targetLocked) {
+        boolean NoteLocked = checkNote();// If the target is locked, it will put the X and Y cords of the target on the SmartDashboard
+        if (NoteLocked) {
             VisionVariables.ExportedVariables.Velocity = camera.getVelocityForNote();
 
         }
-        
+        boolean TagLocked = checkTag();// If the target is locked, it will put the X and Y cords of the target on the SmartDashboard
     }
 
+
+    private boolean checkTag() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'checkTag'");
+    }
 
     public boolean checkNote() {
         return camera.checkNote();

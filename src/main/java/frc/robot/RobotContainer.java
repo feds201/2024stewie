@@ -13,15 +13,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.CameraVariables.CalculatedVariables;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.utils.Telemetry;
 
 public class RobotContainer {
-  // private final DistanceSensor s_DistanceSensor;
-  private final VisionSubsystem vision_sys;
   private final double MaxSpeed = 6; // 6 meters per second desired top speed
   private final double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -38,8 +35,7 @@ public class RobotContainer {
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
   public RobotContainer() {
-    // s_DistanceSensor = new DistanceSensor();
-    vision_sys = new VisionSubsystem();
+    new VisionSubsystem();
     configureBindings();
   }
 
