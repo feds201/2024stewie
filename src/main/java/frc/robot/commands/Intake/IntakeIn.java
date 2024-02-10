@@ -20,7 +20,6 @@ public class IntakeIn extends Command {
       // use addRequirements( here to declare subsystem dependentc
     
   }
-
   
 
 
@@ -36,6 +35,8 @@ public class IntakeIn extends Command {
     c_intake.rotateIntakeWheels(c_intakeVoltage);
     
   }
+
+
 
   // Called once the command ends or is interrupted.
   @Override
