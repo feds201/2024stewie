@@ -41,7 +41,7 @@ public class Shooter extends SubsystemBase {
  
     shooterMain = new TalonFX(3);
     shooterFollower = new TalonFX(5);
-    shooterRotate = new TalonFX(0);
+    shooterRotate = new TalonFX(4);
     shooterRotateEncoder = new DutyCycleEncoder(9);
     
     SignalLogger.start();

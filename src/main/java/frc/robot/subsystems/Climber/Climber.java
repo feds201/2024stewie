@@ -18,8 +18,8 @@ public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
   public Climber() {
    
-    climberMain = new CANSparkMax(0,MotorType.kBrushless);
-    climberFollower = new CANSparkMax(0,MotorType.kBrushless);
+    climberMain = new CANSparkMax(6,MotorType.kBrushless);
+    climberFollower = new CANSparkMax(7,MotorType.kBrushless);
  
         climberFollower.follow(climberMain);
 
