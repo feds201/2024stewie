@@ -60,7 +60,7 @@ public class Shooter extends SubsystemBase {
 
   public void rotateShooterWheelsVolts(double power) {
     DutyCycleOut volts = new DutyCycleOut(0);
-    shooterMain.setControl(volts.withOutput(-power));
+    shooterMain.setControl(volts.withOutput(-1.0 * -power));
   }
 
   public void rotateShooterWheelsVelocity(double velocity) {
