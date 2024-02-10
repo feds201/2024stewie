@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     intakeWheel = new CANSparkMax(56, MotorType.kBrushless);
     wristRotation = new CANSparkMax(57, MotorType.kBrushless);
-    armRotation = new CANSparkMax(0, MotorType.kBrushless);
+    armRotation = new CANSparkMax(55, MotorType.kBrushless);
     wristRotationEncoder = new DutyCycleEncoder(0);
     armRotationEncoder = new DutyCycleEncoder(0);
 
