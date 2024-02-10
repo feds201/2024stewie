@@ -96,19 +96,18 @@ public class RobotContainer {
     // drivetrain.registerTelemetry(logger::telemeterize);
     
     // Shooter
-    driverController.leftBumper().whileTrue(new ShootNoteVoltage(shooter, () -> shooter.getShooterVoltage()));
-    driverController.rightBumper().whileTrue(new ShootNoteVelocity(shooter, () -> shooter.getShooterVelocity())); 
-    driverController.povDown().onTrue(new RotateShooter(shooter, shooter.getShooterAngle(), armRotationEncoder)); 
-    driverController.b().whileTrue(new IntakeIn(intake, 0.1));
-    
-    driverController.a().whileTrue(new RotateArm(intake, 0.5, armRotationEncoder));
+    driverController.rightBumper().whileTrue(new ShootNoteVelocity(shooter,  () -> shooter.getShooterVelocity()));
+    driverController.povLeft().whileTrue(new ShootNoteVoltage(shooter, () -> shooter.getShooterVoltage()));
+    driverController.povDown().onTrue(new RotateShooter(shooter, shooter.getShooterAngle(), armRotationEncoder));
 
-    driverController.x().onTrue(new WristIn(intake, 5.0));
-
-    driverController.y().onTrue(new WristIn(intake, 5).andThen(new IntakeIn(intake, 0.1)));
+    // Intake
+    driverController.povUp().whileTrue(new IntakeIn(intake, 0.1));
+    driverController.b().whileTrue( new RotateArm(intake, 0.5, armRotationEncoder));
+    driverController.y().onTrue(new WristIn(intake, 5.0));
+    driverController.povRight().onTrue(new WristIn(intake, 5).andThen(new IntakeIn(intake, 0.1)));
   }
   
-  // zayn is a monkey
+  // Ritesh is a monkey
   public Command getAutonomousCommand() { 
     return null;
   }
