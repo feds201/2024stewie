@@ -64,14 +64,7 @@ public class RobotContainer {
 
     // );
 
-    joystick.x().whileTrue(
-        drivetrain.applyRequest(
-            () -> (drive
-                .withVelocityX(-0.2)
-                .withVelocityY(CalculatedVariables.Velocity[1])
-                .withRotationalRate(CalculatedVariables.Velocity[2])))
-
-    );
+    // joystick.x().whileTrue();
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
