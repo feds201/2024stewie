@@ -13,14 +13,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.vision.TurnTowardsNote;
+import frc.robot.Constants.CameraVariables.CalculatedVariables;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
-<<<<<<< HEAD
-=======
-import frc.robot.subsystems.vision.Constants.Variables;
->>>>>>> parent of cfafc63 (Update vision subsystem and RobotContainer)
 import frc.robot.utils.Telemetry;
 
 public class RobotContainer {
@@ -48,41 +44,27 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-
-    drivetrain.setDefaultCommand(
-            drivetrain.
-                    applyRequest(
-                            () -> drive
-                                    .withVelocityX(-joystick.getLeftY() * MaxSpeed)
-                                    .withVelocityY(-joystick.getLeftX() * MaxSpeed)
-                                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate)
-                    )
-    );
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-<<<<<<< HEAD
-    joystick.b().whileTrue(
-            drivetrain.applyRequest(
-                    () -> point
-                            .withModuleDirection(
-                                    new Rotation2d(
-                                            -joystick.getLeftY(),
-                                            -joystick.getLeftX()
-                                    )
-                            )
-            )
-    );
+    joystick.b().whileTrue(drivetrain
+        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-//    joystick.x().whileTrue(drivetrain.applyRequest(() -> (drive.withVelocityX(ExportedVariables.Velocity[0]).withVelocityY(ExportedVariables.Velocity[1]).withRotationalRate(ExportedVariables.Velocity[2]) point.withModuleDirection(new Rotation2d(ExportedVariables.Velocity[2], ExportedVariables.Velocity[2]))));
-    joystick.x().whileTrue(new TurnTowardsNote(drivetrain, vision_sys));
+    // joystick.x().whileTrue(
+    //     drivetrain.applyRequest(
+    //         () -> (drive
+    //             .withVelocityX(-0.2)
+    //             .withVelocityY(ExportedVariables.Velocity[1])
+    //             .withRotationalRate(ExportedVariables.Velocity[2])))
 
-=======
-    joystick.b().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-    
-    joystick.x().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(Variables.ExportedVariables.Velocity[0], Variables.ExportedVariables.Velocity[1]))));
->>>>>>> parent of cfafc63 (Update vision subsystem and RobotContainer)
-            
+    // );
 
+    // joystick.x().whileTrue();
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));

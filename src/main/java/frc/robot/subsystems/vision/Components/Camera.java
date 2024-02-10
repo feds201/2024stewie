@@ -8,15 +8,16 @@ public class Camera {
 
 
     public Camera() {
-        backCam = new BackCamera();
-        frontCam = new FrontCamera();
+        backCam = new BackCamera();// For AprilTag
+        frontCam = new FrontCamera();// For Notes
     }
 
 
 
     public void periodic() {
-        backCam.periodic();
-        frontCam.periodic();
+        backCam.periodic();// Runs the periodic method in BackCamera
+        frontCam.periodic();// Runs the periodic method in FrontCamera
+        
     }
 
     public boolean checkNote() {
@@ -25,7 +26,13 @@ public class Camera {
 
 
 
-    public Translation2d getTargetLocation() {
-        return backCam.getTargetLocation();
+    public Translation2d getNoteTargetLocation() {
+        return frontCam.getNoteTargetLocation();
+    }
+
+
+
+    public double[] getVelocityForNote() {
+        return frontCam.getVelocity(frontCam.getNoteTargetLocation());
     }
 }
