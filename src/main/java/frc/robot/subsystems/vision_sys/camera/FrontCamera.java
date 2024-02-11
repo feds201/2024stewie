@@ -5,33 +5,31 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CameraConstants;
+import frc.robot.subsystems.vision_sys.DashBoardManager;
 import frc.robot.subsystems.vision_sys.VisionVariables;
+import frc.robot.subsystems.vision_sys.utils.VisionObject;
 import frc.robot.subsystems.vision_sys.vision_sys;
 
 public class FrontCamera extends vision_sys {
-
+    public static DashBoardManager dashBoardManager = new DashBoardManager();
     public static String nt_key = CameraConstants.FrontCam.kFrontCameraNetworkTablesName;
     public static NetworkTable table = NetworkTableInstance.getDefault().getTable(nt_key);
+    public static VisionObject note = new VisionObject(0, 0, 0);
 
     @Override
     public void periodic() {
-        VisionVariables.FrontCam.tx = table.getEntry("tx").getNumber(0).doubleValue();
+        note.update(
+                table.getEntry("tx").getNumber(0).doubleValue(),
+                table.getEntry("ty").getNumber(0).doubleValue(),
+                table.getEntry("ta").getNumber(0).doubleValue()
+        );
+        dashBoardManager.DashBoard("FrontCamera", note.getX(), note.getY(), CheckTarget(), getAngle(note));
         VisionVariables.FrontCam.tv = (int) table.getEntry("tv").getNumber(0).doubleValue();
-        VisionVariables.FrontCam.ty = table.getEntry("ty").getNumber(0).doubleValue();
-        VisionVariables.FrontCam.ta = table.getEntry("ta").getNumber(0).doubleValue();
-
         VisionVariables.FrontCam.CameraMode = table.getEntry("camMode").getNumber(0);
-
-        SmartDashboard.putNumber("Xaxis", VisionVariables.FrontCam.tx);
-        SmartDashboard.putNumber("Yaxis", VisionVariables.FrontCam.ty);
-        SmartDashboard.putBoolean("Target Locked", CheckTarget());
-        SmartDashboard.putNumber("Angle", getAngle());
-
-
     }
 
-    public double getAngle() {
-        double nx = ((double) 1 / ((double) CameraConstants.FrontCam.CameraWidth / 2)) * (VisionVariables.FrontCam.tx - ((double) CameraConstants.FrontCam.CameraWidth / 2 - 0.5));
+    public double getAngle(VisionObject note) {
+        double nx = ((double) 1 / ((double) CameraConstants.FrontCam.CameraWidth / 2)) * (note.getX() - ((double) CameraConstants.FrontCam.CameraWidth / 2 - 0.5));
         double vpw = 2.0 * Math.tan(CameraConstants.FrontCam.horizontal_fov / 2);
         double x = vpw / 2 * nx;
         double ax = Math.atan2(1, x);
@@ -67,9 +65,9 @@ public class FrontCamera extends vision_sys {
         return VisionVariables.FrontCam.tv != 0;
     }
 
-    @Override
-    public Translation2d GetTarget() {
-        return new Translation2d(VisionVariables.FrontCam.tx, VisionVariables.FrontCam.ty);
+
+    public Translation2d GetTarget(VisionObject note) {
+        return new Translation2d(note.getX(), note.getY());
     }
 
 
