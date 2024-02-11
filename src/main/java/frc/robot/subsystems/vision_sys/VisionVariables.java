@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.vision_sys;
 
 public class VisionVariables {
     public static class ExportedVariables {
@@ -8,7 +8,7 @@ public class VisionVariables {
     }
 
     public static class FrontCam {
-        // private static final String discription = "For finding Notes and going towards them";
+        private static final String description = "For finding Notes and going towards them";
         public static int tv;
         public static double tx;
         public static double ty;
@@ -19,7 +19,7 @@ public class VisionVariables {
     }
 
     public static class BackCam {
-        // private static final String discription = "For finding AprilTags and for distance calculation";
+        private static final String description = "For finding AprilTags and for distance calculation";
         public static int tv;
         public static double tx;
         public static double ty;

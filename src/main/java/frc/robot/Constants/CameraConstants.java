@@ -1,4 +1,4 @@
-package frc.robot.Constants;
+package frc.robot.constants;
 
 public class CameraConstants {
     public static int MaxSpeed = 1;
