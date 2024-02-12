@@ -9,21 +9,24 @@ public class CameraConstants {
         // distance calculation";
         public static final String kname = "BackCamera";
         public static final String ip = "http://10.2.1.17:5801";
-        public static final String kBackCameraNetworkTablesName = "limelight-april";
-        public static double horizontal_fov = 62.5;
+        public static final String BACK_CAMERA_NETWORK_TABLES_NAME = "limelight-april";
+        public static double horizontal_fov = 59.6;
+        public static double vertical_fov = 45.7;
         public static int CameraWidth = 640;
         public static int CameraHeight = 480;
     }
 
     public static class FrontCam {
-        // private static final String discription = "For finding AprilTags and going
+        // private static final String description = "For finding AprilTags and going
         // towards them";
         public static final String kName = "FrontCamera";
         public static final String ip = "http://10.2.1.43:5801";
-        public static final String kFrontCameraNetworkTablesName = "limelight-notes";
-        public static double horizontal_fov = 62.5;
+        public static final String FRONT_CAMERA_NETWORK_TABLES_NAME = "limelight-notes";
+        public static double horizontal_fov = 63.3;
+        public static double vertical_fov = 49.7;
         public static int CameraWidth = 640;
         public static int CameraHeight = 480;
+
 
     }
 }

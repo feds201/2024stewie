@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision_sys;
+package frc.robot.subsystems.vision_sys.utils;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -26,10 +26,10 @@ public record DashBoardManager() {
 
     }
 
-    public void DashBoard(String title, double x, double y, boolean targetLocked, double angle) {
+    public void DashBoard(String title, double x, double y, boolean targetLocked, double[] angle) {
         SmartDashboard.putNumber(title + " " + "Xaxis", x);
         SmartDashboard.putNumber(title + " " + "Yaxis", y);
         SmartDashboard.putBoolean(title + " " + "Target Locked", targetLocked);
-        SmartDashboard.putNumber(title + " " + "Angle", angle);
+        SmartDashboard.putNumberArray(title + " " + "Angle", angle);
     }
 }
