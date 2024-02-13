@@ -183,3 +183,5 @@ ctre_sim/
 *.idea/
 *.run/
 *.gradle
+/.run/
+/.wpilib/
