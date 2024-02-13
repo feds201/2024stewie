@@ -12,18 +12,17 @@ import frc.robot.subsystems.vision_sys.utils.VisionObject;
 import frc.robot.subsystems.vision_sys.vision_sys;
 
 public class FrontCamera extends vision_sys {
-    public static ObjectType type;
     public static DashBoardManager dashBoardManager;
     public static String nt_key;
     public static NetworkTable table;
     public static VisionObject note;
 
     public FrontCamera() {
-        type = ObjectType.NOTE;
+
         dashBoardManager = new DashBoardManager();
         nt_key = CameraConstants.FrontCam.FRONT_CAMERA_NETWORK_TABLES_NAME;
         table = NetworkTableInstance.getDefault().getTable(nt_key);
-        note = new VisionObject(0, 0, 0, type);
+        note = new VisionObject(0, 0, 0, ObjectType.NOTE);
     }
 
     @Override
@@ -40,7 +39,7 @@ public class FrontCamera extends vision_sys {
         VisionVariables.FrontCam.CameraMode = table.getEntry("camMode").getNumber(0);
 
         if (CheckTarget()) {
-            VisionVariables.ExportedVariables.RobotTransformation.rotation = note.getYaw();
+            VisionVariables.FrontCam.RobotTransformation.rotation = note.getYaw();
         }
 
     }

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
+import frc.robot.subsystems.vision_sys.VisionVariables;
 import frc.robot.subsystems.vision_sys.camera.BackCamera;
 import frc.robot.subsystems.vision_sys.camera.FrontCamera;
 import frc.robot.utils.Telemetry;
@@ -54,16 +55,16 @@ public class RobotContainer {
         joystick.b().whileTrue(drivetrain
                 .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-        // joystick.x().whileTrue(
-        //     drivetrain.applyRequest(
-        //         () -> (drive
-        //             .withVelocityX(-0.2)
-        //             .withVelocityY(ExportedVariables.Velocity[1])
-        //             .withRotationalRate(ExportedVariables.Velocity[2])))
+         joystick.x().whileTrue(
+             drivetrain.applyRequest(
+                 () -> (drive
+                     .withVelocityX(VisionVariables.FrontCam.RobotTransformation.x)
+                     .withVelocityY(VisionVariables.FrontCam.RobotTransformation.y)
+                     .withRotationalRate(VisionVariables.FrontCam.RobotTransformation.rotation)
 
-        // );
+         )));
 
-        // joystick.x().whileTrue();
+//         joystick.x().whileTrue();
 
         // reset the field-centric heading on left bumper press
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));

@@ -7,11 +7,7 @@ public class VisionVariables {
         public static Double Distance;
         public static int AngleForShooter;
 
-        public static class RobotTransformation {
-            public static double x;
-            public static double y;
-            public static double rotation;
-        }
+
     }
 
     public static class FrontCam {
@@ -19,6 +15,11 @@ public class VisionVariables {
         public static int tv;
         public static VisionObject target;
         public static Number CameraMode;
+        public static class RobotTransformation {
+            public static double x;
+            public static double y;
+            public static double rotation;
+        }
         
 
     }
@@ -29,6 +30,11 @@ public class VisionVariables {
         public static VisionObject target;
         public static int tid;
         public static Number CameraMode;
+        public static class RobotTransformation {
+            public static double x;
+            public static double y;
+            public static double rotation;
+        }
 
     }
 

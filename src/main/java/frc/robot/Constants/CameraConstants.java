@@ -10,6 +10,8 @@ public class CameraConstants {
         public static final String kname = "BackCamera";
         public static final String ip = "http://10.2.1.17:5801";
         public static final String BACK_CAMERA_NETWORK_TABLES_NAME = "limelight-april";
+        public static final double APRILTAG_HEIGHT = 0.0;
+        public static final double CAMERA_HEIGHT = 0.0;
         public static double horizontal_fov = 59.6;
         public static double vertical_fov = 45.7;
         public static int CameraWidth = 640;
