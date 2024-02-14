@@ -2,22 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Climber;
+package frc.robot.commands.climber;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Climber.Climber;
+import frc.robot.subsystems.climber.Climber;
 
-public class ExtendArm extends Command {
+public class ExtendClimber extends Command {
   /** Creates a new ExtendArm. */
   private final Climber c_climber;
-   private final PIDController pid;
-  private final double kP = 0;
-  private final double kI = 0;
-  private final double kD = 0;
-  public ExtendArm(Climber climber) {
+  
+  public ExtendClimber(Climber climber) {
     c_climber = climber;
-    pid = new PIDController(kP, kI, kD);
     addRequirements(c_climber);
     // Use addRequirements() here to declare subsystem dependencies.
   }
