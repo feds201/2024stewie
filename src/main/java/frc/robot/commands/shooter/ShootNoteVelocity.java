@@ -26,13 +26,13 @@ public class ShootNoteVelocity extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_shooter.rotateShooterWheelsVelocity(c_shootVelocity.getAsDouble());
+    c_shooter.setShootVelocity(c_shootVelocity.getAsDouble()); // TODO INTERESTING CONUNDRUM!
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    c_shooter.rotateShooterWheelsVolts(0.0);
+    c_shooter.setShootVelocity(0.0);
   }
 
   // Returns true when the command should end.

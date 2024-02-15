@@ -3,7 +3,7 @@ package frc.robot.subsystems.vision_sys.camera;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.Constants.CameraConstants;
+import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.vision_sys.VisionVariables;
 import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.subsystems.vision_sys.utils.ObjectType;
@@ -17,7 +17,6 @@ public class BackCamera extends vision_sys {
     public static VisionObject tag;
 
     public BackCamera() {
-
         dashBoardManager = new DashBoardManager();
         nt_key = CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME;
         table = NetworkTableInstance.getDefault().getTable(nt_key);
@@ -36,7 +35,7 @@ public class BackCamera extends vision_sys {
 
         if (CheckTarget()) {
             VisionVariables.BackCam.RobotTransformation.rotation = tag.getYaw();
-            VisionVariables.BackCam.RobotTransformation.x = getDIstance(tag);
+            VisionVariables.BackCam.RobotTransformation.x = getDistance(tag);
         }
 
     }
@@ -46,7 +45,7 @@ public class BackCamera extends vision_sys {
         return VisionVariables.BackCam.tv != 0;
     }
 
-    public  double getDIstance(VisionObject tag){
+    public  double getDistance(VisionObject tag){
         return tag.getDistance();
     }
 

@@ -8,22 +8,26 @@ import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
+import frc.robot.constants.DIOConstants;
+import frc.robot.constants.ShooterConstants;
+import frc.robot.subsystems.SubsystemABC;
 
-public class Shooter extends SubsystemBase {
+public class Shooter extends SubsystemABC {
   // Motors
   private final TalonFX shooterTopMain; // Falcon
   private final TalonFX shooterBottomFollower; // Falcon
@@ -33,157 +37,184 @@ public class Shooter extends SubsystemBase {
   private final DutyCycleEncoder shooterRotateEncoder; // Through Bore Encoder
   private final DoubleSupplier currentArmRotationSupplier;
 
-  // Shuffleboard Tabs
-  private ShuffleboardTab shooterTab;
+  private final PIDController rotatePID = new PIDController(ShooterConstants.kRotateP, ShooterConstants.kRotateI,
+      ShooterConstants.kRotateD);
 
-  // Shuffleboard Entries
-  private GenericEntry voltageSlider;
-  private GenericEntry velocitySlider;
-  private GenericEntry shooterAngle;
+  private final DoubleEntry shootVelocity;
+  private final DoubleEntry shootVoltage;
+  private final DoubleEntry rotateVoltage;
+  private final DoubleEntry rotateTarget ;
+  private final DoubleEntry encoderValue ;
+  private final DoubleEntry encoderAngleWithoutOffset; 
+  private final DoubleEntry encoderAngle ;
 
   public Shooter(DoubleSupplier currentArmRotationSupplier) {
+    super();
     shooterTopMain = new TalonFX(CANConstants.Shooter.kShooterTop);
     shooterBottomFollower = new TalonFX(CANConstants.Shooter.kShooterBottom);
     shooterRotate = new TalonFX(CANConstants.Shooter.kShooterPivot);
-    shooterRotateEncoder = new DutyCycleEncoder(9);
-
+    shooterRotateEncoder = new DutyCycleEncoder(DIOConstants.Shooter.kShooterRotateEncoder); // FIXME: WHAT IS THIS
+                                                                                             // ENCODER VALUE
     this.currentArmRotationSupplier = currentArmRotationSupplier;
 
-    configMotors();
-    setupDebug();
-  }
+    rotatePID.setTolerance(ShooterConstants.kRotateTolerance);
+    rotatePID.setIZone(ShooterConstants.kRotateIZone);
 
-  public void rotateShooterWheels(double c_shootVelocity) {
-    VelocityDutyCycle velocity = new VelocityDutyCycle(0);
-    shooterTopMain.setControl(velocity.withVelocity(c_shootVelocity));
-  }
-
-  public void rotateShooterWheelsVolts(double power) {
-    DutyCycleOut volts = new DutyCycleOut(0);
-    shooterTopMain.setControl(volts.withOutput(-1.0 * -power));
-  }
-
-  public void rotateShooterWheelsVelocity(double velocity) {
-    VelocityDutyCycle velocitySupplier = new VelocityDutyCycle(0);
-    shooterTopMain.setControl(velocitySupplier.withVelocity(velocity));
-  }
-
-  public void rotateShooter(double voltage) {
-    DutyCycleOut angleVolts = new DutyCycleOut(0);
-    shooterRotate.setControl(angleVolts.withOutput(voltage));
-  }
-
-  public void setupDebug() {
-    shooterTab = Shuffleboard.getTab("Shooter");
-    voltageSlider = shooterTab.add("Voltage", 1)
-        .withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", 0, "max", 1)) // specify widget properties here
-        .getEntry();
-    shooterAngle = shooterTab.add("Shooter Angle", 0)
-        .withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", 0, "max", 80))
-        .getEntry();
-
-    velocitySlider = shooterTab.add("Velocity", 0)
-        // .withWidget(BuiltInWidgets.kNumberSlider)
-        // .withProperties(Map.of("min", 0, "max", 0.1)) // specify widget properties
-        // here
-        .getEntry();
-  }
-
-  public double getShooterAngle() {
-    return shooterAngle.getDouble(0);
-  }
-
-  public double getShooterVoltage() {
-    return voltageSlider.getDouble(0);
-  }
-
-  public double getShooterVelocity() {
-    return velocitySlider.getDouble(0);
-  }
-
-  public double getShooterEncoderPosition() {
-    return shooterRotateEncoder.getAbsolutePosition() - currentArmRotationSupplier.getAsDouble();
-  }
-
-  private void configMotors() {
     SignalLogger.start();
     SignalLogger.setPath("/media/sda1/ctre-logs/");
 
-    TalonFXConfiguration configs = new TalonFXConfiguration();
-
-    configs.Slot0.kP = 0.0; // An error of 1 rotation per second results in 2V output
-    configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot0.kD = 0.000; // A change of 1 rotation per second squared results in 0.01 volts output
-    /*
-     * Voltage-based velocity requires a feed forward to account for the back-emf of
-     * the motor
-     */
-    configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12
-                             // volts / Rotation per second
-
-    // Peak output of 8 volts
-    configs.Voltage.PeakForwardVoltage = 8;
-    configs.Voltage.PeakReverseVoltage = -8;
-
-    configs.TorqueCurrent.PeakForwardTorqueCurrent = 40;
-    configs.TorqueCurrent.PeakReverseTorqueCurrent = -40;
-
-    shooterTopMain.getConfigurator().apply(configs);
+    shooterTopMain.getConfigurator().apply(ShooterConstants.GetShooterConfiguration());
     shooterBottomFollower.setControl(new StrictFollower(shooterTopMain.getDeviceID()));
+
+    setupNetworkTables("shooter");
+    shootVelocity = ntTable.getDoubleTopic("shoot_velocity").getEntry(0);
+    shootVoltage = ntTable.getDoubleTopic("shoot_voltage").getEntry(0);
+    rotateVoltage = ntTable.getDoubleTopic("rotate_angle").getEntry(0);
+    rotateTarget = ntTable.getDoubleTopic("rotate_target").getEntry(0);
+    encoderValue = ntTable.getDoubleTopic("encoder_value").getEntry(0);
+    encoderAngleWithoutOffset = ntTable.getDoubleTopic("encoder_angle_no_offset").getEntry(0);
+    encoderAngle = ntTable.getDoubleTopic("encoder_angle").getEntry(0);
+    
+    setupShuffleboard();
+    setupTestCommands();
+    seedNetworkTables();
+  }
+
+  @Override
+  public void setupShuffleboard() {
+    tab.add("shooter rotate encoder", shooterRotateEncoder);
+    tab.add("shooter top main", shooterTopMain);
+    tab.add("shooter botom follower", shooterBottomFollower);
+    tab.add("shoote rotate motor", shooterRotate);
+
+    tab.add("rotation pid controller", rotatePID);
+  }
+
+  @Override
+  public void writePeriodicOutputs() {
+    readEncoderAngle();
+    readEncoderAngleWithoutOffset();
+    readEncoderValue();
+  }
+
+  @Override
+  public void setupTestCommands() {
+    
+  }
+
+  @Override
+  public void seedNetworkTables() {
+    setRotateTarget(0);
+    setRotateVoltage(0);
+    setShootVelocity(0);
+    setShootVoltage(0);
+    getRotateAngle();
+    getRotateTarget();
+    getShootVelocity();
+    getShootVoltage();
+  }
+
+  public void setPIDTarget(double target) {
+    setRotateTarget(target);
+
+    rotatePID.setSetpoint(target);
+  }
+
+  public boolean pidAtSetpoint() {
+    return rotatePID.atSetpoint();
+  }
+
+  public void rotateShooterPID() {
+    double output = rotatePID.calculate(getEncoderAngle(), getRotateTarget());
+    setRotateVoltage(output);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    writePeriodicOutputs();
+  }
+
+  // GETTERS
+
+  public double getShootVelocity() {
+    return shootVelocity.get();
+  }
+
+  public double getShootVoltage() {
+    return shootVoltage.get();
+  }
+
+  public double getRotateAngle() {
+    return rotateVoltage.get();
+  }
+
+  public double getRotateTarget() {
+    return rotateTarget.get();
+  }
+
+  public double getEncoderValue() {
+    return encoderValue.get();
+  }
+
+  public double getEncoderAngleWithoutOffset() {
+    return encoderAngleWithoutOffset.get();
+  }
+
+  public double getEncoderAngle() {
+    return encoderAngle.get();
+  }
+
+  private final DoubleLogEntry shootVelocityLog = new DoubleLogEntry(log, "/shooter/shoot_velocity");
+  private final DoubleLogEntry shootVoltageLog = new DoubleLogEntry(log, "/shooter/shoot_voltage");
+  private final DoubleLogEntry rotateVoltageLog = new DoubleLogEntry(log, "/shooter/rotate_angle");
+  private final DoubleLogEntry rotateTargetLog = new DoubleLogEntry(log, "/shooter/rotate_target");
+  private final DoubleLogEntry encoderValueLog = new DoubleLogEntry(log, "/shooter/encoder_value");
+  private final DoubleLogEntry encoderAngleWithoutOffsetLog = new DoubleLogEntry(log,
+      "/shooter/encoder_angle_no_offset");
+  private final DoubleLogEntry encoderAngleLog = new DoubleLogEntry(log, "/shooter/encoder_angle");
+
+  public void setShootVelocity(double velocity) {
+    shootVelocity.set(velocity);
+    shootVelocityLog.append(velocity);
+
+    VelocityDutyCycle velocityOut = new VelocityDutyCycle(0);
+    shooterTopMain.setControl(velocityOut.withVelocity(velocity));
+  }
+
+  public void setShootVoltage(double voltage) {
+    shootVoltage.set(voltage);
+    shootVoltageLog.append(voltage);
+
+    DutyCycleOut voltageOut = new DutyCycleOut(0);
+    shooterTopMain.setControl(voltageOut.withOutput(voltage));
+  }
+
+  public void setRotateVoltage(double voltage) {
+    rotateVoltage.set(voltage);
+    rotateVoltageLog.append(voltage);
+
+    DutyCycleOut angleVolts = new DutyCycleOut(0);
+    shooterRotate.setControl(angleVolts.withOutput(voltage));
+  }
+
+  public void setRotateTarget(double target) {
+    rotateTarget.set(target);
+    rotateTargetLog.append(target);
+  }
+
+  public void readEncoderValue() {
+    encoderValue.set(shooterRotateEncoder.get());
+    encoderValueLog.append(shooterRotateEncoder.get());
+  }
+
+  public void readEncoderAngleWithoutOffset() {
+    encoderAngleWithoutOffset.set(shooterRotateEncoder.get() * 360);
+    encoderAngleWithoutOffsetLog.append(shooterRotate.get() * 360);
+  }
+
+  public void readEncoderAngle() {
+    encoderAngle.set((shooterRotateEncoder.get() - currentArmRotationSupplier.getAsDouble()) * 360);
+    encoderAngleLog.append((shooterRotateEncoder.get() - currentArmRotationSupplier.getAsDouble()) * 360);
   }
 }
-
-/*
- * Full Motor Configuration
- * TalonFXConfiguration configs = new TalonFXConfiguration();
- * 
- * 
- * Voltage-based velocity requires a feed forward to account for the back-emf of
- * the motor
- * 
- * configs.Slot0.kP = 0.0; // An error of 1 rotation per second results in 2V
- * output
- * configs.Slot0.kI = 0.0; //An error of 1 rotation per second increases output
- * by 0.5V every second
- * configs.Slot0.kD = 0.000; // A change of 1 rotation per second squared
- * results in 0.01 volts output
- * configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333
- * rps per V, 1/8.33 = 0.12
- * // volts / Rotation per second
- * // configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in
- * 2V output
- * // configs.Slot0.kI = 0.5; // An error of 1 rotation per second increases
- * output by 0.5V every second
- * // configs.Slot0.kD = 0.0001; // A change of 1 rotation per second squared
- * results in 0.01 volts output
- * // configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V =
- * 8.333 rps per V, 1/8.33 = 0.12
- * // // volts / Rotation per second
- * // Peak output of 8 volts
- * configs.Voltage.PeakForwardVoltage = 8;
- * configs.Voltage.PeakReverseVoltage = -8;
- * 
- * //
- * // Torque-based velocity does not require a feed forward, as torque will
- * // accelerate the rotor up to the desired velocity by itself
- * //
- * // configs.Slot1.kP = 5; // An error of 1 rotation per second results in 5
- * amps output
- * // configs.Slot1.kI = 0.1; // An error of 1 rotation per second increases
- * output by 0.1 amps every second
- * // configs.Slot1.kD = 0.001; // A change of 1000 rotation per second squared
- * results in 1 amp output
- * 
- * // // Peak output of 40 amps
- * configs.TorqueCurrent.PeakForwardTorqueCurrent = 40;
- * configs.TorqueCurrent.PeakReverseTorqueCurrent = -40;
- * 
- * shooterTopMain.getConfigurator().apply(configs);
- */

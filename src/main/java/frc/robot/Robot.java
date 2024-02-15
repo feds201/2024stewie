@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.NetworkTableConstants;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -16,9 +21,20 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    NetworkTableConstants.inst = NetworkTableInstance.getDefault();
+
+    SmartDashboard.putString("inst", NetworkTableConstants.inst.toString());
+
     m_robotContainer = new RobotContainer();
 
-    // m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
+    m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
+
+    // Start logging data log
+    DataLogManager.start();
+
+    // Record both DS control and joystick data
+    DriverStation.startDataLog(DataLogManager.getLog());
+
   }
 
   @Override
