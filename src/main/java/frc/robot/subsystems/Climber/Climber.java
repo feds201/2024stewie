@@ -14,14 +14,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.subsystems.SubsystemABC;
 
-public class Climber extends SubsystemABC {
+public class climber extends SubsystemABC {
   private final CANSparkMax climberMain;
   private final CANSparkMax climberFollower;
 
   private DoubleEntry climberVoltage;
 
   /** Creates a new Climber. */
-  public Climber() {
+  public climber() {
     super();
     climberMain = new CANSparkMax(CANConstants.Climber.kClimberRightMain, MotorType.kBrushless);
     climberFollower = new CANSparkMax(CANConstants.Climber.kClimberLeftFollower, MotorType.kBrushless);

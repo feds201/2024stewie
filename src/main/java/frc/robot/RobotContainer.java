@@ -7,7 +7,6 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,7 +22,7 @@ import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.climber;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.utils.Telemetry;
@@ -47,7 +46,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Intake intake;
   private final Arm arm;
-  private final Climber climber;
+  private final climber climber;
 
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
@@ -55,7 +54,7 @@ public class RobotContainer {
   public RobotContainer() {
     arm = new Arm();
     shooter = new Shooter(() -> arm.getArmAngle());
-    climber = new Climber();
+    climber = new climber();
     intake = new Intake();
 
     driverController = new CommandXboxController(OIConstants.kDriverController);
