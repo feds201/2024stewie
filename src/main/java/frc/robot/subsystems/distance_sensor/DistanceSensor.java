@@ -19,30 +19,22 @@ public class DistanceSensor extends SubsystemABC {
   private DoubleEntry sensorRange;
 
   public DistanceSensor(Rev2mDistanceSensor.Port sensorType) {
-   super(sensorType.toString());
+    super(sensorType.toString());
     sensorName = sensorType.toString();
-   
-    System.out.println (sensorName);
+
+    System.out.println(sensorName);
     sensor = new Rev2mDistanceSensor(sensorType);
     sensor.setAutomaticMode(true);
     setupDebug();
 
-     seedNetworkTables(); 
+    seedNetworkTables();
   }
-  
+
   @Override
   public void periodic() {
 
     writePeriodicOutputs();
-    // if(distOnboard.isRangeValid()) {
-    // SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
-    // SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
-    // }
 
-    // if(distMXP.isRangeValid()) {
-    // SmartDashboard.putNumber("Range MXP", distMXP.getRange());
-    // SmartDashboard.putNumber("Timestamp MXP", distMXP.getTimestamp());
-    // }
   }
 
   private void setupDebug() {
@@ -58,9 +50,21 @@ public class DistanceSensor extends SubsystemABC {
   @Override
   public void writePeriodicOutputs() {
     // TODO Auto-generated method stub
-   if (sensor.isRangeValid()) {
-      SmartDashboard.putNumber("Range MXP", sensor.getRange());
+    if (sensor.isRangeValid()) {
+      SmartDashboard.putNumber("Range"+ sensorName, sensor.getRange());
     }
+
+    // if (sensor.isRangeValid()) {
+    // SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
+    // SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
+    // }
+
+    // if(distMXP.isRangeValid()) {
+    // SmartDashboard.putNumber("Range MXP", distMXP.getRange());
+    // SmartDashboard.putNumber("Timestamp MXP", distMXP.getTimestamp());
+    // }
+
+
   }
 
   @Override
@@ -72,7 +76,7 @@ public class DistanceSensor extends SubsystemABC {
   @Override
   public void setupShuffleboard() {
     tab.add("DistanceSensor " + sensorName, sensor);
-  
+
   }
 
 }

@@ -16,7 +16,7 @@
   },
   "NTProvider": {
     "types": {
-
+      "/FMSInfo": "FMSInfo"
     },
     "windows": {
       "/FMSInfo": {
