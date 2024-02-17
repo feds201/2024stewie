@@ -9,9 +9,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.CANConstants;
-import frc.robot.constants.DIOConstants;
+import frc.robot.robotSettings.ArmConstants;
+import frc.robot.robotSettings.CANConstants;
+import frc.robot.robotSettings.DIOConstants;
 import frc.robot.subsystems.SubsystemABC;
 
 public class Arm extends SubsystemABC {

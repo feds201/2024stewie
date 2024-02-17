@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.robot.robotSettings;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 

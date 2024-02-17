@@ -11,7 +11,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.CANConstants;
+import frc.robot.robotSettings.CANConstants;
 import frc.robot.subsystems.SubsystemABC;
 
 public class Climber extends SubsystemABC {

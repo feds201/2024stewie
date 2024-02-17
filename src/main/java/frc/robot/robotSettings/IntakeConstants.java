@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.robot.robotSettings;
 
 public class IntakeConstants {
   public final static double kP = 0.0;

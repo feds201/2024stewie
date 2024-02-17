@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.constants.CANConstants;
-import frc.robot.constants.DIOConstants;
-import frc.robot.constants.ShooterConstants;
+import frc.robot.robotSettings.CANConstants;
+import frc.robot.robotSettings.DIOConstants;
+import frc.robot.robotSettings.ShooterConstants;
 import frc.robot.subsystems.SubsystemABC;
 
 public class Shooter extends SubsystemABC {

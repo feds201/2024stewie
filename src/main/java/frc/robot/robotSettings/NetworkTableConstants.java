@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.robot.robotSettings;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 

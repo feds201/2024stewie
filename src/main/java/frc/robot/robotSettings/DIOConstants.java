@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.robot.robotSettings;
 
 public class DIOConstants {
     public static class Shooter {

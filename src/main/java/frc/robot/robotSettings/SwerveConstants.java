@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.robot.robotSettings;
 
 public class SwerveConstants {
     public static final double MaxSpeed = 6; // 6 meters per second desired top speed

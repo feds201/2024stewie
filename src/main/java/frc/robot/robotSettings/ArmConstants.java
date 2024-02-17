@@ -1,5 +1,5 @@
 
-package frc.robot.constants;
+package frc.robot.robotSettings;
 
 public class ArmConstants {
    public static final int kP = 0;
