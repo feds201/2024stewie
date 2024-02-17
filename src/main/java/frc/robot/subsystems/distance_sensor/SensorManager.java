@@ -20,7 +20,7 @@ public class SensorManager extends SubsystemBase {
     }
 
     public Command getMXP() {
-        return run(() -> {
+        return run(() -> {  
             sensorOnBoard = null;
             sensorMXP = new DistanceSensor(Port.kMXP);
         });
