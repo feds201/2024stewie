@@ -49,7 +49,7 @@ public class Shooter extends SubsystemABC {
   private final DoubleEntry encoderAngle ;
 
   public Shooter(DoubleSupplier currentArmRotationSupplier) {
-    super();
+    super("Shooter");
     shooterTopMain = new TalonFX(CANConstants.Shooter.kShooterTop);
     shooterBottomFollower = new TalonFX(CANConstants.Shooter.kShooterBottom);
     shooterRotate = new TalonFX(CANConstants.Shooter.kShooterPivot);
@@ -66,7 +66,7 @@ public class Shooter extends SubsystemABC {
     shooterTopMain.getConfigurator().apply(ShooterConstants.GetShooterConfiguration());
     shooterBottomFollower.setControl(new StrictFollower(shooterTopMain.getDeviceID()));
 
-    setupNetworkTables("shooter");
+    
     shootVelocity = ntTable.getDoubleTopic("shoot_velocity").getEntry(0);
     shootVoltage = ntTable.getDoubleTopic("shoot_voltage").getEntry(0);
     rotateVoltage = ntTable.getDoubleTopic("rotate_angle").getEntry(0);
@@ -75,8 +75,7 @@ public class Shooter extends SubsystemABC {
     encoderAngleWithoutOffset = ntTable.getDoubleTopic("encoder_angle_no_offset").getEntry(0);
     encoderAngle = ntTable.getDoubleTopic("encoder_angle").getEntry(0);
     
-    setupShuffleboard();
-    setupTestCommands();
+    
     seedNetworkTables();
   }
 

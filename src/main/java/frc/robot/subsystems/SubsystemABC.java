@@ -17,17 +17,20 @@ public abstract class SubsystemABC extends SubsystemBase {
    protected DataLog log;
 
    public abstract void seedNetworkTables();
-   public abstract void writePeriodicOutputs();
-   public abstract void setupTestCommands();
-   public abstract void setupShuffleboard();
-   
-   public void setupNetworkTables(String name) { 
-      tab = Shuffleboard.getTab(name);
-      ntTable = NetworkTableConstants.inst.getTable(name);
-      SmartDashboard.putString("haha", ntTable.toString());
-   }
 
-   public SubsystemABC() {
+   public abstract void writePeriodicOutputs();
+
+   public abstract void setupTestCommands();
+
+   public abstract void setupShuffleboard();
+
+  
+
+   public SubsystemABC(String subsystemName) {
+      tab = Shuffleboard.getTab(subsystemName);
+      ntTable = NetworkTableConstants.inst.getTable(subsystemName);
       log = DataLogManager.getLog();
+      setupShuffleboard();
+      setupTestCommands();
    }
 }

@@ -30,7 +30,7 @@ public class Arm extends SubsystemABC {
   private DoubleEntry armRotationEncoderAngle;
 
   public Arm() {
-    super();
+    super("Arm");
     
     armRotation = new TalonFX(CANConstants.Arm.kArm);
     armRotationEncoder = new DutyCycleEncoder(DIOConstants.Arm.kArmRotateEncoder);
@@ -38,15 +38,14 @@ public class Arm extends SubsystemABC {
     pid.setTolerance(ArmConstants.kRotationTolerance);
     pid.setIZone(ArmConstants.kIZone);
     
-    setupNetworkTables("arm");
+    
     
     armTarget = ntTable.getDoubleTopic("target").getEntry(0);
     armOutput = ntTable.getDoubleTopic("output").getEntry(0);
     armRotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
     armRotationEncoderAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
 
-    setupShuffleboard();
-    setupTestCommands();
+   
     seedNetworkTables();
   }
 

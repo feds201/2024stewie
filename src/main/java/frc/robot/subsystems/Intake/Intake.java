@@ -30,9 +30,10 @@ public class Intake extends SubsystemABC {
   private DoubleEntry rotationAngle;
   private DoubleEntry rotationTarget;
 
+
   /** Creates a new Intake. */
   public Intake() {
-    super();
+    super("intake");
 
     intakeWheel = new CANSparkMax(CANConstants.Intake.kIntakeWheels, MotorType.kBrushless);
     wristRotation = new CANSparkMax(CANConstants.Intake.kIntakeWrist, MotorType.kBrushless);
@@ -41,7 +42,7 @@ public class Intake extends SubsystemABC {
     pid.setIZone(IntakeConstants.kIZone);
     pid.setTolerance(IntakeConstants.kRotationTolerance);
 
-    setupNetworkTables("intake");
+  
 
     intakeVoltage = ntTable.getDoubleTopic("wheels_voltage").getEntry(0);
     wristVoltage = ntTable.getDoubleTopic("wrist_voltage").getEntry(0);
@@ -49,8 +50,7 @@ public class Intake extends SubsystemABC {
     rotationAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
     rotationTarget = ntTable.getDoubleTopic("rotation_target").getEntry(0);
 
-    setupShuffleboard();
-    setupTestCommands();
+    
     seedNetworkTables();
   }
 

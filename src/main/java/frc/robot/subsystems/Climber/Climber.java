@@ -22,17 +22,16 @@ public class climber extends SubsystemABC {
 
   /** Creates a new Climber. */
   public climber() {
-    super();
+    super("Climber");
     climberMain = new CANSparkMax(CANConstants.Climber.kClimberRightMain, MotorType.kBrushless);
     climberFollower = new CANSparkMax(CANConstants.Climber.kClimberLeftFollower, MotorType.kBrushless);
 
     climberFollower.follow(climberMain);
     
-    setupNetworkTables("climber");
+   
     climberVoltage = ntTable.getDoubleTopic("climber_voltage").getEntry(0);
 
-    setupShuffleboard();
-    setupTestCommands();
+ 
     seedNetworkTables();
   }
   

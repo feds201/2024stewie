@@ -7,6 +7,8 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.revrobotics.Rev2mDistanceSensor;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,6 +25,8 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.climber;
+import frc.robot.subsystems.distance_sensor.DistanceSensor;
+import frc.robot.subsystems.distance_sensor.SensorManager;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.utils.Telemetry;
@@ -47,11 +51,17 @@ public class RobotContainer {
   private final Intake intake;
   private final Arm arm;
   private final climber climber;
+  private final SensorManager sensorManager;
+ 
+   //private DistanceSensor currentSensor;
 
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
+  
 
   public RobotContainer() {
+    
+    sensorManager = new SensorManager();
     arm = new Arm();
     shooter = new Shooter(() -> arm.getArmAngle());
     climber = new climber();
@@ -77,10 +87,13 @@ public class RobotContainer {
             .withVelocityY(-driverController.getLeftX() * SwerveConstants.MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(-driverController.getRightX() * SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
+    driverController.a().onTrue(sensorManager.getMXP());
+     driverController.b().onTrue(sensorManager.getOnboard());
 
-    driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    driverController.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
+
+
+    //driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    //driverController.b().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
