@@ -6,13 +6,13 @@ package frc.robot.commands.climber;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.climber.climber;
+import frc.robot.subsystems.climber.Climber;
 
 public class ExtendClimber extends Command {
   /** Creates a new ExtendArm. */
-  private final climber c_climber;
+  private final Climber c_climber;
   
-  public ExtendClimber(climber climber) {
+  public ExtendClimber(Climber climber) {
     c_climber = climber;
     addRequirements(c_climber);
     // Use addRequirements() here to declare subsystem dependencies.

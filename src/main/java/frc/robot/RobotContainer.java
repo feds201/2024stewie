@@ -24,7 +24,7 @@ import frc.robot.commands.shooter.ShootNoteVoltage;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.climber.climber;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.distance_sensor.DistanceSensor;
 import frc.robot.subsystems.distance_sensor.SensorManager;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -50,7 +50,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Intake intake;
   private final Arm arm;
-  private final climber climber;
+  private final Climber climber;
   private final SensorManager sensorManager;
  
    //private DistanceSensor currentSensor;
@@ -64,7 +64,7 @@ public class RobotContainer {
     sensorManager = new SensorManager();
     arm = new Arm();
     shooter = new Shooter(() -> arm.getArmAngle());
-    climber = new climber();
+    climber = new Climber();
     intake = new Intake();
 
     driverController = new CommandXboxController(OIConstants.kDriverController);
