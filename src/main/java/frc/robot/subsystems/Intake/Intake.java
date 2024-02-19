@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
 import frc.robot.constants.IntakeConstants;
@@ -65,6 +66,8 @@ public class Intake extends SubsystemABC {
   public void periodic() {
     // This method will be called once per scheduler run
     writePeriodicOutputs();
+
+    SmartDashboard.putNumber("intake bus voltage", intakeWheel.getBusVoltage());
   }
 
   @Override
@@ -123,23 +126,23 @@ public class Intake extends SubsystemABC {
 
   private DoubleLogEntry intakeVoltageLog = new DoubleLogEntry(log, "/intake/target");
   private DoubleLogEntry wristVoltageLog = new DoubleLogEntry(log, "/intake/output");
-  private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/intake/rotation_value");
-  private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/intake/rotation_angle");
-  private DoubleLogEntry rotationTargetLog = new DoubleLogEntry(log, "/intake/rotation_target");
+  private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/intake/rotationValue");
+  private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/intake/rotationAngle");
+  private DoubleLogEntry rotationTargetLog = new DoubleLogEntry(log, "/intake/rotationTarget");
 
   // SETTERS
   public void setWristVoltage(double voltage) {
     wristVoltage.set(voltage);
     wristVoltageLog.append(voltage);
 
-    wristRotation.setVoltage(voltage);
+    wristRotation.set(voltage);
   }
 
   public void setIntakeWheels(double voltage) {
     intakeVoltage.set(voltage);
     intakeVoltageLog.append(voltage);
 
-    intakeWheel.setVoltage(voltage);
+    intakeWheel.set(voltage);
   }
 
   public void readWristAngle() {

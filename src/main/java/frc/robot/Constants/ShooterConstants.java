@@ -11,13 +11,16 @@ public class ShooterConstants {
     public static final double kRotateTolerance = 0.5;
     public static final double kRotateIZone = Double.POSITIVE_INFINITY;
 
+    public static final double kShootVelocity = 0.1;
+    public static final double kShootVoltage = 0.1;
+    public static final double kRotateSpeed = 0.1;
 
     public static TalonFXConfiguration GetShooterConfiguration() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
         configs.Slot0.kP = 0.0; // An error of 1 rotation per second results in 2V output
         configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
-        configs.Slot0.kD = 0.000; // A change of 1 rotation per second squared results in 0.01 volts output
+        configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
         /*
         * Voltage-based velocity requires a feed forward to account for the back-emf of
         * the motor

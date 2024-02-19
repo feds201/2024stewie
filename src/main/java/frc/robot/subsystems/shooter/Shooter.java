@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.shooter;
 
-import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.SignalLogger;
@@ -15,13 +14,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoubleEntry;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
 import frc.robot.constants.ShooterConstants;
@@ -165,14 +159,14 @@ public class Shooter extends SubsystemABC {
     return encoderAngle.get();
   }
 
-  private final DoubleLogEntry shootVelocityLog = new DoubleLogEntry(log, "/shooter/shoot_velocity");
-  private final DoubleLogEntry shootVoltageLog = new DoubleLogEntry(log, "/shooter/shoot_voltage");
-  private final DoubleLogEntry rotateVoltageLog = new DoubleLogEntry(log, "/shooter/rotate_angle");
-  private final DoubleLogEntry rotateTargetLog = new DoubleLogEntry(log, "/shooter/rotate_target");
-  private final DoubleLogEntry encoderValueLog = new DoubleLogEntry(log, "/shooter/encoder_value");
+  private final DoubleLogEntry shootVelocityLog = new DoubleLogEntry(log, "/shooter/velocity");
+  private final DoubleLogEntry shootVoltageLog = new DoubleLogEntry(log, "/shooter/voltage");
+  private final DoubleLogEntry rotateVoltageLog = new DoubleLogEntry(log, "/shooter/angle");
+  private final DoubleLogEntry rotateTargetLog = new DoubleLogEntry(log, "/shooter/target");
+  private final DoubleLogEntry encoderValueLog = new DoubleLogEntry(log, "/shooter/encoderValue");
   private final DoubleLogEntry encoderAngleWithoutOffsetLog = new DoubleLogEntry(log,
-      "/shooter/encoder_angle_no_offset");
-  private final DoubleLogEntry encoderAngleLog = new DoubleLogEntry(log, "/shooter/encoder_angle");
+      "/shooter/encoderAngleNoOffset");
+  private final DoubleLogEntry encoderAngleLog = new DoubleLogEntry(log, "/shooter/encoderAngle");
 
   public void setShootVelocity(double velocity) {
     shootVelocity.set(velocity);
@@ -214,7 +208,7 @@ public class Shooter extends SubsystemABC {
   }
 
   public void readEncoderAngle() {
-    encoderAngle.set((shooterRotateEncoder.get() - currentArmRotationSupplier.getAsDouble()) * 360);
-    encoderAngleLog.append((shooterRotateEncoder.get() - currentArmRotationSupplier.getAsDouble()) * 360);
+    encoderAngle.set(shooterRotateEncoder.get() * 360 - currentArmRotationSupplier.getAsDouble());
+    encoderAngleLog.append(shooterRotateEncoder.get() * 360 - currentArmRotationSupplier.getAsDouble());
   }
 }

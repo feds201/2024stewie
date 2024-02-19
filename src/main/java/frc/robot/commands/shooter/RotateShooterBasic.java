@@ -2,38 +2,37 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.arm;
+package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.shooter.Shooter;
 
-public class RotateArmBasic extends Command {
-  /** Creates a new RotateArmBasic. */
-  double c_speed;
-  Arm c_arm;
+public class RotateShooterBasic extends Command {
+  private final Shooter c_shooter;
+  private final double c_voltage;
 
-  public RotateArmBasic(Arm arm, double speed) {
-    c_arm = arm;
-    c_speed = speed;
-
-    addRequirements(c_arm);
+  public RotateShooterBasic(Shooter shooter, double voltage) {
+    c_shooter = shooter;
+    c_voltage = voltage;
+    addRequirements(c_shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_arm.setOutput(c_speed);
+    c_shooter.setRotateVoltage(c_voltage);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    c_arm.setOutput(0);
+    c_shooter.setRotateVoltage(0);
   }
 
   // Returns true when the command should end.

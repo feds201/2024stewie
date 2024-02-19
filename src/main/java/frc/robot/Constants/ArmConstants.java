@@ -6,6 +6,8 @@ public class ArmConstants {
    public static final int kD = 0;
    public static final int kF = 0;
 
+   public static final double kArmSpeed = 0.05;
+
    public static final double kRotationTolerance = 0.5;
    // TODO: Do we need a velocity tolerance?
    public static final double kIZone = Double.POSITIVE_INFINITY;

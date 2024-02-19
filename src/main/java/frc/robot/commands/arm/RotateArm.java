@@ -5,7 +5,6 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.arm.Arm;
 
 public class RotateArm extends Command {
