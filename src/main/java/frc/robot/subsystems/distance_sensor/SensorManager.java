@@ -4,36 +4,45 @@
 
 package frc.robot.subsystems.distance_sensor;
 
-import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
-
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
 public class SensorManager extends SubsystemBase {
-    private DistanceSensor sensorOnBoard;
-    private DistanceSensor sensorMXP;
+    private boolean isMXPActive;
+
+    private DistanceSensor sensorOnboard = null;
+    private DistanceSensor sensorMXP = null;
     
-    public SensorManager() {
+    public SensorManager(boolean isMXP) {
+        isMXPActive = isMXP;
 
+        if(isMXPActive) {
+            //setMXP();
+        } else {
+            //setOnboard();
+        }
     }
 
-    public Command getMXP() {
-        return run(() -> {  
-            sensorOnBoard = null;
-            sensorMXP = new DistanceSensor(Port.kMXP);
-        });
-
+    public DistanceSensor getActive() {
+        if(isMXPActive) {
+            return sensorMXP;
+        } else {
+            return sensorOnboard;
+        }
     }
 
-    public Command getOnboard() {
-        return run(() -> {
-            sensorMXP = null;
-            sensorOnBoard = new DistanceSensor(Port.kOnboard);
-        });
-
+    public void setMXP() {
+        sensorOnboard = null;
+        System.gc();
+        sensorMXP = new DistanceSensor(Port.kMXP);
+        isMXPActive = true;
     }
-    // Called when the command is initially scheduled.
 
+    public void setOnboard() {
+        sensorMXP = null;
+        System.gc();
+        sensorOnboard = new DistanceSensor(Port.kOnboard);
+        isMXPActive = false;
+    }
 }
