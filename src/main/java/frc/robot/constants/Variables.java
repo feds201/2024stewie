@@ -1,4 +1,4 @@
-package frc.robot.robotSettings;
+package frc.robot.constants;
 
 public class Variables {
 

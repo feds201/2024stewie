@@ -25,7 +25,7 @@ public class DistanceSensor extends SubsystemABC {
   private StringLogEntry sensorNameLog;
 
   public DistanceSensor(Rev2mDistanceSensor.Port sensorType) {
-    super(sensorType.toString());
+    super();
 
     sensorRange = ntTable.getDoubleTopic("sensor_range").getEntry(0);
     sensorName = ntTable.getStringTopic("sensor_name").getEntry(sensorType.toString());

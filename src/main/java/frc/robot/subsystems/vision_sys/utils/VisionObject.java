@@ -1,6 +1,6 @@
 package frc.robot.subsystems.vision_sys.utils;
 
-import frc.robot.robotSettings.CameraConstants;
+import frc.robot.constants.CameraConstants;
 
 public class VisionObject {
     private double x;

@@ -9,9 +9,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import frc.robot.robotSettings.ArmConstants;
-import frc.robot.robotSettings.CANConstants;
-import frc.robot.robotSettings.DIOConstants;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.CANConstants;
+import frc.robot.constants.DIOConstants;
 import frc.robot.subsystems.SubsystemABC;
 
 public class Arm extends SubsystemABC {
@@ -30,7 +30,7 @@ public class Arm extends SubsystemABC {
   private DoubleEntry armRotationEncoderAngle;
 
   public Arm() {
-    super("Arm");
+    super();
     
     armRotation = new TalonFX(CANConstants.Arm.kArm);
     armRotationEncoder = new DutyCycleEncoder(DIOConstants.Arm.kArmRotateEncoder);
@@ -38,14 +38,17 @@ public class Arm extends SubsystemABC {
     pid.setTolerance(ArmConstants.kRotationTolerance);
     pid.setIZone(ArmConstants.kIZone);
     
-    
+    setupNetworkTables("arm");
     
     armTarget = ntTable.getDoubleTopic("target").getEntry(0);
     armOutput = ntTable.getDoubleTopic("output").getEntry(0);
     armRotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
     armRotationEncoderAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
 
-   
+    armRotationEncoder.reset();
+
+    setupShuffleboard();
+    setupTestCommands();
     seedNetworkTables();
   }
 
@@ -66,6 +69,7 @@ public class Arm extends SubsystemABC {
   public void setupShuffleboard() {
     tab.add("armRotation talon", armRotation);
     tab.add("armRotationEncoder", armRotationEncoder);
+    tab.add("pid controller", pid);
   }
 
   public boolean isArmAtTarget() {
@@ -120,8 +124,8 @@ public class Arm extends SubsystemABC {
 
   private DoubleLogEntry armTargetLog = new DoubleLogEntry(log, "/arm/target");
   private DoubleLogEntry armOutputLog = new DoubleLogEntry(log, "/arm/output");
-  private DoubleLogEntry armRotationEncoderValueLog = new DoubleLogEntry(log, "/arm/rotation_value");
-  private DoubleLogEntry armRotationEncoderAngleLog = new DoubleLogEntry(log, "/arm/rotation_angle");
+  private DoubleLogEntry armRotationEncoderValueLog = new DoubleLogEntry(log, "/arm/rotationValue");
+  private DoubleLogEntry armRotationEncoderAngleLog = new DoubleLogEntry(log, "/arm/rotationAngle");
 
   // SETTERS
   public void setOutput(double output) {

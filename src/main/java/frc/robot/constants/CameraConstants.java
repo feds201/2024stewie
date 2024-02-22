@@ -1,4 +1,4 @@
-package frc.robot.robotSettings;
+package frc.robot.constants;
 
 public class CameraConstants {
     public static int MaxSpeed = 1;      // FIXME: Why is this necessary?

@@ -6,9 +6,8 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.robotSettings.NetworkTableConstants;
+import frc.robot.constants.NetworkTableConstants;
 
 public abstract class SubsystemABC extends SubsystemBase {
    protected ShuffleboardTab tab;
@@ -17,20 +16,20 @@ public abstract class SubsystemABC extends SubsystemBase {
    protected DataLog log;
 
    public abstract void seedNetworkTables();
-
    public abstract void writePeriodicOutputs();
-
    public abstract void setupTestCommands();
-
    public abstract void setupShuffleboard();
+   
+   public void setupNetworkTables(String name) { 
+      tab = Shuffleboard.getTab(name);
+      ntTable = NetworkTableConstants.inst.getTable(name);
+   }
 
-  
-
-   public SubsystemABC(String subsystemName) {
-      tab = Shuffleboard.getTab(subsystemName);
-      ntTable = NetworkTableConstants.inst.getTable(subsystemName);
+   public SubsystemABC() {
       log = DataLogManager.getLog();
-      setupShuffleboard();
-      setupTestCommands();
+   }
+
+   public ShuffleboardTab getShuffleboardTab() {
+      return tab;
    }
 }

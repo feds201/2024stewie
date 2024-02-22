@@ -1,29 +1,39 @@
-package frc.robot.robotSettings;
+package frc.robot.constants;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 public class ShooterConstants {
 
-    public static final double kRotateP = 0;
-    public static final double kRotateI = 0;
+    public static final double kRotateP = 0.01;
+    public static final double kRotateI = 0.1;
     public static final double kRotateD = 0;
 
     public static final double kRotateTolerance = 0.5;
-    public static final double kRotateIZone = Double.POSITIVE_INFINITY;
+    public static final double kRotateIZone = 0.1;
 
+    public static final double kShootVelocity = -50;
+    public static final double kShootVoltage = 0.1;
+
+    public static final double kRotateSpeed = 0.03;
+    public static final double kArmInnerWingSetpoint = 70; // 7 feet 10 inches
 
     public static TalonFXConfiguration GetShooterConfiguration() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
-        configs.Slot0.kP = 0.0; // An error of 1 rotation per second results in 2V output
-        configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
-        configs.Slot0.kD = 0.000; // A change of 1 rotation per second squared results in 0.01 volts output
+        configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 2V output
+        configs.Slot0.kI = 0.5; // An error of 1 rotation per second increases output by 0.5V every second
+        configs.Slot0.kD = 0.0001; // A change of 1 rotation per second squared results in 0.01 volts output
         /*
         * Voltage-based velocity requires a feed forward to account for the back-emf of
         * the motor
         */
         configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12
                                 // volts / Rotation per second
+
+        configs.MotionMagic.MotionMagicCruiseVelocity = 80;
+        configs.MotionMagic.MotionMagicAcceleration = 160;
+        configs.MotionMagic.MotionMagicJerk = 1600;
+
 
         // Peak output of 8 volts
         configs.Voltage.PeakForwardVoltage = 8;

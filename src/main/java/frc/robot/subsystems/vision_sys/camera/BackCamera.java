@@ -3,7 +3,7 @@ package frc.robot.subsystems.vision_sys.camera;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.robotSettings.CameraConstants;
+import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.vision_sys.VisionVariables;
 import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.subsystems.vision_sys.utils.ObjectType;
