@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.commands.Intake.RotateWristBasic;
+import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.arm.RotateArmBasic;
 import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.shooter.RotateShooter;
@@ -45,10 +46,11 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add
-                                                                                                                       // a
-                                                                                                                       // 10%
-                                                                                                                       // deadband
+            .withDeadband(SwerveConstants.MaxSpeed * 0.1)
+            .withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add
+                                                                          // a
+                                                                          // 10%
+                                                                          // deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                      // driving in open loop
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -86,33 +88,45 @@ public class RobotContainer {
         configureBindings();
         configureTestCommands();
 
-        // shooter.setDefaultCommand(new RotateShooter(arm, () -> -ShooterConstants.kRotateSpeed));
+        // shooter.setDefaultCommand(new RotateShooter(arm, () ->
+        // -ShooterConstants.kRotateSpeed));
     }
 
     public void configureTestCommands() {
-
 
         // Display Subsystems on Shuffleboard under each of the tabs
         shooterWheels.getShuffleboardTab().add("Run Shooter Wheels",
                 new WaitCommand(10)
                         .alongWith(
-                                new ShootNoteVoltage(shooterWheels, () -> ShooterConstants.kShootVoltage)));
+                                new ShootNoteVoltage(shooterWheels,
+                                        () -> ShooterConstants.kShootVoltage)));
 
         shooterWheels.getShuffleboardTab().add("Run Shooter velocity",
                 new WaitCommand(10)
                         .alongWith(
-                                new ShootNoteVelocity(shooterWheels, () -> ShooterConstants.kShootVelocity)));
+                                new ShootNoteVelocity(shooterWheels,
+                                        () -> ShooterConstants.kShootVelocity)));
 
         shooterRotation.getShuffleboardTab().add("Rotate Shooter Simple",
                 new WaitCommand(10)
                         .alongWith(
-                                new RotateShooterBasic(shooterRotation, -ShooterConstants.kRotateSpeed) // 20% is WAY too fast
+                                new RotateShooterBasic(shooterRotation,
+                                        -ShooterConstants.kRotateSpeed) // 20%
+                                                                        // is
+                                                                        // WAY
+                                                                        // too
+                                                                        // fast
                         ));
 
         shooterRotation.getShuffleboardTab().add("Rotate Shooter PID",
                 new WaitCommand(10)
                         .alongWith(
-                                new RotateShooter(shooterRotation, ShooterConstants.kArmInnerWingSetpoint) // 20% is WAY too fast
+                                new RotateShooter(shooterRotation,
+                                        ShooterConstants.kArmInnerWingSetpoint) // 20%
+                                                                                // is
+                                                                                // WAY
+                                                                                // too
+                                                                                // fast
                         ));
 
         intake.getShuffleboardTab().add("Run Intake Wheels",
@@ -123,24 +137,30 @@ public class RobotContainer {
         intake.getShuffleboardTab().add("Rotate Intake Simple",
                 new WaitCommand(10)
                         .alongWith(
-                                new RotateWristBasic(intake, IntakeConstants.kRotateSpeed)));
+                                new RotateWristBasic(intake,
+                                        IntakeConstants.kRotateSpeed)));
 
         intake.getShuffleboardTab().add("Rotate Intake Backwards Simple",
                 new WaitCommand(10)
                         .alongWith(
-                                new RotateWristBasic(intake, -IntakeConstants.kRotateSpeed)));
+                                new RotateWristBasic(intake,
+                                        -IntakeConstants.kRotateSpeed)));
 
         climber.getShuffleboardTab().add("Run Climber Simple",
                 new WaitCommand(10)
                         .alongWith(
-                                new ExtendClimber(climber, ClimberConstants.kClimberSpeed)));
+                                new ExtendClimber(climber,
+                                        ClimberConstants.kClimberSpeed)));
 
         arm.getShuffleboardTab().add("Rotate Arm Simple",
                 new WaitCommand(10)
                         .alongWith(
                                 new RotateArmBasic(arm, ArmConstants.kArmSpeed)));
 
-
+        arm.getShuffleboardTab().add("Rotate Arm",
+                new WaitCommand(10)
+                        .alongWith(
+                                new RotateArm(arm, ArmConstants.kArmInnerWingSetpoint)));
 
     }
 
@@ -159,23 +179,28 @@ public class RobotContainer {
                     Rotation2d currentHeading = drivetrain.getRotation3d().toRotation2d();
                     double headingDifference = desiredHeading.minus(currentHeading).getRadians();
 
-                    return drive.withVelocityX(-driverController.getLeftY() * SwerveConstants.MaxSpeed) // Drive forward
-                                                                                                        // with negative
-                                                                                                        // Y
+                    return drive.withVelocityX(
+                            -driverController.getLeftY() * SwerveConstants.MaxSpeed) // Drive
+                                                                                     // forward
+                                                                                     // with
+                                                                                     // negative
+                                                                                     // Y
                             // (forward)
-                            .withVelocityY(-driverController.getLeftX() * SwerveConstants.MaxSpeed)
-                            .withRotationalRate(-driverController.getRightX() * SwerveConstants.MaxAngularRate); // Drive
-                                                                                                                 // counterclockwise
-                                                                                                                 // with
-                                                                                                                 // negative
-                                                                                                                 // X
-                                                                                                                 // (left);
-                                                                                                                 // //
-                                                                                                                 // Drive
-                                                                                                                 // left
-                                                                                                                 // with
-                                                                                                                 // negative
-                                                                                                                 // X
+                            .withVelocityY(-driverController.getLeftX()
+                                    * SwerveConstants.MaxSpeed)
+                            .withRotationalRate(-driverController.getRightX()
+                                    * SwerveConstants.MaxAngularRate); // Drive
+                                                                       // counterclockwise
+                                                                       // with
+                                                                       // negative
+                                                                       // X
+                                                                       // (left);
+                                                                       // //
+                                                                       // Drive
+                                                                       // left
+                                                                       // with
+                                                                       // negative
+                                                                       // X
                     // (left)
                     // if (headingDifference > headingTolerance) {
                     // return drive.withVelocityX(-driverController.getLeftY() *
@@ -205,7 +230,8 @@ public class RobotContainer {
         driverController.b().whileTrue(drivetrain
                 .applyRequest(() -> point
                         .withModuleDirection(
-                                new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
+                                new Rotation2d(-driverController.getLeftY(),
+                                        -driverController.getLeftX()))));
 
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -220,8 +246,10 @@ public class RobotContainer {
         operatorController.x().whileTrue(new ExtendClimber(climber, ClimberConstants.kClimberSpeed));
         operatorController.leftTrigger()
                 .whileTrue(new ShootNoteVelocity(shooterWheels, () -> ShooterConstants.kShootVelocity));
-        operatorController.leftTrigger().whileTrue(new ShootNoteVoltage(shooterWheels, () -> ShooterConstants.kShootVoltage));
-        operatorController.povUp().whileTrue(new RotateShooterBasic(shooterRotation, ShooterConstants.kRotateSpeed));
+        operatorController.leftTrigger()
+                .whileTrue(new ShootNoteVoltage(shooterWheels, () -> ShooterConstants.kShootVoltage));
+        operatorController.povUp()
+                .whileTrue(new RotateShooterBasic(shooterRotation, ShooterConstants.kRotateSpeed));
     }
 
     public Command getAutonomousCommand() {

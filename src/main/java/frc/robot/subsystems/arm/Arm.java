@@ -69,6 +69,7 @@ public class Arm extends SubsystemABC {
   public void setupShuffleboard() {
     tab.add("armRotation talon", armRotation);
     tab.add("armRotationEncoder", armRotationEncoder);
+    tab.add("pid controller", pid);
   }
 
   public boolean isArmAtTarget() {
