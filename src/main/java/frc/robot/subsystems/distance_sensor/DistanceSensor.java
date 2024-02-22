@@ -1,90 +1,95 @@
-// // Copyright (c) FIRST and other WPILib contributors.
-// // Open Source Software; you can modify and/or share it under the terms of
-// // the WPILib BSD license file in the root directory of this project.
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems.distance_sensor;
 
-// import com.revrobotics.Rev2mDistanceSensor;
-// <<<<<<< 5-so-many-things-to-change
-// import com.revrobotics.Rev2mDistanceSensor.Port;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// =======
-// import edu.wpi.first.wpilibj.smartdashboard.*;
-// >>>>>>> development
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
 
-// public class DistanceSensor extends SubsystemBase {
-//   private Rev2mDistanceSensor sensorOnboard;
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.networktables.StringEntry;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.smartdashboard.*;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.SubsystemABC;
+import frc.robot.subsystems.distance_sensor.SensorManager;
 
-//   public DistanceSensor(Rev2mDistanceSensor.Port portType) {
-//     sensorOnboard = new Rev2mDistanceSensor(portType);
-//     sensorOnboard.setAutomaticMode(true);
+public class DistanceSensor extends SubsystemABC {
+  private Rev2mDistanceSensor sensor;
 
-//     setupDebug();
-//   }
+  private DoubleEntry sensorRange;
+  private StringEntry sensorName;
+  private DoubleLogEntry sensorRangeLog;
+  private StringLogEntry sensorNameLog;
 
-//   @Override
-//   public void periodic() {
-//     SmartDashboard.putBoolean("Is onboard one range valid??", sensorOnboard.isRangeValid());
-//     SmartDashboard.putBoolean("Is onboard alive????", sensorOnboard.isEnabled());
-//     if (sensorOnboard.isRangeValid()) {
-//       SmartDashboard.putNumber("RangeOnboard", sensorOnboard.getRange());
-//       SmartDashboard.putNumber("TimestampOnboard", sensorOnboard.getTimestamp());
+  public DistanceSensor(Rev2mDistanceSensor.Port sensorType) {
+    super();
 
-//       SmartDashboard.putString("Distance Units Onboard", sensorOnboard.getDistanceUnits().toString());
-//       SmartDashboard.putNumber("Some other range idk Onboard", sensorOnboard.GetRange());
+    sensorRange = ntTable.getDoubleTopic("sensor_range").getEntry(0);
+    sensorName = ntTable.getStringTopic("sensor_name").getEntry(sensorType.toString());
 
-//       SmartDashboard.putBoolean("In Range Onboard", sensorOnboard.getRange() < 4);
-//     }
-//     // }
-//     // if (sensorMXP.isRangeValid()) {
-//     // SmartDashboard.putNumber("Range MXP", sensorMXP.getRange());
-//     // SmartDashboard.putNumber("Timestamp MXP", sensorMXP.getTimestamp());
+    sensorRangeLog = new DoubleLogEntry(log, "/distanceSensor" + sensorType.toString() + "/sensorRange");
+    sensorNameLog = new StringLogEntry(log, "/distanceSensor" + sensorType.toString() + "/sensorName");
+    
+    setSensorName(sensorType.toString());
 
-//     // SmartDashboard.putString("Distance Units MXP",
-//     // sensorMXP.getDistanceUnits().toString());
-//     // SmartDashboard.putNumber("Some other range idk MXP", sensorMXP.GetRange());
+    sensor = new Rev2mDistanceSensor(sensorType);
+    sensor.setAutomaticMode(true);
+    
+    seedNetworkTables();
+  }
 
-//     // SmartDashboard.putBoolean("In Range MXP", sensorMXP.getRange() < 4);
-//     // }
-//     // if(distOnboard.isRangeValid()) {
-//     // SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
-//     // SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
-//     // }
+  @Override
+  public void periodic() {
+    writePeriodicOutputs();
+  }
 
-//     // if(distMXP.isRangeValid()) {
-//     // SmartDashboard.putNumber("Range MXP", distMXP.getRange());
-//     // SmartDashboard.putNumber("Timestamp MXP", distMXP.getTimestamp());
-//     // }
+  @Override
+  public void seedNetworkTables() {
+    // Seed Network Tables is only really necessary for setters that the Programmer
+    // sets,
+    // not a sensor that "read"s independently of the programmer
+    
+  }
 
-//   }
+  @Override
+  public void writePeriodicOutputs() {
+    readSensorRange();
+    getSensorName(); // TODO: is this really necessary to get repeatedly in periodic??
+  }
 
-//   private void setupDebug() {
+  @Override
+  public void setupTestCommands() {
+    // TODO Auto-generated method stub
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'setupTestCommands'");
+  }
 
-//   }
+  @Override
+  public void setupShuffleboard() {
+    // tab.add("sensor", sensor); // this won't work since Rev2MDistanceSensor does
+    // not implement Sendable
+  }
 
-//   // public class DistanceSensor extends SubsystemBase {
-//   // private final I2C i2c1;
+  public double getSensorRange() {
+    return sensorRange.get();
+  }
 
-//   // public DistanceSensor() {
-//   // i2c1 = new I2C(I2C.Port.kOnboard, 0x52);
+  public String getSensorName() {
+    return sensorName.get();
+  }
 
-//   // }
+  // SETTERS
 
-//   // @Override
-//   // public void periodic() {
-//   // SmartDashboard.putNumber("Test", 1);
-//   // SmartDashboard.putNumber("Connected DEvice", i2c1.getDeviceAddress());
-//   // SmartDashboard.putNumber("Distance", getDistance());
-//   // }
+  public void readSensorRange() {
+    sensorRange.set(sensor.getRange());
+    sensorRangeLog.append(sensorRange.get());
+  }
 
-//   // public double getDistance() {
-//   // byte[] buffer = new byte[2]; // Adjust buffer size if needed
-//   // i2c1.read(0x52, 2, buffer); // Assuming distance is in 2 bytes at register
-//   // 0x02
-//   // double distance = ByteBuffer.wrap(buffer).getShort() / 10.0; // Example
-//   // conversion
-//   // return distance;
-//   // }
-
-// }
+  private void setSensorName(String name) {
+    sensorName.set(name);
+    sensorNameLog.append(sensorName.get());
+  }
+}

@@ -6,7 +6,7 @@
 
 // import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 // import edu.wpi.first.wpilibj2.command.Command;
-// import frc.robot.Constants.CameraVariables;
+// import frc.robot.robotSettings.CameraVariables;
 // import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 // import frc.robot.subsystems.vision.VisionSubsystem;
 // import frc.robot.subsystems.vision_systems.BackCamera;

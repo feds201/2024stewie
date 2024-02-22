@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
+    // m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
 
     // Start logging data log
     DataLogManager.start();
@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonom
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
