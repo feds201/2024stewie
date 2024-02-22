@@ -50,6 +50,8 @@ public class Intake extends SubsystemABC {
     rotationAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
     rotationTarget = ntTable.getDoubleTopic("rotation_target").getEntry(0);
 
+    wristRotationEncoder.reset();
+
     setupShuffleboard();
     setupTestCommands();
     seedNetworkTables();

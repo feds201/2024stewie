@@ -41,6 +41,6 @@ public class RotateArm extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return c_arm.isArmAtTarget();
+        return false; //c_arm.isArmAtTarget();
     }
 }

@@ -5,16 +5,16 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterRotation;
 
 public class RotateShooterBasic extends Command {
-  private final Shooter c_shooter;
+  private final ShooterRotation c_shooterRotation;
   private final double c_voltage;
 
-  public RotateShooterBasic(Shooter shooter, double voltage) {
-    c_shooter = shooter;
+  public RotateShooterBasic(ShooterRotation shooterRotation, double voltage) {
+    c_shooterRotation = shooterRotation;
     c_voltage = voltage;
-    addRequirements(c_shooter);
+    addRequirements(c_shooterRotation);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -26,13 +26,13 @@ public class RotateShooterBasic extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_shooter.setRotateVoltage(c_voltage);
+    c_shooterRotation.setRotateVoltage(c_voltage);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    c_shooter.setRotateVoltage(0);
+    c_shooterRotation.setRotateVoltage(0);
   }
 
   // Returns true when the command should end.

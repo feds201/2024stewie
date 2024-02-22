@@ -28,7 +28,7 @@ public class CANConstants {
     }
 
     public static class Arm {
-        public static final int kArm = 2;                 // Kraken
+        public static final int kArm = 6;                 // Kraken
     }
 
     public static class Intake {

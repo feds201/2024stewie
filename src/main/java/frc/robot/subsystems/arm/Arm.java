@@ -45,6 +45,8 @@ public class Arm extends SubsystemABC {
     armRotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
     armRotationEncoderAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
 
+    armRotationEncoder.reset();
+
     setupShuffleboard();
     setupTestCommands();
     seedNetworkTables();

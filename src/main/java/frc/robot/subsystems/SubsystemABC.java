@@ -24,10 +24,13 @@ public abstract class SubsystemABC extends SubsystemBase {
    public void setupNetworkTables(String name) { 
       tab = Shuffleboard.getTab(name);
       ntTable = NetworkTableConstants.inst.getTable(name);
-      SmartDashboard.putString("haha", ntTable.toString());
    }
 
    public SubsystemABC() {
       log = DataLogManager.getLog();
+   }
+
+   public ShuffleboardTab getShuffleboardTab() {
+      return tab;
    }
 }
