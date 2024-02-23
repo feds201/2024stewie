@@ -1,13 +1,13 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Wrist;
 
 public class RotateWristBasic extends Command {
 
-    private final Intake c_intake;
+    private final Wrist c_intake;
     private final double c_voltage;
-    public RotateWristBasic(Intake intake, double voltage) {
+    public RotateWristBasic(Wrist intake, double voltage) {
         c_intake = intake;
         c_voltage = voltage;
 

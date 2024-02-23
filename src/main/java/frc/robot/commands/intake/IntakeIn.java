@@ -5,14 +5,15 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 
 public class IntakeIn extends Command {
   /** Creates a new IntakeIn. */
-  private final Intake c_intake;
+  private final IntakeWheels c_intake;
   private final double c_intakeVoltage;
 
-  public IntakeIn(Intake intake, double intakeVoltage) {
+  public IntakeIn(IntakeWheels intake, double intakeVoltage) {
     c_intake = intake;
     c_intakeVoltage = intakeVoltage;
 

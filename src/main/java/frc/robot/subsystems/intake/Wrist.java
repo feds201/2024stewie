@@ -11,40 +11,34 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.SubsystemABC;
 
-public class Intake extends SubsystemABC {
-  private final CANSparkMax intakeWheel;
+public class Wrist extends SubsystemABC {
   private final CANSparkMax wristRotation;
-
   private final DutyCycleEncoder wristRotationEncoder;
 
   private final PIDController pid = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
 
-  private DoubleEntry intakeVoltage;
   private DoubleEntry wristVoltage;
   private DoubleEntry rotationEncoderValue;
   private DoubleEntry rotationAngle;
   private DoubleEntry rotationTarget;
 
   /** Creates a new Intake. */
-  public Intake() {
+  public Wrist() {
     super();
 
-    intakeWheel = new CANSparkMax(CANConstants.Intake.kIntakeWheels, MotorType.kBrushless);
     wristRotation = new CANSparkMax(CANConstants.Intake.kIntakeWrist, MotorType.kBrushless);
     wristRotationEncoder = new DutyCycleEncoder(DIOConstants.Intake.kIntakeRotateEncoder);
 
     pid.setIZone(IntakeConstants.kIZone);
     pid.setTolerance(IntakeConstants.kRotationTolerance);
 
-    setupNetworkTables("intake");
+    setupNetworkTables("wrist");
 
-    intakeVoltage = ntTable.getDoubleTopic("wheels_voltage").getEntry(0);
     wristVoltage = ntTable.getDoubleTopic("wrist_voltage").getEntry(0);
     rotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
     rotationAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
@@ -59,8 +53,6 @@ public class Intake extends SubsystemABC {
 
   @Override
   public void setupShuffleboard() {
-    // tab.add("intake wheel", intakeWheel);
-    // tab.add("wrist encoder", wristRotationEncoder);
     tab.add("PID Controller", pid);
   }
 
@@ -68,8 +60,6 @@ public class Intake extends SubsystemABC {
   public void periodic() {
     // This method will be called once per scheduler run
     writePeriodicOutputs();
-
-    SmartDashboard.putNumber("intake bus voltage", intakeWheel.getBusVoltage());
   }
 
   @Override
@@ -85,9 +75,7 @@ public class Intake extends SubsystemABC {
 
   @Override
   public void seedNetworkTables() {
-    setIntakeWheels(0);
     setWristVoltage(0);
-    getIntakeWheels();
     getWristVoltage();
   }
 
@@ -106,10 +94,6 @@ public class Intake extends SubsystemABC {
   }
 
   // GETTERS
-  public double getIntakeWheels() {
-    return intakeVoltage.get();
-  }
-
   public double getWristVoltage() {
     return wristVoltage.get();
   }
@@ -126,7 +110,6 @@ public class Intake extends SubsystemABC {
     return rotationTarget.get();
   }
 
-  private DoubleLogEntry intakeVoltageLog = new DoubleLogEntry(log, "/intake/target");
   private DoubleLogEntry wristVoltageLog = new DoubleLogEntry(log, "/intake/output");
   private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/intake/rotationValue");
   private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/intake/rotationAngle");
@@ -138,13 +121,6 @@ public class Intake extends SubsystemABC {
     wristVoltageLog.append(voltage);
 
     wristRotation.set(voltage);
-  }
-
-  public void setIntakeWheels(double voltage) {
-    intakeVoltage.set(voltage);
-    intakeVoltageLog.append(voltage);
-
-    intakeWheel.set(voltage);
   }
 
   public void readWristAngle() {

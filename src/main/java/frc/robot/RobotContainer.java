@@ -7,24 +7,21 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.revrobotics.Rev2mDistanceSensor;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.commands.arm.RotateArm;
-import frc.robot.commands.arm.RotateArmBasic;
 import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.RotateWristBasic;
+import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteVelocity;
@@ -37,9 +34,8 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterWheels;
-import frc.robot.subsystems.distance_sensor.DistanceSensor;
-import frc.robot.subsystems.distance_sensor.SensorManager;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.utils.Telemetry;
@@ -65,7 +61,8 @@ public class RobotContainer {
 
     private final ShooterWheels shooterWheels;
     private final ShooterRotation shooterRotation;
-    private final Intake intake;
+    private final Wrist wrist;
+    private final IntakeWheels intakeWheels;
     private final Arm arm;
     private final Climber climber;
 
@@ -79,13 +76,15 @@ public class RobotContainer {
         shooterWheels = new ShooterWheels();
         shooterRotation = new ShooterRotation(() -> arm.getArmAngle());
         climber = new Climber();
-        intake = new Intake();
+        wrist = new Wrist();
+        intakeWheels = new IntakeWheels();
 
         arm.getShuffleboardTab().add("arm", arm);
         shooterWheels.getShuffleboardTab().add("shooter wheels", shooterWheels);
         shooterRotation.getShuffleboardTab().add("shooter rotation", shooterRotation);
         climber.getShuffleboardTab().add("climber", climber);
-        intake.getShuffleboardTab().add("intake", intake);
+        wrist.getShuffleboardTab().add("wrist", wrist);
+        intakeWheels.getShuffleboardTab().add("wheels", intakeWheels);
 
         driverController = new CommandXboxController(OIConstants.kDriverController);
         operatorController = new CommandXboxController(OIConstants.kOperatorController);
@@ -99,11 +98,11 @@ public class RobotContainer {
     public void configureTestCommands() {
 
         // Display Subsystems on Shuffleboard under each of the tabs
-        shooterWheels.getShuffleboardTab().add("Run Shooter Wheels",
-                new WaitCommand(10)
-                        .alongWith(
-                                new ShootNoteVoltage(shooterWheels,
-                                        () -> ShooterConstants.kShootVoltage)));
+        // shooterWheels.getShuffleboardTab().add("Run Shooter Wheels",
+        //         new WaitCommand(10)
+        //                 .alongWith(
+        //                         new ShootNoteVoltage(shooterWheels,
+        //                                 () -> ShooterConstants.kShootVoltage)));
 
         shooterWheels.getShuffleboardTab().add("Run Shooter velocity",
                 new WaitCommand(10)
@@ -111,16 +110,16 @@ public class RobotContainer {
                                 new ShootNoteVelocity(shooterWheels,
                                         () -> ShooterConstants.kShootVelocity)));
 
-        shooterRotation.getShuffleboardTab().add("Rotate Shooter Simple",
-                new WaitCommand(10)
-                        .alongWith(
-                                new RotateShooterBasic(shooterRotation,
-                                        -ShooterConstants.kRotateSpeed) // 20%
-                                                                        // is
-                                                                        // WAY
-                                                                        // too
-                                                                        // fast
-                        ));
+        // shooterRotation.getShuffleboardTab().add("Rotate Shooter Simple",
+        //         new WaitCommand(10)
+        //                 .alongWith(
+        //                         new RotateShooterBasic(shooterRotation,
+        //                                 -ShooterConstants.kRotateSpeed) // 20%
+        //                                                                 // is
+        //                                                                 // WAY
+        //                                                                 // too
+        //                                                                 // fast
+        //                 ));
 
         shooterRotation.getShuffleboardTab().add("Rotate Shooter PID",
                 new WaitCommand(10)
@@ -133,22 +132,28 @@ public class RobotContainer {
                                                                                 // fast
                         ));
 
-        intake.getShuffleboardTab().add("Run Intake Wheels",
+        intakeWheels.getShuffleboardTab().add("Run Intake Wheels",
                 new WaitCommand(10)
                         .alongWith(
-                                new IntakeIn(intake, IntakeConstants.kWheelSpeed)));
+                                new IntakeIn(intakeWheels, IntakeConstants.kWheelSpeed)));
 
-        intake.getShuffleboardTab().add("Rotate Intake Simple",
+        wrist.getShuffleboardTab().add("Rotate Intake Simple",
                 new WaitCommand(10)
                         .alongWith(
-                                new RotateWristBasic(intake,
+                                new RotateWristBasic(wrist,
                                         IntakeConstants.kRotateSpeed)));
 
-        intake.getShuffleboardTab().add("Rotate Intake Backwards Simple",
+        wrist.getShuffleboardTab().add("Rotate Intake Backwards Simple",
                 new WaitCommand(10)
                         .alongWith(
-                                new RotateWristBasic(intake,
+                                new RotateWristBasic(wrist,
                                         -IntakeConstants.kRotateSpeed)));
+
+        wrist.getShuffleboardTab().add("Rotate Intake PID", 
+           new WaitCommand(10)
+                        .alongWith(
+                                new RotateWristPID(wrist,
+                                        IntakeConstants.kWristNotePosition)));
 
         climber.getShuffleboardTab().add("Run Climber Simple",
                 new WaitCommand(10)
@@ -156,10 +161,10 @@ public class RobotContainer {
                                 new ExtendClimber(climber,
                                         ClimberConstants.kClimberSpeed)));
 
-        arm.getShuffleboardTab().add("Rotate Arm Simple",
-                new WaitCommand(10)
-                        .alongWith(
-                                new RotateArmBasic(arm, ArmConstants.kArmSpeed)));
+        // arm.getShuffleboardTab().add("Rotate Arm Simple",
+        //         new WaitCommand(10)
+        //                 .alongWith(
+        //                         new RotateArmBasic(arm, ArmConstants.kArmSpeed)));
 
         arm.getShuffleboardTab().add("Rotate Arm",
                 new WaitCommand(10)
@@ -245,7 +250,7 @@ public class RobotContainer {
         }
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        driverController.leftTrigger().whileTrue(new IntakeIn(intake, IntakeConstants.kWheelSpeed));
+        driverController.leftTrigger().whileTrue(new IntakeIn(intakeWheels, IntakeConstants.kWheelSpeed));
 
         operatorController.x().whileTrue(new ExtendClimber(climber, ClimberConstants.kClimberSpeed));
         operatorController.leftTrigger()
