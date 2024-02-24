@@ -36,6 +36,7 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
+import frc.robot.subsystems.sensors.BreakBeamSensor;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.utils.Telemetry;
@@ -65,6 +66,7 @@ public class RobotContainer {
     private final IntakeWheels intakeWheels;
     private final Arm arm;
     private final Climber climber;
+    private final BreakBeamSensor breakBeamSensor;
 
     private final CommandXboxController driverController;
     private final CommandXboxController operatorController;
@@ -78,6 +80,7 @@ public class RobotContainer {
         climber = new Climber();
         wrist = new Wrist();
         intakeWheels = new IntakeWheels();
+        breakBeamSensor = new BreakBeamSensor();
 
         arm.getShuffleboardTab().add("arm", arm);
         shooterWheels.getShuffleboardTab().add("shooter wheels", shooterWheels);

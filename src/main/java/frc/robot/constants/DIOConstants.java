@@ -12,4 +12,9 @@ public class DIOConstants {
     public static class Arm {
         public static final int kArmRotateEncoder = 1;
     }
+
+    public static class SensorConstants {
+        public static final int breakBeamReceiverPort = 8;
+        public static final int breakBeamTransmitterPort = 7;
+    }
 }
