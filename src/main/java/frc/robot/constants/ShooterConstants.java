@@ -4,6 +4,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 public class ShooterConstants {
 
+    public static final int kFeederASpeed = 1;
+    public static final int kFeederBSpeed = 0;
+
     public static final double kRotateP = 0.01;
     public static final double kRotateI = 0.1;
     public static final double kRotateD = 0;
