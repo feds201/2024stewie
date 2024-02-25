@@ -11,7 +11,7 @@ public abstract class vision_sys extends SubsystemBase {
 
 
   public vision_sys() {
-    SmartDashboard.putBoolean("isBlueAlliance", false);
+
   }
 
   public abstract void periodic();

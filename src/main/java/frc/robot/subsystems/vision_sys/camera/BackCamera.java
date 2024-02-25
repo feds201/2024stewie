@@ -1,15 +1,12 @@
 package frc.robot.subsystems.vision_sys.camera;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.vision_sys.VisionVariables;
 import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
-
 import frc.robot.subsystems.vision_sys.utils.ObjectType;
 import frc.robot.subsystems.vision_sys.utils.VisionObject;
 import frc.robot.subsystems.vision_sys.vision_sys;
@@ -24,25 +21,49 @@ public class BackCamera extends vision_sys {
     public Random random = new Random();
 
     public BackCamera() {
-
         dashBoardManager = new DashBoardManager();
         nt_key = CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME;
         table = NetworkTableInstance.getDefault().getTable(nt_key);
         tag = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
     }
-
     @Override
-    public void periodic() {
-        //                table.getEntry("tx").getNumber(0).doubleValue(),
-        //                table.getEntry("ty").getNumber(0).doubleValue(),
-        //                table.getEntry("ta").getNumber(0).doubleValue()
-
+    public void simulationPeriodic() {
+        super.simulationPeriodic();
         tag.update(
                 random.nextDouble() * 100,
                 random.nextDouble() * 100,
                 random.nextDouble() * 360
         );
+        Periodic();
 
+    }
+    @Override
+    public void periodic() {
+        tag.update(
+                                table.getEntry("tx").getNumber(0).doubleValue(),
+                                table.getEntry("ty").getNumber(0).doubleValue(),
+                                table.getEntry("ta").getNumber(0).doubleValue()
+        );
+        Periodic();
+
+    }
+    @Override
+    public boolean CheckTarget() {
+        int target = table.getEntry("tid").getNumber(0).intValue();
+        return target == 3;
+    }
+    @Override
+    public Translation2d GetTarget(VisionObject note) {
+        return null;
+    }
+    private int setShooterAngle(VisionObject tag) {
+        return (int) tag.getAngle()[1];
+    }
+
+    public  double getDistance(VisionObject tag){
+        return tag.getDistance();
+    }
+    private void Periodic() {
         VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
 
         dashBoardManager.DashBoard(
@@ -58,27 +79,8 @@ public class BackCamera extends vision_sys {
             VisionVariables.BackCam.target = tag;
             VisionVariables.ExportedVariables.AngleForShooter = setShooterAngle(tag);
             VisionVariables.ExportedVariables.Distance = getDistance(tag);
+            SmartDashboard.putNumber("Distance", getDistance(tag));
         }
-
-    }
-
-    private int setShooterAngle(VisionObject tag) {
-        return (int) tag.getAngle()[1];
-    }
-
-    @Override
-    public boolean CheckTarget() {
-        int target = table.getEntry("tif").getNumber(0).intValue();
-        return target == 3;
-    }
-
-    public  double getDistance(VisionObject tag){
-        return tag.getDistance();
-    }
-
-    @Override
-    public Translation2d GetTarget(VisionObject note) {
-        return null;
     }
 
 
