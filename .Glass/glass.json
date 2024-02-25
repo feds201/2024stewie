@@ -1,0 +1,137 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "open": true,
+        "shooterRotation": {
+          "open": true,
+          "rotation pid controller": {
+            "open": true
+          }
+        }
+      },
+      "SmartDashboard": {
+        "open": true
+      },
+      "arm": {
+        "open": true
+      },
+      "shooterRotation": {
+        "open": true
+      },
+      "wrist": {
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
+      "/Shuffleboard/arm/Rotate Arm": "Command",
+      "/Shuffleboard/arm/arm": "Subsystem",
+      "/Shuffleboard/arm/armRotation talon": "Motor Controller",
+      "/Shuffleboard/arm/pid controller": "PIDController",
+      "/Shuffleboard/climber/Run Climber Simple": "Command",
+      "/Shuffleboard/climber/climber": "Subsystem",
+      "/Shuffleboard/intakeWheels/Run Intake Wheels": "Command",
+      "/Shuffleboard/intakeWheels/wheels": "Subsystem",
+      "/Shuffleboard/shooter/Rotate Servos": "Command",
+      "/Shuffleboard/shooter/Run Shooter velocity": "Command",
+      "/Shuffleboard/shooter/Shoot Note Full Command": "Command",
+      "/Shuffleboard/shooter/Shooter feed note position TESTING": "Command",
+      "/Shuffleboard/shooter/Slider Arm Rotation": "Command",
+      "/Shuffleboard/shooter/rotation pid controller": "PIDController",
+      "/Shuffleboard/shooter/servo thick side": "Subsystem",
+      "/Shuffleboard/shooter/shoote rotate motor": "Motor Controller",
+      "/Shuffleboard/shooter/shooter botom follower": "Motor Controller",
+      "/Shuffleboard/shooter/shooter rotation": "Subsystem",
+      "/Shuffleboard/shooter/shooter top main": "Motor Controller",
+      "/Shuffleboard/shooter/shooter wheels": "Subsystem",
+      "/Shuffleboard/shooterRotation/Rotate Shooter PID": "Command",
+      "/Shuffleboard/shooterRotation/rotation pid controller": "PIDController",
+      "/Shuffleboard/shooterRotation/shoote rotate motor": "Motor Controller",
+      "/Shuffleboard/shooterRotation/shooter rotation": "Subsystem",
+      "/Shuffleboard/shooterWheels/Rotate Servos": "Command",
+      "/Shuffleboard/shooterWheels/Run Shooter velocity": "Command",
+      "/Shuffleboard/shooterWheels/feeder left": "Subsystem",
+      "/Shuffleboard/shooterWheels/feeder right": "Subsystem",
+      "/Shuffleboard/shooterWheels/shooter botom follower": "Motor Controller",
+      "/Shuffleboard/shooterWheels/shooter top main": "Motor Controller",
+      "/Shuffleboard/shooterWheels/shooter wheels": "Subsystem",
+      "/Shuffleboard/wrist/PID Controller": "PIDController",
+      "/Shuffleboard/wrist/Rotate Intake Backwards Simple": "Command",
+      "/Shuffleboard/wrist/Rotate Intake PID": "Command",
+      "/Shuffleboard/wrist/Rotate Intake Simple": "Command",
+      "/Shuffleboard/wrist/wrist": "Subsystem",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT3)",
+    "serverTeam": "201"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 348,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/arm/output"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 267,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/arm/target"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/arm/rotation_angle"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

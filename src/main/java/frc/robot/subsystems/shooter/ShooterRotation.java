@@ -7,8 +7,10 @@ package frc.robot.subsystems.shooter;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoubleEntry;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.CANConstants.Shooter;
 import frc.robot.subsystems.SubsystemABC;
 
 public class ShooterRotation extends SubsystemABC {
@@ -31,34 +34,40 @@ public class ShooterRotation extends SubsystemABC {
   private final PIDController rotatePID;
 
   private final DoubleEntry rotateVoltage;
-  private final DoubleEntry rotateTarget ;
-  private final DoubleEntry encoderValue ;
-  private final DoubleEntry encoderAngleWithoutOffset; 
-  private final DoubleEntry encoderAngle ;
+  private final DoubleEntry rotateTarget;
+  private final DoubleEntry encoderValue;
+  private final DoubleEntry encoderAngleWithoutOffset;
+  private final DoubleEntry encoderAngle;
 
   public ShooterRotation(DoubleSupplier currentArmRotationSupplier) {
     super();
     shooterRotate = new TalonFX(CANConstants.Shooter.kShooterPivot);
     shooterRotateEncoder = new DutyCycleEncoder(DIOConstants.Shooter.kShooterRotateEncoder); // FIXME: WHAT IS THIS
                                                                                              // ENCODER VALUE
+    TalonFXConfiguration configs = new TalonFXConfiguration();
+    configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    
+    shooterRotate.getConfigurator().apply(configs);
+    
     this.currentArmRotationSupplier = currentArmRotationSupplier;
 
     rotatePID = new PIDController(ShooterConstants.kRotateP, ShooterConstants.kRotateI,
-      ShooterConstants.kRotateD);
+        ShooterConstants.kRotateD);
 
     rotatePID.setTolerance(ShooterConstants.kRotateTolerance);
     rotatePID.setIZone(ShooterConstants.kRotateIZone);
+    rotatePID.setIntegratorRange(ShooterConstants.kIMin, ShooterConstants.kIMax);
 
     SignalLogger.start();
     SignalLogger.setPath("/media/sda1/ctre-logs/");
 
-    setupNetworkTables("shooterRotation");
+    setupNetworkTables("shooter");
     rotateVoltage = ntTable.getDoubleTopic("rotate_angle").getEntry(0);
     rotateTarget = ntTable.getDoubleTopic("rotate_target").getEntry(0);
     encoderValue = ntTable.getDoubleTopic("encoder_value").getEntry(0);
     encoderAngleWithoutOffset = ntTable.getDoubleTopic("encoder_angle_no_offset").getEntry(0);
     encoderAngle = ntTable.getDoubleTopic("encoder_angle").getEntry(0);
-    
+
     shooterRotateEncoder.reset(); // REMEMBER TO RESET AT HOME
 
     setupShuffleboard();
@@ -82,12 +91,12 @@ public class ShooterRotation extends SubsystemABC {
 
   @Override
   public void setupTestCommands() {
-    
+
   }
 
   @Override
   public void seedNetworkTables() {
-    setRotateTarget(0);
+    setRotateTarget(0.001);
     setRotateVoltage(0);
     getRotateAngle();
     getRotateTarget();
@@ -111,8 +120,8 @@ public class ShooterRotation extends SubsystemABC {
     SmartDashboard.putNumber("current kP", rotatePID.getP());
     SmartDashboard.putNumber("current kI", rotatePID.getI());
     SmartDashboard.putNumber("current kD", rotatePID.getD());
-  
-    setRotateVoltage(output * -1); // positive direction is towards intake, when it should be away from intake
+
+    setRotateVoltage(output); // positive direction is towards intake, when it should be away from intake
   }
 
   @Override
@@ -176,4 +185,5 @@ public class ShooterRotation extends SubsystemABC {
     encoderAngle.set(shooterRotateEncoder.get() * 360 - currentArmRotationSupplier.getAsDouble());
     encoderAngleLog.append(shooterRotateEncoder.get() * 360 - currentArmRotationSupplier.getAsDouble());
   }
+
 }

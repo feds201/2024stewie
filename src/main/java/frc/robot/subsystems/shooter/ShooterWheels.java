@@ -35,7 +35,7 @@ public class ShooterWheels extends SubsystemABC {
     shooterTopMain.getConfigurator().apply(ShooterConstants.GetShooterConfiguration());
     shooterBottomFollower.setControl(new StrictFollower(shooterTopMain.getDeviceID()));
 
-    setupNetworkTables("shooterWheels");
+    setupNetworkTables("shooter");
     shootVelocity = ntTable.getDoubleTopic("shoot_velocity").getEntry(0);
     shootVoltage = ntTable.getDoubleTopic("shoot_voltage").getEntry(0);
  
