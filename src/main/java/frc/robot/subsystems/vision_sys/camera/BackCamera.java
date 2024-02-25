@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision_sys.camera;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.vision_sys.VisionVariables;
 import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
@@ -33,10 +34,13 @@ public class BackCamera extends vision_sys {
         VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
         dashBoardManager.DashBoard("BackCamera", tag.getX(), tag.getY(), CheckTarget(), tag.getAngle());
 
-        if (CheckTarget()) {
-            VisionVariables.BackCam.RobotTransformation.rotation = tag.getYaw();
-            VisionVariables.BackCam.RobotTransformation.x = getDistance(tag);
-        }
+        SmartDashboard.putNumber("Distance", getDistance(tag));
+        //
+//        if (CheckTarget()) {
+//            VisionVariables.BackCam.RobotTransformation.rotation = tag.getYaw();
+//            VisionVariables.BackCam.RobotTransformation.x = getDistance(tag);
+//
+//        }
 
     }
 

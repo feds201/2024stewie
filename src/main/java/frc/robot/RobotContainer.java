@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -21,8 +19,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.constants.OIConstants;
-import frc.robot.constants.SwerveConstants;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.intake.IntakeIn;
@@ -30,24 +26,23 @@ import frc.robot.commands.intake.RotateWristBasic;
 import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.commands.shooter.RotateFeeder;
 import frc.robot.commands.shooter.RotateShooter;
-import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteVelocity;
-import frc.robot.commands.shooter.ShootNoteVoltage;
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.ClimberConstants;
-import frc.robot.constants.IntakeConstants;
-import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.shooter.ShooterFeeder;
-import frc.robot.subsystems.shooter.ShooterRotation;
-import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensor;
+import frc.robot.subsystems.shooter.ShooterFeeder;
+import frc.robot.subsystems.shooter.ShooterRotation;
+import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
+import frc.robot.subsystems.vision_sys.camera.BackCamera;
+import frc.robot.subsystems.vision_sys.camera.FrontCamera;
 import frc.robot.utils.Telemetry;
+
+import java.util.Map;
 
 public class RobotContainer {
 
@@ -77,6 +72,9 @@ public class RobotContainer {
     private final IntakeWheels intakeWheels;
     private final Arm arm;
     private final Climber climber;
+
+    private final FrontCamera frontCamera;
+    private final BackCamera backCamera;
     private final BreakBeamSensor breakBeamSensor;
 
     private final CommandXboxController driverController;
@@ -94,6 +92,8 @@ public class RobotContainer {
         servoThickSide = new ShooterFeeder(ShooterConstants.kThickWheelServoPort);
         servoThinSide = new ShooterFeeder(ShooterConstants.kThinWheelServoPort);
         breakBeamSensor = new BreakBeamSensor();
+        frontCamera = new FrontCamera();
+        backCamera = new BackCamera();
 
         arm.getShuffleboardTab().add("arm", arm);
         shooterWheels.getShuffleboardTab().add("shooter wheels", shooterWheels);

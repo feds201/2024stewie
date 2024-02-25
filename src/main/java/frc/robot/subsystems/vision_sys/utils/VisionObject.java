@@ -106,19 +106,16 @@ public class VisionObject {
         switch (type) {
             case NOTE:
                 // code
-                double targetOffsetAngle_Vertical = y;
-                double limelightMountAngleDegrees = 25.0;
-                double limelightLensHeightInches = 20.0;
-                double goalHeightInches = 60.0;
-                double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-                double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-                return (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+                return 0;
             case APRILTAG:
                 // code
-                throw new IllegalArgumentException("Not implemented Yet");
-            default:
-                throw new IllegalArgumentException("Invalid type");
-        }
+              double targetOffsetAngle_Vertical = y;
+                double limelightMountAngleDegrees = 32;
+                double limelightMountAngleRadians = Math.toRadians(limelightMountAngleDegrees);
+                double limelightLensHeightMeters = 0.508; // 20 inches to meters
+                double goalHeightMeters = 1.524; // 60 inches to meters
+                double angleToGoalRadians = limelightMountAngleRadians + targetOffsetAngle_Vertical;
+                return (goalHeightMeters - limelightLensHeightMeters) / Math.tan(angleToGoalRadians);
     }
-
-}
+        return 0;
+    }}
