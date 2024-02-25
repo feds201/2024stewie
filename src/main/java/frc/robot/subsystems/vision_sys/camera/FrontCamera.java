@@ -26,7 +26,6 @@ public class FrontCamera extends vision_sys {
         note = new VisionObject(0, 0, 0, ObjectType.NOTE);
 
     }
-
     @Override
     public void simulationPeriodic() {
         super.simulationPeriodic();
@@ -35,31 +34,23 @@ public class FrontCamera extends vision_sys {
                 random.nextDouble() * 100,
                 random.nextDouble() * 360
         );
-        dashBoardManager.DashBoard(
-                "FrontCamera",
-                note.getX(),
-                note.getY(),
-                CheckTarget(),
-                note.getAngle()
-        );
-
-        VisionVariables.FrontCam.tv = (int) table.getEntry("tv").getNumber(0).doubleValue();
-        VisionVariables.FrontCam.CameraMode = table.getEntry("camMode").getNumber(0);
-
-        if (CheckTarget()) {
-            VisionVariables.FrontCam.RobotTransformation.rotation = note.getYaw();
-        }
-
+        Periodic();
     }
-
     @Override
     public void periodic() {
-
         note.update(
                                 table.getEntry("tx").getNumber(0).doubleValue(),
                                 table.getEntry("ty").getNumber(0).doubleValue(),
                                 table.getEntry("ta").getNumber(0).doubleValue()
         );
+        Periodic();
+
+    }
+    @Override
+    public boolean CheckTarget() {
+        return VisionVariables.FrontCam.tv != 0;
+    }
+    private void Periodic() {
         dashBoardManager.DashBoard(
                 "FrontCamera",
                 note.getX(),
@@ -74,19 +65,9 @@ public class FrontCamera extends vision_sys {
         if (CheckTarget()) {
             VisionVariables.FrontCam.RobotTransformation.rotation = note.getYaw();
         }
-
     }
-
-
-    @Override
-    public boolean CheckTarget() {
-        return VisionVariables.FrontCam.tv != 0;
-    }
-
-
     public Translation2d GetTarget(VisionObject note) {
         return new Translation2d(note.getX(), note.getY());
     }
-
 
 }

@@ -1,13 +1,10 @@
 package frc.robot.subsystems.vision_sys;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.vision_sys.utils.VisionObject;
-
-import java.util.Optional;
 
 public class VisionVariables {
 
-    public static Optional<DriverStation.Alliance> isBlueAlliance;
+
     public static class ExportedVariables {
         public static double Distance;
         public static int AngleForShooter;
