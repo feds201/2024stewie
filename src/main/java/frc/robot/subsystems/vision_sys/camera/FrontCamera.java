@@ -25,6 +25,7 @@ public class FrontCamera extends vision_sys {
         nt_key = CameraConstants.FrontCam.FRONT_CAMERA_NETWORK_TABLES_NAME;
         table = NetworkTableInstance.getDefault().getTable(nt_key);
         note = new VisionObject(0, 0, 0, ObjectType.NOTE);
+
     }
 
     @Override

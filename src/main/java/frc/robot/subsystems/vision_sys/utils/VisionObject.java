@@ -1,5 +1,6 @@
 package frc.robot.subsystems.vision_sys.utils;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.constants.CameraConstants;
 
 public class VisionObject {
@@ -120,5 +121,9 @@ public class VisionObject {
                 throw new IllegalArgumentException("Invalid type");
         }
     }
+    private double distanceToTag() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    }
+
 
 }
