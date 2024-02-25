@@ -1,6 +1,23 @@
+/*
+ * *****************************************************************************
+ *  * Copyright (c) 2024 FEDS 201. All rights reserved.
+ *  *
+ *  * This codebase is the property of FEDS 201 Robotics Team.
+ *  * Unauthorized copying, reproduction, or distribution of this code, or any
+ *  * portion thereof, is strictly prohibited.
+ *  *
+ *  * This code is provided "as is" and without any express or implied warranties,
+ *  * including, without limitation, the implied warranties of merchantability
+ *  * and fitness for a particular purpose.
+ *  *
+ *  * For inquiries or permissions regarding the use of this code, please contact
+ *  * feds201@gmail.com
+ *  ****************************************************************************
+ *
+ */
+
 package frc.robot.subsystems.vision_sys.utils;
 
-import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.constants.CameraConstants;
 
 public class VisionObject {
@@ -115,14 +132,9 @@ public class VisionObject {
                 double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
                 return (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
             case APRILTAG:
-                // code
-                throw new IllegalArgumentException("Not implemented Yet");
-            default:
-                throw new IllegalArgumentException("Invalid type");
+                return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         }
-    }
-    private double distanceToTag() {
-        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return 0;
     }
 
 

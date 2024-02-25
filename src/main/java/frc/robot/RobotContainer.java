@@ -1,6 +1,20 @@
-// // Copyright (c) FIRST and other WPILib contributors.
-// // Open Source Software; you can modify and/or share it under the terms of
-// // the WPILib BSD license file in the root directory of this project.
+/*
+ * *****************************************************************************
+ *  * Copyright (c) 2024 FEDS 201. All rights reserved.
+ *  *
+ *  * This codebase is the property of FEDS 201 Robotics Team.
+ *  * Unauthorized copying, reproduction, or distribution of this code, or any
+ *  * portion thereof, is strictly prohibited.
+ *  *
+ *  * This code is provided "as is" and without any express or implied warranties,
+ *  * including, without limitation, the implied warranties of merchantability
+ *  * and fitness for a particular purpose.
+ *  *
+ *  * For inquiries or permissions regarding the use of this code, please contact
+ *  * feds201@gmail.com
+ *  ****************************************************************************
+ *
+ */
 
 package frc.robot;
 
@@ -36,10 +50,10 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.vision_sys.LockTag.AprilTagLock;
 import frc.robot.subsystems.vision_sys.LockTag.Joystick;
-import frc.robot.subsystems.vision_sys.LockTag.NoteLock;
 import frc.robot.subsystems.vision_sys.LockTag.RotationSource;
 import frc.robot.subsystems.vision_sys.camera.BackCamera;
 import frc.robot.subsystems.vision_sys.camera.FrontCamera;
+import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.utils.Telemetry;
 
 public class RobotContainer {
@@ -49,12 +63,8 @@ public class RobotContainer {
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(SwerveConstants.MaxSpeed * 0.1)
-            .withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add
-                                                                          // a
-                                                                          // 10%
-                                                                          // deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                                     // driving in open loop
+            .withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
@@ -69,7 +79,8 @@ public class RobotContainer {
     private final Climber climber;
     private final FrontCamera frontCamera;
     private final BackCamera backCamera;
-    public final CommandXboxController driverController;
+    private final DashBoardManager visionManager;
+    public  final CommandXboxController driverController;
     private final CommandXboxController operatorController;
     private RotationSource TabLock = new Joystick();
 
@@ -85,8 +96,7 @@ public class RobotContainer {
         intakeWheels = new IntakeWheels();
         frontCamera = new FrontCamera();
         backCamera = new BackCamera();
-
-
+        visionManager = new DashBoardManager();
 
         arm.getShuffleboardTab().add("arm", arm);
         shooterWheels.getShuffleboardTab().add("shooter wheels", shooterWheels);
@@ -94,6 +104,8 @@ public class RobotContainer {
         climber.getShuffleboardTab().add("climber", climber);
         wrist.getShuffleboardTab().add("wrist", wrist);
         intakeWheels.getShuffleboardTab().add("wheels", intakeWheels);
+
+
 
         driverController = new CommandXboxController(OIConstants.kDriverController);
         operatorController = new CommandXboxController(OIConstants.kOperatorController);
@@ -208,6 +220,7 @@ public class RobotContainer {
                             return drive
                                     .withVelocityX(-driverController.getLeftY() * SwerveConstants.MaxSpeed)
                                     .withVelocityY(-driverController.getLeftX() * SwerveConstants.MaxSpeed)
+//                                    .withRotationalRate(-driverController.getRightX() * SwerveConstants.MaxAngularRate  );
                                     .withRotationalRate(TabLock.getR());
                         }
                 )
@@ -235,9 +248,9 @@ public class RobotContainer {
                         .onTrue(new InstantCommand(() -> TabLock = new AprilTagLock()))
                         .onFalse(new InstantCommand(() -> TabLock = new Joystick()));
 
-        driverController.x()
-                        .onTrue(new InstantCommand(() -> TabLock = new NoteLock()))
-                        .onFalse(new InstantCommand(() -> TabLock = new Joystick()));
+//        driverController.x()
+//                        .onTrue(new InstantCommand(() -> TabLock = new NoteLock()))
+//                        .onFalse(new InstantCommand(() -> TabLock = new Joystick()));
 
         // reset the field-centric heading on left bumper press
         driverController.leftBumper()

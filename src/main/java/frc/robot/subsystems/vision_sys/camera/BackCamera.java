@@ -34,7 +34,7 @@ public class BackCamera extends vision_sys {
                 random.nextDouble() * 100,
                 random.nextDouble() * 360
         );
-        Periodic();
+
 
     }
     @Override
@@ -44,26 +44,6 @@ public class BackCamera extends vision_sys {
                                 table.getEntry("ty").getNumber(0).doubleValue(),
                                 table.getEntry("ta").getNumber(0).doubleValue()
         );
-        Periodic();
-
-    }
-    @Override
-    public boolean CheckTarget() {
-        int target = table.getEntry("tid").getNumber(0).intValue();
-        return target == 3;
-    }
-    @Override
-    public Translation2d GetTarget(VisionObject note) {
-        return null;
-    }
-    private int setShooterAngle(VisionObject tag) {
-        return (int) tag.getAngle()[1];
-    }
-
-    public  double getDistance(VisionObject tag){
-        return tag.getDistance();
-    }
-    private void Periodic() {
         VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
 
         dashBoardManager.DashBoard(
@@ -78,10 +58,25 @@ public class BackCamera extends vision_sys {
         if (CheckTarget()) {
             VisionVariables.BackCam.target = tag;
             VisionVariables.ExportedVariables.AngleForShooter = setShooterAngle(tag);
-            VisionVariables.ExportedVariables.Distance = getDistance(tag);
-            SmartDashboard.putNumber("Distance", getDistance(tag));
+            VisionVariables.ExportedVariables.Distance = tag.getDistance();
+            SmartDashboard.putNumber("Distance", VisionVariables.ExportedVariables.Distance);
         }
+
     }
+    @Override
+    public boolean CheckTarget() {
+        int target = table.getEntry("tid").getNumber(0).intValue();
+        return target == 4;
+    }
+    @Override
+    public Translation2d GetTarget(VisionObject note) {
+        return null;
+    }
+    private int setShooterAngle(VisionObject tag) {
+        return (int) tag.getAngle()[1];
+    }
+
+
 
 
 }
