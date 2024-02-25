@@ -1,14 +1,10 @@
 package frc.robot.subsystems.vision_sys.LockTag;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.vision_sys.VisionVariables;
 
-public class AprilTagLock implements RotationSource {
+public class NoteLock  implements RotationSource{
 
-    NetworkTable table = NetworkTableInstance.getDefault().getTable(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
     public static PIDController rotationPID = createPIDController();
     private static PIDController createPIDController() {
         PIDController pid = new PIDController(.01, .02, .001);
@@ -19,6 +15,6 @@ public class AprilTagLock implements RotationSource {
     }
     @Override
     public double getR() {
-        return rotationPID.calculate(VisionVariables.BackCam.target.getX());
+        return rotationPID.calculate(VisionVariables.FrontCam.target.getX());
     }
 }

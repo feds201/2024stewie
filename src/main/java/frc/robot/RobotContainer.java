@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.arm.RotateArm;
@@ -34,6 +34,10 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
+import frc.robot.subsystems.vision_sys.LockTag.AprilTagLock;
+import frc.robot.subsystems.vision_sys.LockTag.Joystick;
+import frc.robot.subsystems.vision_sys.LockTag.NoteLock;
+import frc.robot.subsystems.vision_sys.LockTag.RotationSource;
 import frc.robot.subsystems.vision_sys.camera.BackCamera;
 import frc.robot.subsystems.vision_sys.camera.FrontCamera;
 import frc.robot.utils.Telemetry;
@@ -67,6 +71,7 @@ public class RobotContainer {
     private final BackCamera backCamera;
     public final CommandXboxController driverController;
     private final CommandXboxController operatorController;
+    private RotationSource TabLock = new Joystick();
 
     ShuffleboardTab commandsTab = Shuffleboard.getTab("commands");
 
@@ -203,7 +208,7 @@ public class RobotContainer {
                             return drive
                                     .withVelocityX(-driverController.getLeftY() * SwerveConstants.MaxSpeed)
                                     .withVelocityY(-driverController.getLeftX() * SwerveConstants.MaxSpeed)
-                                    .withRotationalRate(-driverController.getRightX() * SwerveConstants.MaxAngularRate);
+                                    .withRotationalRate(TabLock.getR());
                         }
                 )
         );
@@ -227,13 +232,12 @@ public class RobotContainer {
                 );
 
         driverController.y()
-                        .onTrue(
-                                new RunCommand(
-                                        () -> {
+                        .onTrue(new InstantCommand(() -> TabLock = new AprilTagLock()))
+                        .onFalse(new InstantCommand(() -> TabLock = new Joystick()));
 
-                                        }
-                                )
-                        );
+        driverController.x()
+                        .onTrue(new InstantCommand(() -> TabLock = new NoteLock()))
+                        .onFalse(new InstantCommand(() -> TabLock = new Joystick()));
 
         // reset the field-centric heading on left bumper press
         driverController.leftBumper()
