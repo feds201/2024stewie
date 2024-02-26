@@ -1,6 +1,20 @@
-// // Copyright (c) FIRST and other WPILib contributors.
-// // Open Source Software; you can modify and/or share it under the terms of
-// // the WPILib BSD license file in the root directory of this project.
+/*
+ * *****************************************************************************
+ *  * Copyright (c) 2024 FEDS 201. All rights reserved.
+ *  *
+ *  * This codebase is the property of FEDS 201 Robotics Team.
+ *  * Unauthorized copying, reproduction, or distribution of this code, or any
+ *  * portion thereof, is strictly prohibited.
+ *  *
+ *  * This code is provided "as is" and without any express or implied warranties,
+ *  * including, without limitation, the implied warranties of merchantability
+ *  * and fitness for a particular purpose.
+ *  *
+ *  * For inquiries or permissions regarding the use of this code, please contact
+ *  * feds201@gmail.com
+ *  ****************************************************************************
+ *
+ */
 
 package frc.robot;
 
@@ -17,12 +31,14 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.constants.OIConstants;
-import frc.robot.constants.SwerveConstants;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.intake.IntakeIn;
@@ -33,10 +49,7 @@ import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteVelocity;
 import frc.robot.commands.shooter.ShootNoteVoltage;
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.ClimberConstants;
-import frc.robot.constants.IntakeConstants;
-import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.shooter.ShooterFeeder;
@@ -45,8 +58,15 @@ import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensor;
+
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
+import frc.robot.subsystems.vision_sys.LockTag.AprilTagLock;
+import frc.robot.subsystems.vision_sys.LockTag.Joystick;
+import frc.robot.subsystems.vision_sys.LockTag.RotationSource;
+import frc.robot.subsystems.vision_sys.camera.BackCamera;
+import frc.robot.subsystems.vision_sys.camera.FrontCamera;
+import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.utils.Telemetry;
 
 public class RobotContainer {
@@ -56,12 +76,8 @@ public class RobotContainer {
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(SwerveConstants.MaxSpeed * 0.1)
-            .withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add
-                                                                          // a
-                                                                          // 10%
-                                                                          // deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                                     // driving in open loop
+            .withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
@@ -77,20 +93,30 @@ public class RobotContainer {
     private final IntakeWheels intakeWheels;
     private final Arm arm;
     private final Climber climber;
-    private final BreakBeamSensor breakBeamSensor;
 
+    private final FrontCamera frontCamera;
+    private final BackCamera backCamera;
+    private final DashBoardManager visionManager;
+    public  final CommandXboxController driverController;
+    private final BreakBeamSensor breakBeamSensor;
     private final CommandXboxController driverController;
+
     private final CommandXboxController operatorController;
+    private RotationSource TabLock = new Joystick();
 
     ShuffleboardTab commandsTab = Shuffleboard.getTab("commands");
+
 
     public RobotContainer() {
         arm = new Arm();
         shooterWheels = new ShooterWheels();
-        shooterRotation = new ShooterRotation(() -> arm.getArmAngle());
+        shooterRotation = new ShooterRotation(arm::getArmAngle);
         climber = new Climber();
         wrist = new Wrist();
         intakeWheels = new IntakeWheels();
+        frontCamera = new FrontCamera();
+        backCamera = new BackCamera();
+        visionManager = new DashBoardManager();
         servoThickSide = new ShooterFeeder(ShooterConstants.kThickWheelServoPort);
         servoThinSide = new ShooterFeeder(ShooterConstants.kThinWheelServoPort);
         breakBeamSensor = new BreakBeamSensor();
@@ -107,6 +133,8 @@ public class RobotContainer {
         // wrist.setDefaultCommand(new RotateWristPID(wrist, 0)); // TODO: what angle
         // does this need to be
 
+
+
         driverController = new CommandXboxController(OIConstants.kDriverController);
         operatorController = new CommandXboxController(OIConstants.kOperatorController);
         configureBindings();
@@ -119,14 +147,55 @@ public class RobotContainer {
         setupClimberCommands();
         setupIntakeCommands();
         setupShooterCommands();
-        // wrist.getShuffleboardTab().add("Deploy Intake", new RotateWristPID(wrist, ));
-
     }
 
     private void configureBindings() {
-        // Swerve
-
         final double headingTolerance = Math.toRadians(2.0); // Define a tolerance for heading alignment
+
+        drivetrain.setDefaultCommand(
+                drivetrain.applyRequest(() ->
+                        {
+                            Rotation2d desiredHeading = new Rotation2d(
+                                    driverController.getRightX(),
+                                    driverController.getRightY()
+                            );
+                            Rotation2d currentHeading = drivetrain.getRotation3d().toRotation2d();
+                            double headingDifference = desiredHeading.minus(currentHeading).getRadians();
+
+                            return drive
+                                    .withVelocityX(-driverController.getLeftY() * SwerveConstants.MaxSpeed)
+                                    .withVelocityY(-driverController.getLeftX() * SwerveConstants.MaxSpeed)
+//                                    .withRotationalRate(-driverController.getRightX() * SwerveConstants.MaxAngularRate  );
+                                    .withRotationalRate(TabLock.getR());
+                        }
+                )
+        );
+
+        driverController.a()
+                .whileTrue(
+                        drivetrain.applyRequest(() -> brake
+                        )
+                );
+
+        driverController.b()
+                .whileTrue(drivetrain
+                    .applyRequest(() -> point
+                            .withModuleDirection(
+                                    new Rotation2d(
+                                            -driverController.getLeftY(),
+                                            -driverController.getLeftX()
+                                    )
+                            )
+                    )
+                );
+
+        driverController.y()
+                        .onTrue(new InstantCommand(() -> TabLock = new AprilTagLock()))
+                        .onFalse(new InstantCommand(() -> TabLock = new Joystick()));
+
+//        driverController.x()
+//                        .onTrue(new InstantCommand(() -> TabLock = new NoteLock()))
+//                        .onFalse(new InstantCommand(() -> TabLock = new Joystick()));
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(() -> {
@@ -161,21 +230,29 @@ public class RobotContainer {
                                         -driverController.getLeftX()))));
 
         // reset the field-centric heading on left bumper press
-        driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+        driverController.leftBumper()
+                .onTrue(
+                        drivetrain.runOnce(
+                                drivetrain::seedFieldRelative
+                        )
+                );
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
-        drivetrain.registerTelemetry(logger::telemeterize);
 
-        driverController.leftTrigger().whileTrue(new IntakeIn(intakeWheels, IntakeConstants.kWheelSpeed));
 
-        // operatorController.povUp()
-        // .whileTrue(new RotateShooter(shooterRotation,
-        // ShooterConstants.kRotateSpeed));
-        // operatorController.povDown()
-        // .whileTrue(new RotateShooter(shooterRotation,
-        // -ShooterConstants.kRotateSpeed));
+        drivetrain
+                .registerTelemetry(
+                        logger::telemeterize
+                );
+        driverController.leftTrigger()
+                .whileTrue(
+                        new IntakeIn(
+                                intakeWheels,
+                                IntakeConstants.kWheelSpeed
+                        )
+                );
     }
 
     public Command getAutonomousCommand() {

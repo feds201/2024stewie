@@ -16,7 +16,33 @@
   },
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
+      "/Shuffleboard/arm/Rotate Arm": "Command",
+      "/Shuffleboard/arm/arm": "Subsystem",
+      "/Shuffleboard/arm/armRotation talon": "Motor Controller",
+      "/Shuffleboard/arm/pid controller": "PIDController",
+      "/Shuffleboard/climber/Run Climber Simple": "Command",
+      "/Shuffleboard/climber/climber": "Subsystem",
+      "/Shuffleboard/intakeWheels/Run Intake Wheels": "Command",
+      "/Shuffleboard/intakeWheels/wheels": "Subsystem",
+      "/Shuffleboard/shooterRotation/Rotate Shooter PID": "Command",
+      "/Shuffleboard/shooterRotation/rotation pid controller": "PIDController",
+      "/Shuffleboard/shooterRotation/shoote rotate motor": "Motor Controller",
+      "/Shuffleboard/shooterRotation/shooter rotation": "Subsystem",
+      "/Shuffleboard/shooterWheels/Run Shooter velocity": "Command",
+      "/Shuffleboard/shooterWheels/shooter botom follower": "Motor Controller",
+      "/Shuffleboard/shooterWheels/shooter top main": "Motor Controller",
+      "/Shuffleboard/shooterWheels/shooter wheels": "Subsystem",
+      "/Shuffleboard/wrist/PID Controller": "PIDController",
+      "/Shuffleboard/wrist/Rotate Intake Backwards Simple": "Command",
+      "/Shuffleboard/wrist/Rotate Intake PID": "Command",
+      "/Shuffleboard/wrist/Rotate Intake Simple": "Command",
+      "/Shuffleboard/wrist/wrist": "Subsystem",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d"
     },
     "windows": {
       "/FMSInfo": {
@@ -27,9 +53,6 @@
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
     "Connections": {
       "open": true
     },
