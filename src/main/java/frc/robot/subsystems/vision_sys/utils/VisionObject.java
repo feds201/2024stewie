@@ -18,9 +18,12 @@
 
 package frc.robot.subsystems.vision_sys.utils;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.constants.CameraConstants;
 
 public class VisionObject {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
     private double x;
     private double y;
     private double area;
@@ -124,17 +127,18 @@ public class VisionObject {
         switch (type) {
             case NOTE:
                 // code
+                throw new IllegalArgumentException("Not Yet Done");
+            case APRILTAG:
                 double targetOffsetAngle_Vertical = y;
-                double limelightMountAngleDegrees = 25.0;
-                double limelightLensHeightInches = 20.0;
-                double goalHeightInches = 60.0;
+                double limelightMountAngleDegrees = 30;
+                double limelightLensHeightMetres = 0.285;
+                double goalHeightMetres = 1.4;
                 double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
                 double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-                return (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-            case APRILTAG:
-                return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+                return (goalHeightMetres - limelightLensHeightMetres) / Math.tan(angleToGoalRadians);
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
         }
-        return 0;
     }
 
 
