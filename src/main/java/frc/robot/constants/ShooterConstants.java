@@ -1,21 +1,33 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ShooterConstants {
 
-    public static final double kRotateP = 0.01;
-    public static final double kRotateI = 0.1;
+    public static final int kServoThickSideSpeed = 1;
+    public static final int kServoThinSideSpeed = 0;
+
+    public static final double kRotateP = 0.013;
+    public static final double kRotateI = 0.002;
     public static final double kRotateD = 0;
 
     public static final double kRotateTolerance = 0.5;
-    public static final double kRotateIZone = 0.1;
+    public static final double kRotateIZone = Double.POSITIVE_INFINITY;
+    public static final double kIMax = 0.05;
+    public static final double kIMin = -0.05;
 
-    public static final double kShootVelocity = -50;
+    public static final double kShootVelocity = -80;
     public static final double kShootVoltage = 0.1;
 
     public static final double kRotateSpeed = 0.03;
-    public static final double kArmInnerWingSetpoint = 70; // 7 feet 10 inches
+    public static final double kArmSubwooferSetpoint = -10; // 7 feet 10 inches
+    public static final double kArm60InchSetpoint = -15;    // 5 feet away 
+    public static final double kShooterRotationFeederSetpoint = -30;
+    public static final double kRotateShooterDelay = 0;
+
+    public static final int kThickWheelServoPort = 1;
+    public static final int kThinWheelServoPort = 2;
 
     public static TalonFXConfiguration GetShooterConfiguration() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -41,6 +53,8 @@ public class ShooterConstants {
 
         configs.TorqueCurrent.PeakForwardTorqueCurrent = 40;
         configs.TorqueCurrent.PeakReverseTorqueCurrent = -40;
+
+        configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         return configs;
     }

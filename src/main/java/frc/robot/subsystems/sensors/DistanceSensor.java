@@ -2,19 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.distance_sensor;
+package frc.robot.subsystems.sensors;
 
 import com.revrobotics.Rev2mDistanceSensor;
-import com.revrobotics.Rev2mDistanceSensor.Port;
-
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.StringEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.wpilibj.smartdashboard.*;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.SubsystemABC;
-import frc.robot.subsystems.distance_sensor.SensorManager;
 
 public class DistanceSensor extends SubsystemABC {
   private Rev2mDistanceSensor sensor;

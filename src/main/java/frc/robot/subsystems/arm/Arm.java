@@ -37,6 +37,7 @@ public class Arm extends SubsystemABC {
 
     pid.setTolerance(ArmConstants.kRotationTolerance);
     pid.setIZone(ArmConstants.kIZone);
+    pid.setIntegratorRange(ArmConstants.kIMin, ArmConstants.kIMax);
     
     setupNetworkTables("arm");
     
