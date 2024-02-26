@@ -28,7 +28,7 @@ public class DistanceSensor extends SubsystemABC {
     sensorRangeLog = new DoubleLogEntry(log, "/distanceSensor" + sensorType.toString() + "/sensorRange");
     sensorNameLog = new StringLogEntry(log, "/distanceSensor" + sensorType.toString() + "/sensorName");
     
-    setSensorName(sensorType.toString());
+    setSensorName("distanceSensor");
 
     sensor = new Rev2mDistanceSensor(sensorType);
     sensor.setAutomaticMode(true);

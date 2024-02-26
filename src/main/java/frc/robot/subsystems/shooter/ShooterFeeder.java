@@ -19,7 +19,7 @@ public class ShooterFeeder extends SubsystemABC {
   public ShooterFeeder(int feederPort) {
     super();
     feeder = new Servo(feederPort);
-    setupNetworkTables("shooterFeeder");
+    setupNetworkTables("shooter");
     currentServoSpeed = ntTable.getDoubleTopic("current_servo_speed").getEntry(0);
 
     setupShuffleboard();

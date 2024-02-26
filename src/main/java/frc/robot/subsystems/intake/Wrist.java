@@ -37,7 +37,7 @@ public class Wrist extends SubsystemABC {
     pid.setIZone(IntakeConstants.kIZone);
     pid.setTolerance(IntakeConstants.kRotationTolerance);
 
-    setupNetworkTables("wrist");
+    setupNetworkTables("intake");
 
     wristVoltage = ntTable.getDoubleTopic("wrist_voltage").getEntry(0);
     rotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);

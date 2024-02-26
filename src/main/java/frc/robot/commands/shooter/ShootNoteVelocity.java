@@ -33,6 +33,7 @@ public class ShootNoteVelocity extends Command {
   @Override
   public void end(boolean interrupted) {
     c_shooterWheels.setShootVelocity(0.0);
+    c_shooterWheels.setShootVoltage(0.0); // this is to stop a wheel spin issue
   }
 
   // Returns true when the command should end.

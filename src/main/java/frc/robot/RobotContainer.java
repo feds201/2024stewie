@@ -200,13 +200,19 @@ public class RobotContainer {
         intakeWheels.getShuffleboardTab().add("Run Intake Wheels",
                 new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed));
 
+        GenericEntry wristSpeed = wrist.getShuffleboardTab()
+                .add("Wrist Speed", IntakeConstants.kRotateSpeed)
+                .withWidget(BuiltInWidgets.kNumberSlider)
+                .withProperties(Map.of("min", 0, "max", 0.3, "blockIncrement", 0.005))
+                .getEntry();
+
         wrist.getShuffleboardTab().add("Rotate Intake Simple",
                 new RotateWristBasic(wrist,
-                        () -> IntakeConstants.kRotateSpeed));
+                        () -> wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
 
         wrist.getShuffleboardTab().add("Rotate Intake Backwards Simple",
                 new RotateWristBasic(wrist,
-                        () -> -IntakeConstants.kRotateSpeed));
+                        () -> -wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
 
         wrist.getShuffleboardTab().add("Rotate Intake PID",
                 new RotateWristPID(wrist,
@@ -225,13 +231,13 @@ public class RobotContainer {
         GenericEntry shooterSpeed = shooterWheels.getShuffleboardTab()
                 .add("Shooter Velocity", -80)
                 .withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min", -100, "max", -30))
+                .withProperties(Map.of("min", -100, "max", -30, "blockIncrement", 1))
                 .getEntry();
 
         GenericEntry shooterAngle = shooterWheels.getShuffleboardTab()
                 .add("Shooter Angle", -10)
                 .withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min", -70, "max", 0))
+                .withProperties(Map.of("min", -70, "max", 0, "blockIncrement", 1))
                 .getEntry();
 
         shooterWheels.getShuffleboardTab().add("Run Shooter velocity",

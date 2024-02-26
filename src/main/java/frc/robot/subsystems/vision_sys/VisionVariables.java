@@ -11,7 +11,6 @@ public class VisionVariables {
     }
 
     public static class FrontCam {
-        
         public static int tv;
         public static VisionObject target;
         public static Number CameraMode;

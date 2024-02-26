@@ -24,7 +24,7 @@ public class IntakeWheels extends SubsystemABC {
 
     intakeWheel = new CANSparkMax(CANConstants.Intake.kIntakeWheels, MotorType.kBrushless);
 
-    setupNetworkTables("intakeWheels");
+    setupNetworkTables("intake");
 
     intakeVoltage = ntTable.getDoubleTopic("wheels_voltage").getEntry(0);
 

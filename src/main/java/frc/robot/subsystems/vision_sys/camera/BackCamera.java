@@ -10,6 +10,7 @@ import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.subsystems.vision_sys.utils.ObjectType;
 import frc.robot.subsystems.vision_sys.utils.VisionObject;
 import frc.robot.subsystems.vision_sys.vision_sys;
+import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
 
 import java.util.Random;
 
@@ -61,6 +62,9 @@ public class BackCamera extends vision_sys {
             VisionVariables.ExportedVariables.Distance = tag.getDistance();
             SmartDashboard.putNumber("Distance", VisionVariables.ExportedVariables.Distance);
         }
+
+        SmartDashboard.putNumber("limelight distance", ExportedVariables.Distance);
+        SmartDashboard.putNumber("tz", table.getEntry("TZ").getNumber(0).doubleValue());
 
     }
     @Override
