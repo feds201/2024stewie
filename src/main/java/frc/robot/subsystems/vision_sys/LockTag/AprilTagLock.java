@@ -19,8 +19,10 @@ public class AprilTagLock implements RotationSource {
         pid.setSetpoint(0); // 0 = apriltag angle
         return pid;
     }
+
     @Override
     public double getR() {
         return rotationPID.calculate(VisionVariables.BackCam.target.getX());
     }
+    
 }

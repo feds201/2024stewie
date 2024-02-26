@@ -17,7 +17,7 @@ public class ShooterConstants {
     public static final double kIMax = 0.05;
     public static final double kIMin = -0.05;
 
-    public static final double kShootVelocity = -80;
+    public static final double kShootVelocity = -100;
     public static final double kShootVoltage = 0.1;
 
     public static final double kRotateSpeed = 0.03;
