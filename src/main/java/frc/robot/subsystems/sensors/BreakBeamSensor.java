@@ -5,7 +5,6 @@
 package frc.robot.subsystems.sensors;
 
 import edu.wpi.first.networktables.BooleanEntry;
-import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.DIOConstants.*;

@@ -4,6 +4,8 @@
 
 package frc.robot.commands.climber;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.climber.Climber;
 
@@ -11,9 +13,9 @@ import frc.robot.subsystems.climber.Climber;
 public class ExtendClimber extends Command {
   /** Creates a new ExtendArm. */
   private final Climber c_climber;
-  private final double c_voltage;
+  private final DoubleSupplier c_voltage;
   
-  public ExtendClimber(Climber climber, double voltage) {
+  public ExtendClimber(Climber climber, DoubleSupplier voltage) {
     c_climber = climber;
     c_voltage = voltage;
     addRequirements(c_climber);
@@ -27,7 +29,7 @@ public class ExtendClimber extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_climber.setClimberVoltage(c_voltage);
+    c_climber.setClimberVoltage(c_voltage.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

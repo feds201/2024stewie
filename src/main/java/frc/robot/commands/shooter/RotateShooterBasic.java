@@ -4,14 +4,16 @@
 
 package frc.robot.commands.shooter;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.ShooterRotation;
 
 public class RotateShooterBasic extends Command {
   private final ShooterRotation c_shooterRotation;
-  private final double c_voltage;
+  private final DoubleSupplier c_voltage;
 
-  public RotateShooterBasic(ShooterRotation shooterRotation, double voltage) {
+  public RotateShooterBasic(ShooterRotation shooterRotation, DoubleSupplier voltage) {
     c_shooterRotation = shooterRotation;
     c_voltage = voltage;
     addRequirements(c_shooterRotation);
@@ -26,7 +28,7 @@ public class RotateShooterBasic extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_shooterRotation.setRotateVoltage(c_voltage);
+    c_shooterRotation.setRotateVoltage(c_voltage.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

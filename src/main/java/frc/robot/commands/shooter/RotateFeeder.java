@@ -4,6 +4,8 @@
 
 package frc.robot.commands.shooter;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.ShooterFeeder;
 
@@ -11,8 +13,8 @@ import frc.robot.subsystems.shooter.ShooterFeeder;
 public class RotateFeeder extends Command {
   /** Creates a new RotateFeeder. */
   private final ShooterFeeder c_ShooterFeeder;
-  private final double c_speed;
-  public RotateFeeder(ShooterFeeder shooterFeeder, double speed) {
+  private final DoubleSupplier c_speed;
+  public RotateFeeder(ShooterFeeder shooterFeeder, DoubleSupplier speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     c_ShooterFeeder = shooterFeeder;
     c_speed = speed;
@@ -26,7 +28,7 @@ public class RotateFeeder extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_ShooterFeeder.setCurrentServoSpeed(c_speed);
+    c_ShooterFeeder.setCurrentServoSpeed(c_speed.getAsDouble());
 
   }
 
