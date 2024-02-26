@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.constants.CANConstants.Shooter;
 import frc.robot.subsystems.SubsystemABC;
 
 public class ShooterRotation extends SubsystemABC {

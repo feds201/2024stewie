@@ -1,13 +1,15 @@
 package frc.robot.commands.intake;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Wrist;
 
 public class RotateWristBasic extends Command {
-
     private final Wrist c_intake;
-    private final double c_voltage;
-    public RotateWristBasic(Wrist intake, double voltage) {
+    private final DoubleSupplier c_voltage;
+   
+    public RotateWristBasic(Wrist intake, DoubleSupplier voltage) {
         c_intake = intake;
         c_voltage = voltage;
 
@@ -15,13 +17,11 @@ public class RotateWristBasic extends Command {
     }
 
     @Override
-    public void initialize() {
-        
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
-        c_intake.setWristVoltage(c_voltage);
+        c_intake.setWristVoltage(c_voltage.getAsDouble());
     }
     
     @Override

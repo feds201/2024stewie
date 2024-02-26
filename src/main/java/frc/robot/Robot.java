@@ -16,7 +16,6 @@ import frc.robot.constants.NetworkTableConstants;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-
   private RobotContainer m_robotContainer;
 
   @Override
@@ -27,7 +26,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    // m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
+    m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
 
     // Start logging data log
     DataLogManager.start();

@@ -15,7 +15,6 @@ import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.constants.CANConstants.Shooter;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
@@ -39,7 +38,7 @@ public class FeedNoteToShooter extends ParallelCommandGroup {
           new SequentialCommandGroup(
             new WaitCommand(ShooterConstants.kRotateShooterDelay),
             new ParallelDeadlineGroup(
-              new IntakeIn(wheels, -IntakeConstants.kWheelSpeed)
+              new IntakeIn(wheels, () -> -IntakeConstants.kWheelSpeed)
             )
           )
         )

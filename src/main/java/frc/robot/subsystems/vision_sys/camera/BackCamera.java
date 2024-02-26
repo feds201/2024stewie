@@ -10,12 +10,16 @@ import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.subsystems.vision_sys.utils.ObjectType;
 import frc.robot.subsystems.vision_sys.utils.VisionObject;
 import frc.robot.subsystems.vision_sys.vision_sys;
+import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
+
+import java.util.Random;
 
 public class BackCamera extends vision_sys {
     public static DashBoardManager dashBoardManager;
     public static String nt_key;
     public static NetworkTable table;
     public static VisionObject tag;
+    public Random random = new Random();
 
     public BackCamera() {
         dashBoardManager = new DashBoardManager();
@@ -23,39 +27,60 @@ public class BackCamera extends vision_sys {
         table = NetworkTableInstance.getDefault().getTable(nt_key);
         tag = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
     }
+    @Override
+    public void simulationPeriodic() {
+        super.simulationPeriodic();
+        tag.update(
+                random.nextDouble() * 100,
+                random.nextDouble() * 100,
+                random.nextDouble() * 360
+        );
 
+
+    }
     @Override
     public void periodic() {
         tag.update(
-                table.getEntry("tx").getNumber(0).doubleValue(),
-                table.getEntry("ty").getNumber(0).doubleValue(),
-                table.getEntry("ta").getNumber(0).doubleValue()
+                                table.getEntry("tx").getNumber(0).doubleValue(),
+                                table.getEntry("ty").getNumber(0).doubleValue(),
+                                table.getEntry("ta").getNumber(0).doubleValue()
         );
         VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
-        dashBoardManager.DashBoard("BackCamera", tag.getX(), tag.getY(), CheckTarget(), tag.getAngle());
 
-        SmartDashboard.putNumber("Distance", getDistance(tag));
-        //
-//        if (CheckTarget()) {
-//            VisionVariables.BackCam.RobotTransformation.rotation = tag.getYaw();
-//            VisionVariables.BackCam.RobotTransformation.x = getDistance(tag);
-//
-//        }
+        dashBoardManager.DashBoard(
+                "BackCamera",
+                tag.getX(),
+                tag.getY(),
+                CheckTarget(),
+                tag.getAngle()
+        );
+        SmartDashboard.putNumber("Estimated Shooter Angle",  setShooterAngle(tag));
+
+        if (CheckTarget()) {
+            VisionVariables.BackCam.target = tag;
+            VisionVariables.ExportedVariables.AngleForShooter = setShooterAngle(tag);
+            VisionVariables.ExportedVariables.Distance = tag.getDistance();
+            SmartDashboard.putNumber("Distance", VisionVariables.ExportedVariables.Distance);
+        }
+
+        SmartDashboard.putNumber("limelight distance", ExportedVariables.Distance);
+        SmartDashboard.putNumber("tz", table.getEntry("TZ").getNumber(0).doubleValue());
 
     }
-
     @Override
     public boolean CheckTarget() {
-        return VisionVariables.BackCam.tv != 0;
+        int target = table.getEntry("tid").getNumber(0).intValue();
+        return target == 4;
     }
-
-    public  double getDistance(VisionObject tag){
-        return tag.getDistance();
-    }
-
     @Override
     public Translation2d GetTarget(VisionObject note) {
         return null;
     }
+    private int setShooterAngle(VisionObject tag) {
+        return (int) tag.getAngle()[1];
+    }
+
+
+
 
 }

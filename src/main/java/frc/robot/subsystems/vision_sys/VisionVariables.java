@@ -3,13 +3,14 @@ package frc.robot.subsystems.vision_sys;
 import frc.robot.subsystems.vision_sys.utils.VisionObject;
 
 public class VisionVariables {
+
+
     public static class ExportedVariables {
         public static double Distance;
         public static int AngleForShooter;
     }
 
     public static class FrontCam {
-        
         public static int tv;
         public static VisionObject target;
         public static Number CameraMode;

@@ -4,15 +4,17 @@
 
 package frc.robot.commands.arm;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.arm.Arm;
 
 public class RotateArmBasic extends Command {
   /** Creates a new RotateArmBasic. */
-  double c_speed;
+  DoubleSupplier c_speed;
   Arm c_arm;
 
-  public RotateArmBasic(Arm arm, double speed) {
+  public RotateArmBasic(Arm arm, DoubleSupplier speed) {
     c_arm = arm;
     c_speed = speed;
 
@@ -27,7 +29,7 @@ public class RotateArmBasic extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_arm.setOutput(c_speed);
+    c_arm.setOutput(c_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

@@ -4,40 +4,34 @@
 
 package frc.robot.commands.intake;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
 
 public class IntakeIn extends Command {
   /** Creates a new IntakeIn. */
   private final IntakeWheels c_intake;
-  private final double c_intakeVoltage;
+  private final DoubleSupplier c_intakeVoltage;
 
-  public IntakeIn(IntakeWheels intake, double intakeVoltage) {
+  public IntakeIn(IntakeWheels intake, DoubleSupplier intakeVoltage) {
     c_intake = intake;
     c_intakeVoltage = intakeVoltage;
 
     addRequirements(c_intake);
       // use addRequirements( here to declare subsystem dependentc
-    
   }
-  
-
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_intake.setIntakeWheels(c_intakeVoltage);
+    c_intake.setIntakeWheels(c_intakeVoltage.getAsDouble());
     
   }
-
-
 
   // Called once the command ends or is interrupted.
   @Override

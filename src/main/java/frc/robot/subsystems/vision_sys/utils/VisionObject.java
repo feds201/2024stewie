@@ -1,3 +1,21 @@
+/*
+ * *****************************************************************************
+ *  * Copyright (c) 2024 FEDS 201. All rights reserved.
+ *  *
+ *  * This codebase is the property of FEDS 201 Robotics Team.
+ *  * Unauthorized copying, reproduction, or distribution of this code, or any
+ *  * portion thereof, is strictly prohibited.
+ *  *
+ *  * This code is provided "as is" and without any express or implied warranties,
+ *  * including, without limitation, the implied warranties of merchantability
+ *  * and fitness for a particular purpose.
+ *  *
+ *  * For inquiries or permissions regarding the use of this code, please contact
+ *  * feds201@gmail.com
+ *  ****************************************************************************
+ *
+ */
+
 package frc.robot.subsystems.vision_sys.utils;
 
 import frc.robot.constants.CameraConstants;
@@ -106,16 +124,18 @@ public class VisionObject {
         switch (type) {
             case NOTE:
                 // code
-                return 0;
+                double targetOffsetAngle_Vertical = y;
+                double limelightMountAngleDegrees = 25.0;
+                double limelightLensHeightInches = 20.0;
+                double goalHeightInches = 60.0;
+                double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+                double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+                return (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
             case APRILTAG:
-                // code
-              double targetOffsetAngle_Vertical = y;
-                double limelightMountAngleDegrees = 32;
-                double limelightMountAngleRadians = Math.toRadians(limelightMountAngleDegrees);
-                double limelightLensHeightMeters = 0.508; // 20 inches to meters
-                double goalHeightMeters = 1.524; // 60 inches to meters
-                double angleToGoalRadians = limelightMountAngleRadians + targetOffsetAngle_Vertical;
-                return (goalHeightMeters - limelightLensHeightMeters) / Math.tan(angleToGoalRadians);
-    }
+                return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        }
         return 0;
-    }}
+    }
+
+
+}
