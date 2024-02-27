@@ -63,9 +63,6 @@ public class BackCamera extends vision_sys {
             SmartDashboard.putNumber("Distance", VisionVariables.ExportedVariables.Distance);
         }
 
-        SmartDashboard.putNumber("limelight distance", ExportedVariables.Distance);
-        SmartDashboard.putNumber("tz", table.getEntry("TZ").getNumber(0).doubleValue());
-
     }
     @Override
     public boolean CheckTarget() {

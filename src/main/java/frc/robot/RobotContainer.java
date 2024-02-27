@@ -18,8 +18,6 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -31,12 +29,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.arm.RotateArm;
@@ -52,16 +46,14 @@ import frc.robot.commands.swerve.AimToAprilTag;
 import frc.robot.constants.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.shooter.ShooterFeeder;
-import frc.robot.subsystems.shooter.ShooterRotation;
-import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensor;
-
+import frc.robot.subsystems.shooter.ShooterFeeder;
+import frc.robot.subsystems.shooter.ShooterRotation;
+import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
-import frc.robot.subsystems.vision_sys.LockTag.AprilTagLock;
 import frc.robot.subsystems.vision_sys.LockTag.Joystick;
 import frc.robot.subsystems.vision_sys.LockTag.RotationSource;
 import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
@@ -70,6 +62,8 @@ import frc.robot.subsystems.vision_sys.camera.FrontCamera;
 import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.utils.LLDistanceToShooterAngle;
 import frc.robot.utils.Telemetry;
+
+import java.util.Map;
 
 public class RobotContainer {
 
@@ -181,28 +175,58 @@ public class RobotContainer {
                 drivetrain::seedFieldRelative));
 
     // LOAD BUTTON
-    driverController.leftBumper().whileTrue(new RotateShooter(shooterRotation, -70));
+    operatorController.leftBumper().whileTrue(new RotateShooter(shooterRotation, -70));
 
     // AUTO AIM
-    driverController.rightTrigger()
-        .onTrue(new AimToAprilTag(drivetrain, () -> driverController.getLeftX(), () -> driverController.getLeftY())
+    operatorController.rightTrigger()
+        .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX, driverController::getLeftY)
         .andThen(new ToggleRumble(driverController, 0.5)));
 
-    driverController.leftTrigger()
-    .onTrue(new ParallelCommandGroup(
-            new RotateShooter(shooterRotation, LLDistanceToShooterAngle.LLDistanceToShooterAngle(ExportedVariables.Distance)),
-            new ShootNoteVelocity(shooterWheels,
-                () -> -ShooterConstants.kShootVelocity),
-            new SequentialCommandGroup(
-                new WaitCommand(5),
-                new ParallelCommandGroup(
-                    new ParallelCommandGroup(
-                        new RotateFeeder(
-                            servoThickSide,
-                            () -> ShooterConstants.kServoThickSideSpeed),
-                        new RotateFeeder(
-                            servoThinSide,
-                            () -> ShooterConstants.kServoThinSideSpeed))))));
+//    operatorController.leftTrigger()
+//    .onTrue(new ParallelCommandGroup(
+//            new RotateShooter(shooterRotation, LLDistanceToShooterAngle.LLDistanceToShooterAngle(ExportedVariables.Distance)),
+//            new ShootNoteVelocity(shooterWheels, () -> -ShooterConstants.kShootVelocity),
+//            new SequentialCommandGroup(
+//                new WaitCommand(5),
+//                new ParallelCommandGroup(
+//                    new ParallelCommandGroup((
+//                        new RotateFeeder(servoThickSide, () -> ShooterConstants.kServoThickSideSpeed),
+//                        new RotateFeeder(servoThinSide, () -> ShooterConstants.kServoThinSideSpeed))))))
+//    .onFalse(new ParallelCommandGroup(
+//            new RotateShooter(shooterRotation, 0),
+//            new ShootNoteVelocity(shooterWheels, () -> 0),
+//            new RotateFeeder(servoThickSide, () -> 0),
+//            new RotateFeeder(servoThinSide, () -> 0)
+//            ));
+    operatorController.leftTrigger()
+
+            .onTrue(new ParallelCommandGroup(
+                    new RotateShooter(shooterRotation, LLDistanceToShooterAngle.LLDistanceToShooterAngle(ExportedVariables.Distance)),
+                    new ShootNoteVelocity(shooterWheels, () -> -ShooterConstants.kShootVelocity),
+                    new SequentialCommandGroup(
+                            new WaitCommand(5),
+                            new ParallelCommandGroup(
+                                    new ParallelCommandGroup(
+                                            new RotateFeeder(servoThickSide, () -> ShooterConstants.kServoThickSideSpeed),
+                                            new RotateFeeder(servoThinSide, () -> ShooterConstants.kServoThinSideSpeed)
+                                    )
+                            )
+                    )
+            )
+            )
+            .onFalse(new ParallelCommandGroup(
+                    new RotateShooter(shooterRotation, 0),
+                    new ShootNoteVelocity(shooterWheels, () -> 0),
+                    new SequentialCommandGroup(
+                            new ParallelCommandGroup(
+                                    new ParallelCommandGroup(
+                                            new RotateFeeder(servoThickSide, () -> 0),
+                                            new RotateFeeder(servoThinSide, () -> 0)
+                                    )
+                            )
+                    )
+            ));
+
 
   }
 

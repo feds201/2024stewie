@@ -8,8 +8,8 @@ public class ShooterConstants {
     public static final int kServoThickSideSpeed = 1;
     public static final int kServoThinSideSpeed = 0;
 
-    public static final double kRotateP = 0.013;
-    public static final double kRotateI = 0.002;
+    public static final double kRotateP = 0.008;
+    public static final double kRotateI = 0.003;
     public static final double kRotateD = 0;
 
     public static final double kRotateTolerance = 0.5;
