@@ -35,10 +35,11 @@ public class AimToAprilTag extends Command {
         c_leftX = leftX;
         c_leftY = leftY;
 
-        c_pid = new PIDController(.05, .025, .001);
-        c_pid.setTolerance(.25); // allowable angle error
+        c_pid = new PIDController(0.025, .05, .00);
+        c_pid.setTolerance(.25, 0.05); // allowable angle error
         c_pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
-        c_pid.setSetpoint(0); // 0 = apriltag angle
+        c_pid.setIntegratorRange(-0.3  , 0.3);
+        c_pid.setSetpoint(-10); // 0 = apriltag angle
         Shuffleboard.getTab("swerve").add("april tag pid", c_pid);
         
         addRequirements(swerve);
@@ -49,7 +50,7 @@ public class AimToAprilTag extends Command {
     }
 
     public boolean isFinished() {
-        return c_pid.atSetpoint();
+        return false;
     }
 
     public void execute() {

@@ -29,7 +29,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -41,7 +43,9 @@ import frc.robot.commands.intake.RotateWristBasic;
 import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.commands.shooter.RotateFeeder;
 import frc.robot.commands.shooter.RotateShooter;
+import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteVelocity;
+import frc.robot.commands.shooter.ShootNoteVoltage;
 import frc.robot.commands.swerve.AimToAprilTag;
 import frc.robot.constants.*;
 import frc.robot.subsystems.arm.Arm;
@@ -175,12 +179,18 @@ public class RobotContainer {
                 drivetrain::seedFieldRelative));
 
     // LOAD BUTTON
-    operatorController.leftBumper().whileTrue(new RotateShooter(shooterRotation, -70));
+    operatorController.leftBumper().onTrue(new RotateShooter(shooterRotation, () -> -70)).onFalse(new RotateShooterBasic(shooterRotation, () -> 0));
 
     // AUTO AIM
     operatorController.rightTrigger()
         .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX, driverController::getLeftY)
-        .andThen(new ToggleRumble(driverController, 0.5)));
+        .andThen(new ParallelCommandGroup(new ToggleRumble(driverController, 0.5)), 
+                                          new ToggleRumble(operatorController, 0.5)))
+        .onFalse(new ParallelDeadlineGroup(
+            new WaitCommand(0.2),
+            drivetrain.applyRequest(() -> brake)
+        ));
+        
 
 //    operatorController.leftTrigger()
 //    .onTrue(new ParallelCommandGroup(
@@ -199,12 +209,12 @@ public class RobotContainer {
 //            new RotateFeeder(servoThinSide, () -> 0)
 //            ));
     operatorController.leftTrigger()
-
-            .onTrue(new ParallelCommandGroup(
-                    new RotateShooter(shooterRotation, LLDistanceToShooterAngle.LLDistanceToShooterAngle(ExportedVariables.Distance)),
-                    new ShootNoteVelocity(shooterWheels, () -> -ShooterConstants.kShootVelocity),
+            .whileTrue(new ParallelCommandGroup(
+                    new RotateShooter(shooterRotation, () -> LLDistanceToShooterAngle.GetShooterAngle(ExportedVariables.Distance)),
+                    //new ShootNoteVelocity(shooterWheels, () -> ShooterConstants.kShootVelocity),
+                    new ShootNoteVoltage(shooterWheels,() -> -0.9),
                     new SequentialCommandGroup(
-                            new WaitCommand(5),
+                            new WaitCommand(3),
                             new ParallelCommandGroup(
                                     new ParallelCommandGroup(
                                             new RotateFeeder(servoThickSide, () -> ShooterConstants.kServoThickSideSpeed),
@@ -215,17 +225,21 @@ public class RobotContainer {
             )
             )
             .onFalse(new ParallelCommandGroup(
-                    new RotateShooter(shooterRotation, 0),
+                    new RotateShooterBasic(shooterRotation, () -> 0),
                     new ShootNoteVelocity(shooterWheels, () -> 0),
                     new SequentialCommandGroup(
                             new ParallelCommandGroup(
                                     new ParallelCommandGroup(
-                                            new RotateFeeder(servoThickSide, () -> 0),
-                                            new RotateFeeder(servoThinSide, () -> 0)
+                                            new RotateFeeder(servoThickSide, () -> 0.5),
+                                            new RotateFeeder(servoThinSide, () -> 0.5)
                                     )
                             )
                     )
             ));
+
+        operatorController.a().onTrue(new RotateShooter(shooterRotation, 
+        () -> LLDistanceToShooterAngle.GetShooterAngle(ExportedVariables.Distance)))
+                              .onFalse(new RotateShooterBasic(shooterRotation, () -> 0));
 
 
   }
@@ -263,7 +277,7 @@ public class RobotContainer {
   private void setupArmCommands() {
     arm.getShuffleboardTab().add("Rotate Arm",
         new RotateArm(arm,
-            ArmConstants.kArmInnerWingSetpoint));
+            () -> ArmConstants.kArmInnerWingSetpoint));
   }
 
   private void setupShooterCommands() {
@@ -271,7 +285,7 @@ public class RobotContainer {
     GenericEntry shooterSpeed = shooterWheels.getShuffleboardTab()
         .add("Shooter Velocity", -80)
         .withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", -100, "max", -30, "blockIncrement", 1))
+        .withProperties(Map.of("min", -200, "max", -30, "blockIncrement", 2))
         .getEntry();
 
     GenericEntry shooterAngle = shooterWheels.getShuffleboardTab()
@@ -293,10 +307,10 @@ public class RobotContainer {
     // ShooterConstants.kArm60InchSetpoint));
 
     shooterRotation.getShuffleboardTab().add("Slider Arm Rotation", new RotateShooter(shooterRotation,
-        ShooterConstants.kArm60InchSetpoint));
+        () -> ShooterConstants.kArm60InchSetpoint));
 
     shooterRotation.getShuffleboardTab().add("Shooter feed note position TESTING",
-        new RotateShooter(shooterRotation, -70));
+        new RotateShooter(shooterRotation, () -> -70));
 
     shooterWheels.getShuffleboardTab().add("Rotate Servos", new ParallelCommandGroup(
         new RotateFeeder(servoThickSide, () -> ShooterConstants.kServoThickSideSpeed),
@@ -304,7 +318,7 @@ public class RobotContainer {
 
     shooterRotation.getShuffleboardTab().add("Shoot Note Full Command",
         new ParallelCommandGroup(
-            new RotateShooter(shooterRotation, LLDistanceToShooterAngle.LLDistanceToShooterAngle(ExportedVariables.Distance)),
+            new RotateShooter(shooterRotation, () -> LLDistanceToShooterAngle.GetShooterAngle(ExportedVariables.Distance)),
             new ShootNoteVelocity(shooterWheels,
                 () -> shooterSpeed.getDouble(
                     ShooterConstants.kShootVelocity)),

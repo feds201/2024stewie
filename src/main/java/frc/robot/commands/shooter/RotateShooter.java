@@ -4,14 +4,16 @@
 
 package frc.robot.commands.shooter;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.ShooterRotation;
 
 public class RotateShooter extends Command {
   private final ShooterRotation c_shooterRotation;
-  private final double c_ShooterAngle;
+  private final DoubleSupplier c_ShooterAngle;
 
-  public RotateShooter(ShooterRotation shooterRotation, double shooterAngle) {
+  public RotateShooter(ShooterRotation shooterRotation, DoubleSupplier shooterAngle) {
     c_shooterRotation= shooterRotation;
     c_ShooterAngle = shooterAngle;
     addRequirements(c_shooterRotation);
@@ -21,7 +23,7 @@ public class RotateShooter extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    c_shooterRotation.setPIDTarget(c_ShooterAngle);
+    c_shooterRotation.setPIDTarget(c_ShooterAngle.getAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
