@@ -29,20 +29,16 @@ public class FeedNoteToShooter extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new RotateArm(arm, () -> ArmConstants.kArmRotationFeederSetpoint),
-      new SequentialCommandGroup(
-        new WaitCommand(ArmConstants.kArmRotationDelay),
-        new ParallelCommandGroup(
-          new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint),
-          new RotateShooter(shooterRotation, () -> ShooterConstants.kShooterRotationFeederSetpoint),
-          new SequentialCommandGroup(
-            new WaitCommand(ShooterConstants.kRotateShooterDelay),
-            new ParallelDeadlineGroup(
-              new IntakeIn(wheels, () -> -IntakeConstants.kWheelSpeed)
-            )
-          )
-        )
-      )
-    );
+        new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+        new SequentialCommandGroup(
+            new WaitCommand(ArmConstants.kArmRotationDelay),
+            new ParallelCommandGroup(
+                new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint),
+                new RotateShooter(shooterRotation,
+                    () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
+                new SequentialCommandGroup(
+                    new WaitCommand(ShooterConstants.kRotateShooterDelay),
+                    new ParallelDeadlineGroup(
+                        new IntakeIn(wheels, () -> IntakeConstants.kWheelSpeed))))));
   }
 }

@@ -7,11 +7,8 @@ package frc.robot.subsystems.shooter;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -30,7 +27,7 @@ public class ShooterRotation extends SubsystemABC {
   private final DutyCycleEncoder shooterRotateEncoder; // Through Bore Encoder
   private final DoubleSupplier currentArmRotationSupplier;
 
-  private final PIDController rotatePID;
+  private final PIDController rotatePID = ShooterConstants.RotationPIDForExternalEncoder.GetRotationPID();
 
   private final DoubleEntry rotateVoltage;
   private final DoubleEntry rotateTarget;
@@ -41,21 +38,9 @@ public class ShooterRotation extends SubsystemABC {
   public ShooterRotation(DoubleSupplier currentArmRotationSupplier) {
     super();
     shooterRotate = new TalonFX(CANConstants.Shooter.kShooterPivot);
-    shooterRotateEncoder = new DutyCycleEncoder(DIOConstants.Shooter.kShooterRotateEncoder); // FIXME: WHAT IS THIS
-                                                                                             // ENCODER VALUE
-    TalonFXConfiguration configs = new TalonFXConfiguration();
-    configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    
-    shooterRotate.getConfigurator().apply(configs);
-    
+    shooterRotateEncoder = new DutyCycleEncoder(DIOConstants.Shooter.kShooterRotateEncoder);                                                                           
+    shooterRotate.getConfigurator().apply(ShooterConstants.GetRotationConfiguration());
     this.currentArmRotationSupplier = currentArmRotationSupplier;
-
-    rotatePID = new PIDController(ShooterConstants.kRotateP, ShooterConstants.kRotateI,
-        ShooterConstants.kRotateD);
-
-    rotatePID.setTolerance(ShooterConstants.kRotateTolerance);
-    rotatePID.setIZone(ShooterConstants.kRotateIZone);
-    rotatePID.setIntegratorRange(ShooterConstants.kIMin, ShooterConstants.kIMax);
 
     SignalLogger.start();
     SignalLogger.setPath("/media/sda1/ctre-logs/");
@@ -67,10 +52,9 @@ public class ShooterRotation extends SubsystemABC {
     encoderAngleWithoutOffset = ntTable.getDoubleTopic("encoder_angle_no_offset").getEntry(0);
     encoderAngle = ntTable.getDoubleTopic("encoder_angle").getEntry(0);
 
-    shooterRotateEncoder.reset(); // REMEMBER TO RESET AT HOME
+    shooterRotateEncoder.setPositionOffset(0.9170); // REMEMBER TO RESET AT HOME
 
     setupShuffleboard();
-    setupTestCommands();
     seedNetworkTables();
   }
 
@@ -88,10 +72,6 @@ public class ShooterRotation extends SubsystemABC {
     readEncoderValue();
   }
 
-  @Override
-  public void setupTestCommands() {
-
-  }
 
   @Override
   public void seedNetworkTables() {

@@ -64,6 +64,7 @@ public class FrontCamera extends vision_sys {
 
         if (CheckTarget()) {
             VisionVariables.FrontCam.RobotTransformation.rotation = note.getYaw();
+            
         }
     }
     public Translation2d GetTarget(VisionObject note) {

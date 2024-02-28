@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
 import frc.robot.constants.IntakeConstants;
@@ -20,7 +21,7 @@ public class Wrist extends SubsystemABC {
   private final CANSparkMax wristRotation;
   private final DutyCycleEncoder wristRotationEncoder;
 
-  private final PIDController pid = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
+  private final PIDController pid = IntakeConstants.WristPID.GetWristPID();
 
   private DoubleEntry wristVoltage;
   private DoubleEntry rotationEncoderValue;
@@ -34,9 +35,6 @@ public class Wrist extends SubsystemABC {
     wristRotation = new CANSparkMax(CANConstants.Intake.kIntakeWrist, MotorType.kBrushless);
     wristRotationEncoder = new DutyCycleEncoder(DIOConstants.Intake.kIntakeRotateEncoder);
 
-    pid.setIZone(IntakeConstants.kIZone);
-    pid.setTolerance(IntakeConstants.kRotationTolerance);
-
     setupNetworkTables("intake");
 
     wristVoltage = ntTable.getDoubleTopic("wrist_voltage").getEntry(0);
@@ -44,16 +42,21 @@ public class Wrist extends SubsystemABC {
     rotationAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
     rotationTarget = ntTable.getDoubleTopic("rotation_target").getEntry(0);
 
-    wristRotationEncoder.reset();
+    SmartDashboard.putNumber("WRIST BEFORE", wristRotationEncoder.get());
+    wristRotationEncoder.setPositionOffset(0.7904);
+    SmartDashboard.putNumber("WRIST AFTER", wristRotationEncoder.get());
 
     setupShuffleboard();
-    setupTestCommands();
     seedNetworkTables();
   }
 
   @Override
   public void setupShuffleboard() {
     tab.add("PID Controller", pid);
+    // tab.add("Wrist Voltage", wristVoltage);
+    // tab.add("Rotation Encoder Value", rotationEncoderValue);
+    // tab.add("Rotation Angle", rotationAngle);
+    // tab.add("Rotation Target", rotationTarget);
   }
 
   @Override
@@ -66,11 +69,6 @@ public class Wrist extends SubsystemABC {
   public void writePeriodicOutputs() {
     readWristAngle();
     readIntakeEncoder();
-  }
-
-  @Override
-  public void setupTestCommands() {
-
   }
 
   @Override

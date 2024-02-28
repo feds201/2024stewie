@@ -56,13 +56,6 @@ public class DistanceSensor extends SubsystemABC {
   }
 
   @Override
-  public void setupTestCommands() {
-    // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'setupTestCommands'");
-  }
-
-  @Override
   public void setupShuffleboard() {
     // tab.add("sensor", sensor); // this won't work since Rev2MDistanceSensor does
     // not implement Sendable

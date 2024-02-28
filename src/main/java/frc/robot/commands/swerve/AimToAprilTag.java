@@ -2,25 +2,17 @@ package frc.robot.commands.swerve;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
+import edu.wpi.first.wpilibj2.command.Command;
+
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.CameraConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision_sys.VisionVariables;
 
 public class AimToAprilTag extends Command {
-    private final NetworkTable table = NetworkTableInstance.getDefault()
-            .getTable(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
-
-    // public static PIDController rotationPID = createPIDController();
     private final CommandSwerveDrivetrain c_swerve;
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(SwerveConstants.MaxSpeed * 0.1)

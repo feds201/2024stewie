@@ -3,53 +3,66 @@ package frc.robot.constants;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.PIDController;
+
 public class ShooterConstants {
+    public static class RotationPIDForExternalEncoder {
+        public static final double kRotateP = 0.008;
+        public static final double kRotateI = 0.003;
+        public static final double kRotateD = 0;
+
+        public static final double kRotateTolerance = 0.5;
+        public static final double kRotateIZone = Double.POSITIVE_INFINITY;
+        public static final double kIMax = 0.05;
+        public static final double kIMin = -0.05;
+
+        public static final double kArmSubwooferSetpoint = -10; // 7 feet 10 inches
+        public static final double kArm60InchSetpoint = -15; // 5 feet away
+        public static final double kShooterRotationFeederSetpoint = -30;
+
+        public static PIDController GetRotationPID() {
+            PIDController pid = new PIDController(kRotateP, kRotateI,
+                    kRotateD);
+
+            pid.setTolerance(kRotateTolerance);
+            pid.setIZone(kRotateIZone);
+            pid.setIntegratorRange(kIMin, kIMax);
+            return pid;
+        }
+    }
 
     public static final int kServoThickSideSpeed = 1;
     public static final int kServoThinSideSpeed = 0;
-
-    public static final double kRotateP = 0.008;
-    public static final double kRotateI = 0.003;
-    public static final double kRotateD = 0;
-
-    public static final double kRotateTolerance = 0.5;
-    public static final double kRotateIZone = Double.POSITIVE_INFINITY;
-    public static final double kIMax = 0.05;
-    public static final double kIMin = -0.05;
 
     public static final double kShootVelocity = -100;
     public static final double kShootVoltage = 0.1;
 
     public static final double kRotateSpeed = 0.03;
-    public static final double kArmSubwooferSetpoint = -10; // 7 feet 10 inches
-    public static final double kArm60InchSetpoint = -15;    // 5 feet away 
-    public static final double kShooterRotationFeederSetpoint = -30;
     public static final double kRotateShooterDelay = 0;
 
     public static final int kThickWheelServoPort = 1;
     public static final int kThinWheelServoPort = 2;
 
-    public static TalonFXConfiguration GetShooterConfiguration() {
+    public static TalonFXConfiguration GetWheelsConfiguration() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
         configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 2V output
         configs.Slot0.kI = 0.5; // An error of 1 rotation per second increases output by 0.5V every second
         configs.Slot0.kD = 0.0001; // A change of 1 rotation per second squared results in 0.01 volts output
         /*
-        * Voltage-based velocity requires a feed forward to account for the back-emf of
-        * the motor
-        */
+         * Voltage-based velocity requires a feed forward to account for the back-emf of
+         * the motor
+         */
         configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12
-                                // volts / Rotation per second
+                                 // volts / Rotation per second
 
         configs.MotionMagic.MotionMagicCruiseVelocity = 80;
         configs.MotionMagic.MotionMagicAcceleration = 160;
         configs.MotionMagic.MotionMagicJerk = 1600;
 
-
         // Peak output of 8 volts
-        configs.Voltage.PeakForwardVoltage = 8;
-        configs.Voltage.PeakReverseVoltage = -8;
+        configs.Voltage.PeakForwardVoltage = 0.9 * 12;
+        configs.Voltage.PeakReverseVoltage = -0.9 * 12;
 
         configs.TorqueCurrent.PeakForwardTorqueCurrent = 40;
         configs.TorqueCurrent.PeakReverseTorqueCurrent = -40;
@@ -58,9 +71,16 @@ public class ShooterConstants {
 
         return configs;
     }
+
+    public static TalonFXConfiguration GetRotationConfiguration() {
+        TalonFXConfiguration configs = new TalonFXConfiguration();
+        configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        return configs;
+    }
 }
 
-/* Full Motor Configuration Old Code
+/*
+ * Full Motor Configuration Old Code
  * 
  * TalonFXConfiguration configs = new TalonFXConfiguration();
  * 

@@ -4,21 +4,17 @@
 
 package frc.robot.commands.shooter;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.shooter.ShooterFeeder;
+import frc.robot.subsystems.shooter.ShooterServos;
 
 
-public class RotateFeeder extends Command {
+public class EjectNote extends Command {
   /** Creates a new RotateFeeder. */
-  private final ShooterFeeder c_ShooterFeeder;
-  private final DoubleSupplier c_speed;
-  public RotateFeeder(ShooterFeeder shooterFeeder, DoubleSupplier speed) {
+  private final ShooterServos c_servos;
+  public EjectNote(ShooterServos servos) {
     // Use addRequirements() here to declare subsystem dependencies.
-    c_ShooterFeeder = shooterFeeder;
-    c_speed = speed;
-    addRequirements(c_ShooterFeeder);
+    c_servos = servos;
+    addRequirements(c_servos);
   }
 
   // Called when the command is initially scheduled.
@@ -28,14 +24,14 @@ public class RotateFeeder extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    c_ShooterFeeder.setCurrentServoSpeed(c_speed.getAsDouble());
+    c_servos.ejectNote();
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     c_ShooterFeeder.setCurrentServoSpeed(0.5);
+     c_servos.stopServos();
   }
 
   // Returns true when the command should end.

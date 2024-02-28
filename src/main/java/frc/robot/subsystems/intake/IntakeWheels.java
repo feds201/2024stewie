@@ -29,7 +29,6 @@ public class IntakeWheels extends SubsystemABC {
     intakeVoltage = ntTable.getDoubleTopic("wheels_voltage").getEntry(0);
 
     setupShuffleboard();
-    setupTestCommands();
     seedNetworkTables();
   }
 
@@ -48,11 +47,6 @@ public class IntakeWheels extends SubsystemABC {
 
   @Override
   public void writePeriodicOutputs() {
-
-  }
-
-  @Override
-  public void setupTestCommands() {
 
   }
 

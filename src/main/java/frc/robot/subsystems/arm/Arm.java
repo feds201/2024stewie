@@ -19,25 +19,21 @@ public class Arm extends SubsystemABC {
   private final TalonFX armRotation; // FIXME: Set encoder soft limits
   private final DutyCycleEncoder armRotationEncoder;
 
-  private final PIDController pid = new PIDController(
-      ArmConstants.kP,
-      ArmConstants.kI,
-      ArmConstants.kD);
+  private final PIDController pid = ArmConstants.ArmPIDForExternalEncoder.GetArmPID();
 
   private DoubleEntry armTarget;
   private DoubleEntry armOutput;
   private DoubleEntry armRotationEncoderValue;
   private DoubleEntry armRotationEncoderAngle;
+  private DoubleEntry armInternalEncoderValue;
+  private DoubleEntry armInternalEncoderAngle;
 
   public Arm() {
     super();
     
     armRotation = new TalonFX(CANConstants.Arm.kArm);
+    armRotation.getConfigurator().apply(ArmConstants.GetArmMotorConfiguration());
     armRotationEncoder = new DutyCycleEncoder(DIOConstants.Arm.kArmRotateEncoder);
-
-    pid.setTolerance(ArmConstants.kRotationTolerance);
-    pid.setIZone(ArmConstants.kIZone);
-    pid.setIntegratorRange(ArmConstants.kIMin, ArmConstants.kIMax);
     
     setupNetworkTables("arm");
     
@@ -45,17 +41,13 @@ public class Arm extends SubsystemABC {
     armOutput = ntTable.getDoubleTopic("output").getEntry(0);
     armRotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
     armRotationEncoderAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
+    armInternalEncoderValue = ntTable.getDoubleTopic("rotation_value_internal").getEntry(0);
+    armInternalEncoderAngle = ntTable.getDoubleTopic("rotation_angle_internal").getEntry(0);
 
-    armRotationEncoder.reset();
+    armRotationEncoder.setPositionOffset(0.3473);
 
     setupShuffleboard();
-    setupTestCommands();
     seedNetworkTables();
-  }
-
-  @Override
-  public void setupTestCommands() {
-
   }
 
   @Override
@@ -88,10 +80,6 @@ public class Arm extends SubsystemABC {
 
   public void stopArmRotation() {
     this.setOutput(0);
-  }
-
-  public void resetEncoder() {
-    armRotationEncoder.reset();
   }
 
   @Override
@@ -127,6 +115,8 @@ public class Arm extends SubsystemABC {
   private DoubleLogEntry armOutputLog = new DoubleLogEntry(log, "/arm/output");
   private DoubleLogEntry armRotationEncoderValueLog = new DoubleLogEntry(log, "/arm/rotationValue");
   private DoubleLogEntry armRotationEncoderAngleLog = new DoubleLogEntry(log, "/arm/rotationAngle");
+  private DoubleLogEntry armInternalEncoderValueLog = new DoubleLogEntry(log, "/arm/internalValue");
+  private DoubleLogEntry armInternalEncoderAngleLog = new DoubleLogEntry(log, "/arm/internalAngle");
 
   // SETTERS
   public void setOutput(double output) {
@@ -149,5 +139,15 @@ public class Arm extends SubsystemABC {
   public void readRotationEncoder() {
     armRotationEncoderValue.set(armRotationEncoder.get());
     armRotationEncoderValueLog.append(armRotationEncoderValue.get());
+  }
+
+  public void readArmAngleInternal() {
+    armInternalEncoderAngle.set(armRotation.getPosition().getValueAsDouble() / ArmConstants.kArmGearReduction);
+    armInternalEncoderAngleLog.append(armInternalEncoderAngle.get());
+  }
+
+  public void readInternalEncoder() {
+    armInternalEncoderValue.set(armRotation.getPosition().getValueAsDouble());
+    armInternalEncoderValueLog.append(armInternalEncoderValue.get());
   }
 }

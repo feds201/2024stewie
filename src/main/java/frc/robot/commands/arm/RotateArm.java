@@ -24,7 +24,6 @@ public class RotateArm extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        c_arm.resetEncoder();
         c_arm.setPIDTarget(c_angle.getAsDouble());
     }
 

@@ -36,20 +36,12 @@ public class BreakBeamSensor extends SubsystemABC {
 
   @Override
   public void seedNetworkTables() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'seedNetworkTables'");
   }
 
   @Override
   public void writePeriodicOutputs() {
     // receiver.get();
     SmartDashboard.putBoolean("Beam Broken", receiver.get());
-  }
-
-  @Override
-  public void setupTestCommands() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setupTestCommands'");
   }
 
   @Override

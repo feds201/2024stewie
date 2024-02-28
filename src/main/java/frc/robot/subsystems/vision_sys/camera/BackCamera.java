@@ -10,7 +10,6 @@ import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.subsystems.vision_sys.utils.ObjectType;
 import frc.robot.subsystems.vision_sys.utils.VisionObject;
 import frc.robot.subsystems.vision_sys.vision_sys;
-import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
 
 import java.util.Random;
 

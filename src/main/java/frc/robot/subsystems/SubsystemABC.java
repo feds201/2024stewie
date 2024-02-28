@@ -17,7 +17,6 @@ public abstract class SubsystemABC extends SubsystemBase {
 
    public abstract void seedNetworkTables();
    public abstract void writePeriodicOutputs();
-   public abstract void setupTestCommands();
    public abstract void setupShuffleboard();
    
    public void setupNetworkTables(String name) { 

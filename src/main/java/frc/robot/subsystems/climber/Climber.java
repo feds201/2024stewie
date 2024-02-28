@@ -31,7 +31,6 @@ public class Climber extends SubsystemABC {
     climberVoltage = ntTable.getDoubleTopic("climber_voltage").getEntry(0);
 
     setupShuffleboard();
-    setupTestCommands();
     seedNetworkTables();
   }
   
@@ -55,10 +54,6 @@ public class Climber extends SubsystemABC {
   @Override
   public void writePeriodicOutputs() {
     // write encoder values here!
-  }
-
-  @Override
-  public void setupTestCommands() {
   }
   
   
