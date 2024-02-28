@@ -39,16 +39,17 @@ public class FrontCamera extends vision_sys {
     @Override
     public void periodic() {
         note.update(
-                                table.getEntry("tx").getNumber(0).doubleValue(),
-                                table.getEntry("ty").getNumber(0).doubleValue(),
-                                table.getEntry("ta").getNumber(0).doubleValue()
+                table.getEntry("tx").getNumber(0).doubleValue(),
+                table.getEntry("ty").getNumber(0).doubleValue(),
+                table.getEntry("ta").getNumber(0).doubleValue()
         );
         Periodic();
 
     }
     @Override
     public boolean CheckTarget() {
-        return VisionVariables.FrontCam.tv != 0;
+//        return VisionVariables.FrontCam.tv != 0;
+        return true;
     }
     private void Periodic() {
         dashBoardManager.DashBoard(
@@ -58,13 +59,14 @@ public class FrontCamera extends vision_sys {
                 CheckTarget(),
                 note.getAngle()
         );
+//        VisionVariables.FrontCam.distance = note.getDistance();
+//        SmartDashboard.putNumber("Note-Distance",note.getDistance());
 
         VisionVariables.FrontCam.tv = (int) table.getEntry("tv").getNumber(0).doubleValue();
         VisionVariables.FrontCam.CameraMode = table.getEntry("camMode").getNumber(0);
 
         if (CheckTarget()) {
             VisionVariables.FrontCam.RobotTransformation.rotation = note.getYaw();
-            
         }
     }
     public Translation2d GetTarget(VisionObject note) {

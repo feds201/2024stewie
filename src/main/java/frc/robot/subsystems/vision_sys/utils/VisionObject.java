@@ -126,7 +126,7 @@ public class VisionObject {
     public double getDistance() {
         switch (type) {
             case NOTE:
-                return 0;
+                throw new IllegalArgumentException("Finish the code first before doing something stupid");
             case APRILTAG:
                 double targetOffsetAngle_Vertical = y;
                 double limelightMountAngleDegrees = 30;
