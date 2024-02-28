@@ -22,7 +22,6 @@ public class AimToAprilTag extends Command {
 
     // public static PIDController rotationPID = createPIDController();
     private final CommandSwerveDrivetrain c_swerve;
-    private final PIDController c_pid;
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(SwerveConstants.MaxSpeed * 0.1)
       .withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1)
@@ -34,19 +33,12 @@ public class AimToAprilTag extends Command {
         c_swerve = swerve;
         c_leftX = leftX;
         c_leftY = leftY;
-
-        c_pid = new PIDController(0.025, .05, .00);
-        c_pid.setTolerance(.25, 0.05); // allowable angle error
-        c_pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
-        c_pid.setIntegratorRange(-0.3  , 0.3);
-        c_pid.setSetpoint(-10); // 0 = apriltag angle
-        Shuffleboard.getTab("swerve").add("april tag pid", c_pid);
         
         addRequirements(swerve);
     }
 
     public void initialize() {
-
+        c_swerve.resetPID();
     }
 
     public boolean isFinished() {
@@ -59,7 +51,7 @@ public class AimToAprilTag extends Command {
                   * SwerveConstants.MaxSpeed)
               .withVelocityY(-c_leftY.getAsDouble()
                   * SwerveConstants.MaxSpeed)
-              .withRotationalRate(c_pid.calculate(VisionVariables.BackCam.target.getX())));
+              .withRotationalRate(c_swerve.getPIDRotation(VisionVariables.BackCam.target.getX())));
       
     }
 

@@ -137,6 +137,8 @@ public class RobotContainer {
     setupClimberCommands();
     setupIntakeCommands();
     setupShooterCommands();
+
+    Shuffleboard.getTab("swerve").add("Swerve PID", drivetrain.pid);
   }
 
   private void configureDefaultCommands() {
