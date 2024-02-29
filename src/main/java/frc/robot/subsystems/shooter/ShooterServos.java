@@ -26,8 +26,8 @@ public class ShooterServos extends SubsystemABC {
 
   public ShooterServos() {
     super();
-    servoThickSide = new Servo(ShooterConstants.kServoThickSideSpeed);
-    servoThinSide = new Servo(ShooterConstants.kServoThinSideSpeed);
+    servoThickSide = new Servo(ShooterConstants.kThickWheelServoPort);
+    servoThinSide = new Servo(ShooterConstants.kThinWheelServoPort);
 
     setupNetworkTables("shooter");
     thickSideSpeed = ntTable.getDoubleTopic("thick_side_speed").getEntry(0.5);

@@ -8,7 +8,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +30,8 @@ public class Wrist extends SubsystemABC {
   private DoubleEntry rotationAngle;
   private DoubleEntry rotationTarget;
 
+  private BooleanEntry failure;
+
   /** Creates a new Intake. */
   public Wrist() {
     super();
@@ -41,9 +45,10 @@ public class Wrist extends SubsystemABC {
     rotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
     rotationAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
     rotationTarget = ntTable.getDoubleTopic("rotation_target").getEntry(0);
+    failure = ntTable.getBooleanTopic("rotation_target").getEntry(false);
 
     SmartDashboard.putNumber("WRIST BEFORE", wristRotationEncoder.get());
-    wristRotationEncoder.setPositionOffset(0.7904);
+    wristRotationEncoder.setPositionOffset(0.7439);
     SmartDashboard.putNumber("WRIST AFTER", wristRotationEncoder.get());
 
     setupShuffleboard();
@@ -83,8 +88,13 @@ public class Wrist extends SubsystemABC {
   }
 
   public void setPIDTarget(double target) {
-    setTarget(target);
-    pid.setSetpoint(target);
+    if(target < 0  || target > 230) 
+    {
+      setFailure(true);
+    } else {
+      setTarget(target);
+      pid.setSetpoint(target);
+    }
   }
 
   public boolean pidAtSetpoint() {
@@ -108,17 +118,22 @@ public class Wrist extends SubsystemABC {
     return rotationTarget.get();
   }
 
+  public boolean getFailure() {
+    return failure.get();
+  }
+
   private DoubleLogEntry wristVoltageLog = new DoubleLogEntry(log, "/intake/output");
   private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/intake/rotationValue");
   private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/intake/rotationAngle");
   private DoubleLogEntry rotationTargetLog = new DoubleLogEntry(log, "/intake/rotationTarget");
+  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/intake/error");
 
   // SETTERS
   public void setWristVoltage(double voltage) {
     wristVoltage.set(voltage);
     wristVoltageLog.append(voltage);
 
-    wristRotation.set(voltage);
+    wristRotation.set(voltage); // TODO FIGURE OUT HOW TO CAP THIS
   }
 
   public void readWristAngle() {
@@ -134,5 +149,10 @@ public class Wrist extends SubsystemABC {
   public void setTarget(double target) {
     rotationTarget.set(target);
     rotationTargetLog.append(target);
+  }
+
+  public void setFailure(boolean failureValue) {
+    failure.set(failureValue);
+    failureLog.append(failureValue);
   }
 }

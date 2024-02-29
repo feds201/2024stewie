@@ -6,7 +6,9 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.constants.ArmConstants;
@@ -27,6 +29,7 @@ public class Arm extends SubsystemABC {
   private DoubleEntry armRotationEncoderAngle;
   private DoubleEntry armInternalEncoderValue;
   private DoubleEntry armInternalEncoderAngle;
+  private BooleanEntry failure;
 
   public Arm() {
     super();
@@ -43,6 +46,7 @@ public class Arm extends SubsystemABC {
     armRotationEncoderAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
     armInternalEncoderValue = ntTable.getDoubleTopic("rotation_value_internal").getEntry(0);
     armInternalEncoderAngle = ntTable.getDoubleTopic("rotation_angle_internal").getEntry(0);
+    failure = ntTable.getBooleanTopic("rotation_angle_internal").getEntry(false);
 
     armRotationEncoder.setPositionOffset(0.3473);
 
@@ -111,12 +115,17 @@ public class Arm extends SubsystemABC {
     return armRotationEncoderValue.get();
   }
 
+  public boolean getFailure() {
+    return failure.get();
+  }
+
   private DoubleLogEntry armTargetLog = new DoubleLogEntry(log, "/arm/target");
   private DoubleLogEntry armOutputLog = new DoubleLogEntry(log, "/arm/output");
   private DoubleLogEntry armRotationEncoderValueLog = new DoubleLogEntry(log, "/arm/rotationValue");
   private DoubleLogEntry armRotationEncoderAngleLog = new DoubleLogEntry(log, "/arm/rotationAngle");
   private DoubleLogEntry armInternalEncoderValueLog = new DoubleLogEntry(log, "/arm/internalValue");
   private DoubleLogEntry armInternalEncoderAngleLog = new DoubleLogEntry(log, "/arm/internalAngle");
+  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/arm/internalAngle");
 
   // SETTERS
   public void setOutput(double output) {
@@ -129,6 +138,11 @@ public class Arm extends SubsystemABC {
   public void setTarget(double target) {
     armTarget.set(target);
     armTargetLog.append(target);
+  }
+
+  public void setFailure(boolean failureValue) {
+    failure.set(failureValue);
+    failureLog.append(failureValue);
   }
 
   public void readArmAngle() {

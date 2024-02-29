@@ -9,8 +9,8 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class ArmConstants {
    public static class ArmPIDForExternalEncoder {
-      public static final double kP = 0.012;
-      public static final double kI = 0.002;
+      public static final double kP = 0.;
+      public static final double kI = 0.;
       public static final double kD = 0;
       public static final double kF = 0;
 

@@ -25,7 +25,6 @@ public class EjectNote extends Command {
   @Override
   public void execute() {
     c_servos.ejectNote();
-
   }
 
   // Called once the command ends or is interrupted.

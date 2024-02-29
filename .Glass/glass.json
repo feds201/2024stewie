@@ -1,5 +1,8 @@
 {
   "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    },
     "transitory": {
       "Shuffleboard": {
         "open": true,
@@ -14,6 +17,15 @@
         "open": true
       },
       "arm": {
+        "open": true
+      },
+      "distance_sensor": {
+        "open": true
+      },
+      "intake": {
+        "open": true
+      },
+      "irsensor": {
         "open": true
       },
       "shooterRotation": {
@@ -32,14 +44,29 @@
       "/Shuffleboard/arm/pid controller": "PIDController",
       "/Shuffleboard/climber/Run Climber Simple": "Command",
       "/Shuffleboard/climber/climber": "Subsystem",
+      "/Shuffleboard/intake/PID Controller": "PIDController",
+      "/Shuffleboard/intake/Rotate Idle Position": "Command",
+      "/Shuffleboard/intake/Rotate Intake Backwards Simple": "Command",
+      "/Shuffleboard/intake/Rotate Intake Simple": "Command",
+      "/Shuffleboard/intake/Rotate Note Position": "Command",
+      "/Shuffleboard/intake/Rotate Shooter Position": "Command",
+      "/Shuffleboard/intake/Rotate until note in intake": "Command",
+      "/Shuffleboard/intake/Run Intake Wheels": "Command",
+      "/Shuffleboard/intake/Run Intake Wheels Backwards": "Command",
+      "/Shuffleboard/intake/wheels": "Subsystem",
+      "/Shuffleboard/intake/wrist": "Subsystem",
       "/Shuffleboard/intakeWheels/Run Intake Wheels": "Command",
       "/Shuffleboard/intakeWheels/wheels": "Subsystem",
+      "/Shuffleboard/irsensor/BreakBeam": "Digital Input",
       "/Shuffleboard/shooter/Rotate Servos": "Command",
       "/Shuffleboard/shooter/Run Shooter velocity": "Command",
       "/Shuffleboard/shooter/Shoot Note Full Command": "Command",
       "/Shuffleboard/shooter/Shooter feed note position TESTING": "Command",
       "/Shuffleboard/shooter/Slider Arm Rotation": "Command",
+      "/Shuffleboard/shooter/Spin Servos": "Command",
+      "/Shuffleboard/shooter/Stop Servos": "Command",
       "/Shuffleboard/shooter/rotation pid controller": "PIDController",
+      "/Shuffleboard/shooter/servo": "Subsystem",
       "/Shuffleboard/shooter/servo thick side": "Subsystem",
       "/Shuffleboard/shooter/shoote rotate motor": "Motor Controller",
       "/Shuffleboard/shooter/shooter botom follower": "Motor Controller",
@@ -57,6 +84,7 @@
       "/Shuffleboard/shooterWheels/shooter botom follower": "Motor Controller",
       "/Shuffleboard/shooterWheels/shooter top main": "Motor Controller",
       "/Shuffleboard/shooterWheels/shooter wheels": "Subsystem",
+      "/Shuffleboard/swerve/Swerve PID": "PIDController",
       "/Shuffleboard/wrist/PID Controller": "PIDController",
       "/Shuffleboard/wrist/Rotate Intake Backwards Simple": "Command",
       "/Shuffleboard/wrist/Rotate Intake PID": "Command",
@@ -69,6 +97,9 @@
     }
   },
   "NetworkTables Info": {
+    "Connections": {
+      "open": true
+    },
     "visible": true
   },
   "NetworkTables Settings": {
@@ -109,7 +140,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 267,
+          "height": 336,
           "series": [
             {
               "color": [
@@ -128,6 +159,15 @@
                 1.0
               ],
               "id": "NT:/arm/rotation_angle"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/current angle"
             }
           ]
         }

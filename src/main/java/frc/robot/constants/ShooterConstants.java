@@ -7,8 +7,8 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class ShooterConstants {
     public static class RotationPIDForExternalEncoder {
-        public static final double kRotateP = 0.008;
-        public static final double kRotateI = 0.003;
+        public static final double kRotateP = 0.012;
+        public static final double kRotateI = 0.001;
         public static final double kRotateD = 0;
 
         public static final double kRotateTolerance = 0.5;
@@ -31,8 +31,8 @@ public class ShooterConstants {
         }
     }
 
-    public static final int kServoThickSideSpeed = 1;
-    public static final int kServoThinSideSpeed = 0;
+    public static final int kServoThickSideSpeed = 0;
+    public static final int kServoThinSideSpeed = 1;
 
     public static final double kShootVelocity = -100;
     public static final double kShootVoltage = 0.1;
