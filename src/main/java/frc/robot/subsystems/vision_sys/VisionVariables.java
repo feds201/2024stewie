@@ -14,6 +14,8 @@ public class VisionVariables {
         public static int tv;
         public static VisionObject target;
         public static Number CameraMode;
+        public static double distance;
+
         public static class RobotTransformation {
             public static double x;
             public static double y;

@@ -39,6 +39,7 @@
       "/Shuffleboard/shooter/Shooter feed note position TESTING": "Command",
       "/Shuffleboard/shooter/Slider Arm Rotation": "Command",
       "/Shuffleboard/shooter/rotation pid controller": "PIDController",
+      "/Shuffleboard/shooter/servo": "Subsystem",
       "/Shuffleboard/shooter/servo thick side": "Subsystem",
       "/Shuffleboard/shooter/shoote rotate motor": "Motor Controller",
       "/Shuffleboard/shooter/shooter botom follower": "Motor Controller",

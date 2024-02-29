@@ -26,6 +26,7 @@ public class BackCamera extends vision_sys {
         table = NetworkTableInstance.getDefault().getTable(nt_key);
         tag = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
     }
+
     @Override
     public void simulationPeriodic() {
         super.simulationPeriodic();
@@ -34,18 +35,35 @@ public class BackCamera extends vision_sys {
                 random.nextDouble() * 100,
                 random.nextDouble() * 360
         );
-
-
+        Periodic();
     }
+
     @Override
     public void periodic() {
         tag.update(
-                                table.getEntry("tx").getNumber(0).doubleValue(),
-                                table.getEntry("ty").getNumber(0).doubleValue(),
-                                table.getEntry("ta").getNumber(0).doubleValue()
+                table.getEntry("tx").getNumber(0).doubleValue(),
+                table.getEntry("ty").getNumber(0).doubleValue(),
+                table.getEntry("ta").getNumber(0).doubleValue()
         );
         VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
 
+
+    }
+
+    @Override
+    public boolean CheckTarget() {
+        int target = table.getEntry("tid").getNumber(0).intValue();
+        if (target == 4){return true;}else return target== 7;
+    }
+
+    public Translation2d GetTarget(VisionObject note) {
+        return null;
+    }
+    private int setShooterAngle(VisionObject tag) {
+        return (int) tag.getAngle()[1];
+    }
+
+    private void Periodic(){
         dashBoardManager.DashBoard(
                 "BackCamera",
                 tag.getX(),
@@ -61,22 +79,7 @@ public class BackCamera extends vision_sys {
             VisionVariables.ExportedVariables.Distance = tag.getDistance();
             SmartDashboard.putNumber("Distance", VisionVariables.ExportedVariables.Distance);
         }
-
     }
-    @Override
-    public boolean CheckTarget() {
-        int target = table.getEntry("tid").getNumber(0).intValue();
-        return target == 4;
-    }
-    @Override
-    public Translation2d GetTarget(VisionObject note) {
-        return null;
-    }
-    private int setShooterAngle(VisionObject tag) {
-        return (int) tag.getAngle()[1];
-    }
-
-
 
 
 }
