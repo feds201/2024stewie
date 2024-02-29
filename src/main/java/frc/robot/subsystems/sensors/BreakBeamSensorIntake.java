@@ -16,7 +16,7 @@ public class BreakBeamSensorIntake extends SubsystemABC {
   private final BooleanEntry beamBrokenIntake;
 
   public BreakBeamSensorIntake() {
-    setupNetworkTables("irsensor");
+    setupNetworkTables("irsensor_intake");
 
     // transmitter = new DigitalInput(SensorConstants.breakBeamTransmitterPort);
     receiverIntake = new DigitalInput(SensorConstants.intakeBreakBeamReceiverPort);

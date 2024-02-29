@@ -37,13 +37,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Intake.IntakeIn;
+import frc.robot.commands.Intake.IntakeUntilNoteIn;
+import frc.robot.commands.Intake.RotateWristBasic;
+import frc.robot.commands.Intake.RotateWristPID;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.controller.ToggleRumble;
-import frc.robot.commands.intake.IntakeIn;
-import frc.robot.commands.intake.IntakeUntilNoteIn;
-import frc.robot.commands.intake.RotateWristBasic;
-import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.commands.shooter.StopServos;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooter;
@@ -54,13 +54,12 @@ import frc.robot.commands.shooter.ShootNoteVoltage;
 import frc.robot.commands.swerve.AimToAprilTag;
 import frc.robot.constants.*;
 import frc.robot.constants.DIOConstants.Intake;
+import frc.robot.subsystems.Intake.IntakeWheels;
+import frc.robot.subsystems.Intake.Wrist;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
-import frc.robot.subsystems.sensors.DistanceSensor;
 import frc.robot.subsystems.shooter.ShooterServos;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterWheels;
@@ -99,7 +98,7 @@ public class RobotContainer {
   private final IntakeWheels intakeWheels;
   private final Arm arm;
   private final Climber climber;
-  private final DistanceSensor distanceSensor;
+
 
   private final FrontCamera frontCamera;
   private final BackCamera backCamera;
@@ -125,7 +124,7 @@ public class RobotContainer {
     servos = new ShooterServos();
     breakBeamSensorShooter = new BreakBeamSensorShooter();
     breakBeamSensorIntake = new BreakBeamSensorIntake();
-    distanceSensor = new DistanceSensor(Port.kMXP);
+   
 
     arm.getShuffleboardTab().add("arm", arm);
     shooterWheels.getShuffleboardTab().add("shooter wheels", shooterWheels);
@@ -315,7 +314,7 @@ public class RobotContainer {
     wrist.getShuffleboardTab().add("Rotate until note in intake",
         new SequentialCommandGroup(
             new RotateWristPID(wrist, IntakeConstants.kWristNotePosition),
-            new IntakeUntilNoteIn(intakeWheels, distanceSensor),
+            new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake),
             new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint)
 
         ));

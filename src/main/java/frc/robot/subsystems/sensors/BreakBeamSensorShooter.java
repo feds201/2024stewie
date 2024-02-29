@@ -16,7 +16,7 @@ public class BreakBeamSensorShooter extends SubsystemABC {
   private final BooleanEntry beamBrokenShooter;
 
   public BreakBeamSensorShooter() {
-    setupNetworkTables("irsensor");
+    setupNetworkTables("irsensor_shooter");
 
     // transmitter = new DigitalInput(SensorConstants.breakBeamTransmitterPort);
     receiverShooter = new DigitalInput(SensorConstants.shooterBreakBeamReceiverPort);
