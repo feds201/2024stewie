@@ -58,7 +58,8 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
-import frc.robot.subsystems.sensors.BreakBeamSensor;
+import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
+import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.sensors.DistanceSensor;
 import frc.robot.subsystems.shooter.ShooterServos;
 import frc.robot.subsystems.shooter.ShooterRotation;
@@ -103,7 +104,8 @@ public class RobotContainer {
   private final FrontCamera frontCamera;
   private final BackCamera backCamera;
   private final DashBoardManager visionManager;
-  private final BreakBeamSensor breakBeamSensor;
+  private final BreakBeamSensorShooter breakBeamSensorShooter;
+  private final BreakBeamSensorIntake breakBeamSensorIntake;
 
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
@@ -121,7 +123,8 @@ public class RobotContainer {
     backCamera = new BackCamera();
     visionManager = new DashBoardManager();
     servos = new ShooterServos();
-    breakBeamSensor = new BreakBeamSensor();
+    breakBeamSensorShooter = new BreakBeamSensorShooter();
+    breakBeamSensorIntake = new BreakBeamSensorIntake();
     distanceSensor = new DistanceSensor(Port.kMXP);
 
     arm.getShuffleboardTab().add("arm", arm);
@@ -215,7 +218,7 @@ public class RobotContainer {
                         new ParallelCommandGroup(
                             new IntakeIn(intakeWheels, () -> 0.4),
                             new EjectNote(servos))
-                            .until(breakBeamSensor::getBeamBroken)
+                            .until(breakBeamSensorShooter::getBeamBroken)
                             .andThen(new ParallelDeadlineGroup(
                                 new WaitCommand(0.3),
                                 new IntakeIn(intakeWheels, () -> 0.4),

@@ -14,7 +14,9 @@ public class DIOConstants {
     }
 
     public static class SensorConstants {
-        public static final int breakBeamReceiverPort = 8;
-        public static final int breakBeamTransmitterPort = 9;
+        public static final int shooterBreakBeamReceiverPort = 8;
+        public static final int shooterBreakBeamTransmitterPort = 9;
+        public static final int intakeBreakBeamReceiverPort = 6;
+        public static final int intakeBreakBeamTransmitterPort = 7;
     }
 }
