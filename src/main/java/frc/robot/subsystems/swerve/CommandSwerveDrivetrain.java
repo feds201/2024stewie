@@ -24,42 +24,50 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
+ * Class that extends the Phoenix SwerveDrivetrain class and implements
+ * subsystem
  * so it can be used in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    public static final PIDController pid = new PIDController(0.025, .05, .00); 
+    public static final PIDController pid = new PIDController(0.04, .01, .009);
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
-        
+    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
+
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        
+
         pid.setTolerance(.25, 0.05); // allowable angle error
         pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
-        pid.setIntegratorRange(-0.2  , 0.2);
+        pid.setIntegratorRange(-0.2, 0.2);
         pid.setSetpoint(-10); // 0 = apriltag angle
-    
+
     }
+
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        pid.setTolerance(.25, 0.05); // allowable angle error
+        pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
+        pid.setIntegratorRange(-0.2, 0.2);
+        pid.setSetpoint(-10); // 0 = apriltag angle
     }
+
     public boolean getPIDAtSetpoint() {
         return pid.atSetpoint();
     }
-
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
@@ -73,7 +81,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
-
     private void configurePathPlanner() {
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
@@ -81,17 +88,18 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
 
         AutoBuilder.configureHolonomic(
-            ()->this.getState().Pose, // Supplier of current robot pose
-            this::seedFieldRelative,  // Consumer for seeding pose against auto
-            this::getCurrentRobotChassisSpeeds,
-            (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
-                                            TunerConstants.kSpeedAt12VoltsMps,
-                                            driveBaseRadius,
-                                            new ReplanningConfig()),
-            ()->false, // Change this if the path needs to be flipped on red vs blue
-            this); // Subsystem for requirements
+                () -> this.getState().Pose, // Supplier of current robot pose
+                this::seedFieldRelative, // Consumer for seeding pose against auto
+                this::getCurrentRobotChassisSpeeds,
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
+                                                                             // robot
+                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+                        new PIDConstants(10, 0, 0),
+                        TunerConstants.kSpeedAt12VoltsMps,
+                        driveBaseRadius,
+                        new ReplanningConfig()),
+                () -> true, // Change this if the path needs to be flipped on red vs blue
+                this); // Subsystem for requirements
     }
 
     public double getPIDRotation(double currentX) {
@@ -101,7 +109,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public void resetPID() {
         pid.reset();
     }
-
 
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
