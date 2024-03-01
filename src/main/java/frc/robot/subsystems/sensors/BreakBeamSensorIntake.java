@@ -9,19 +9,19 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.constants.DIOConstants.*;
 import frc.robot.subsystems.SubsystemABC;
 
-public class BreakBeamSensor extends SubsystemABC {
+public class BreakBeamSensorIntake extends SubsystemABC {
   /** Creates a new BreakBeamSensor. */
   // private final DigitalInput transmitter;
-  private final DigitalInput receiver;
-  private final BooleanEntry beamBroken;
+  private final DigitalInput receiverIntake;
+  private final BooleanEntry beamBrokenIntake;
 
-  public BreakBeamSensor() {
-    setupNetworkTables("irsensor");
+  public BreakBeamSensorIntake() {
+    setupNetworkTables("irsensor_intake");
 
     // transmitter = new DigitalInput(SensorConstants.breakBeamTransmitterPort);
-    receiver = new DigitalInput(SensorConstants.breakBeamReceiverPort);
+    receiverIntake = new DigitalInput(SensorConstants.intakeBreakBeamReceiverPort);
 
-    beamBroken = ntTable.getBooleanTopic("shooter_loaded").getEntry(true);
+    beamBrokenIntake = ntTable.getBooleanTopic("shooter_loaded").getEntry(true);
 
     setupShuffleboard();
     seedNetworkTables();
@@ -29,7 +29,7 @@ public class BreakBeamSensor extends SubsystemABC {
 
   @Override
   public void setupShuffleboard() {
-    tab.add("BreakBeam", receiver);
+    tab.add("BreakBeam", receiverIntake);
   }
 
   @Override
@@ -47,11 +47,11 @@ public class BreakBeamSensor extends SubsystemABC {
   }
 
   public void readBeamBroken() {
-    beamBroken.set(!receiver.get());
+    beamBrokenIntake.set(!receiverIntake.get());
   }
 
   public boolean getBeamBroken() {
-    return beamBroken.get();
+    return beamBrokenIntake.get();
   }
 
 }

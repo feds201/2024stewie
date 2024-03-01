@@ -58,8 +58,8 @@ import frc.robot.subsystems.Intake.IntakeWheels;
 import frc.robot.subsystems.Intake.Wrist;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.sensors.BreakBeamSensor;
-import frc.robot.subsystems.sensors.DistanceSensor;
+import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
+import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterServos;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterWheels;
@@ -98,12 +98,13 @@ public class RobotContainer {
   private final IntakeWheels intakeWheels;
   private final Arm arm;
   private final Climber climber;
-  private final DistanceSensor distanceSensor;
+
 
 //   private final FrontCamera frontCamera;
   private final BackCamera backCamera;
   private final DashBoardManager visionManager;
-  private final BreakBeamSensor breakBeamSensor;
+  private final BreakBeamSensorShooter breakBeamSensorShooter;
+  private final BreakBeamSensorIntake breakBeamSensorIntake;
 
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
@@ -121,8 +122,9 @@ public class RobotContainer {
     backCamera = new BackCamera();
     visionManager = new DashBoardManager();
     servos = new ShooterServos();
-    breakBeamSensor = new BreakBeamSensor();
-    distanceSensor = new DistanceSensor(Port.kMXP);
+    breakBeamSensorShooter = new BreakBeamSensorShooter();
+    breakBeamSensorIntake = new BreakBeamSensorIntake();
+   
 
     arm.getShuffleboardTab().add("arm", arm);
     shooterWheels.getShuffleboardTab().add("shooter wheels", shooterWheels);
@@ -215,7 +217,7 @@ public class RobotContainer {
                         new ParallelCommandGroup(
                             new IntakeIn(intakeWheels, () -> 0.4),
                             new EjectNote(servos))
-                            .until(breakBeamSensor::getBeamBroken)
+                            .until(breakBeamSensorShooter::getBeamBroken)
                             .andThen(new ParallelDeadlineGroup(
                                 new WaitCommand(0.3),
                                 new IntakeIn(intakeWheels, () -> 0.4),
@@ -313,7 +315,7 @@ public class RobotContainer {
     wrist.getShuffleboardTab().add("Rotate until note in intake",
         new SequentialCommandGroup(
             new RotateWristPID(wrist, IntakeConstants.kWristNotePosition),
-            new IntakeUntilNoteIn(intakeWheels, distanceSensor),
+            new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake),
             new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint)
 
         ));

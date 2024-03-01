@@ -9,19 +9,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake.IntakeWheels;
-import frc.robot.subsystems.sensors.DistanceSensor;
+import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeUntilNoteIn extends SequentialCommandGroup {
   /** Creates a new RotateUntilNoteIn. */
-  public IntakeUntilNoteIn(IntakeWheels intakeWheels, DistanceSensor distanceSensor) {
+  public IntakeUntilNoteIn(IntakeWheels intakeWheels, BreakBeamSensorIntake irSensor) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed)
-            .until(() -> distanceSensor.noteInIntake()),
+            .until(() -> irSensor.getBeamBroken()),
         new ParallelDeadlineGroup(
             new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay),
             new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed)));
