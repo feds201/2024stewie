@@ -137,13 +137,25 @@ public class Wrist extends SubsystemABC {
   }
 
   public void readWristAngle() {
-    rotationAngle.set(wristRotationEncoder.get() * 360);
-    rotationAngleLog.append(rotationAngle.get());
+    double rotationAngleValue = wristRotationEncoder.get() * 360;
+    if(rotationAngleValue > 250) {
+      rotationAngleValue -= 360;
+    } else if (rotationAngleValue < -10) {
+      rotationAngleValue += 360;
+    }
+    rotationAngle.set(rotationAngleValue);
+    rotationAngleLog.append(rotationAngleValue);
   }
 
   public void readIntakeEncoder() {
-    rotationEncoderValue.set(wristRotationEncoder.get());
-    rotationEncoderValueLog.append(rotationEncoderValue.get());
+    double rotationValue = wristRotationEncoder.get();
+    if(rotationValue > 1) {
+      rotationValue -= 1;
+    } else if (rotationValue < -10/360) {
+      rotationValue += 1;
+    }
+    rotationEncoderValue.set(rotationValue);
+    rotationEncoderValueLog.append(rotationValue);
   }
 
   public void setTarget(double target) {

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intake.IntakeIn;
-import frc.robot.commands.Intake.RotateWristPID;
+import frc.robot.commands.Intake.RotateWristPIDInfinite;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.constants.ArmConstants;
@@ -33,7 +33,7 @@ public class FeedNoteToShooter extends ParallelCommandGroup {
         new SequentialCommandGroup(
             new WaitCommand(ArmConstants.kArmRotationDelay),
             new ParallelCommandGroup(
-                new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint),
+                new RotateWristPIDInfinite(wrist, IntakeConstants.kWristShooterFeederSetpoint),
                 new RotateShooter(shooterRotation,
                     () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
                 new SequentialCommandGroup(

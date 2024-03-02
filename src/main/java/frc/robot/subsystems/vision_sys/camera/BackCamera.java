@@ -46,7 +46,7 @@ public class BackCamera extends vision_sys {
                 table.getEntry("ta").getNumber(0).doubleValue()
         );
         VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
-
+        Periodic();
 
     }
 

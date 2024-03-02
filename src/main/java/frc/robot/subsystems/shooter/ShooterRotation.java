@@ -169,13 +169,25 @@ public class ShooterRotation extends SubsystemABC {
   }
 
   public void readEncoderValue() {
-    encoderValue.set(shooterRotateEncoder.get());
-    encoderValueLog.append(shooterRotateEncoder.get());
+    double encoder = shooterRotateEncoder.get();
+    if(encoder < -1) {
+      encoder += 1;
+    } else if (encoder > 10/360) {
+      encoder -= 1;
+    }
+    encoderValue.set(encoder);
+    encoderValueLog.append(encoder);
   }
 
   public void readEncoderAngleWithoutOffset() {
-    encoderAngleWithoutOffset.set(shooterRotateEncoder.get() * 360);
-    encoderAngleWithoutOffsetLog.append(shooterRotate.get() * 360);
+    double angle = shooterRotateEncoder.get() * 360;
+    if(angle < -360) {
+      angle += 360;
+    } else if (angle > 10) {
+      angle -= 360;
+    }
+    encoderAngleWithoutOffset.set(angle);
+    encoderAngleWithoutOffsetLog.append(angle);
   }
 
   public void readEncoderAngle() {
