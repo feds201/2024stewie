@@ -96,7 +96,7 @@ public class ShooterRotation extends SubsystemABC {
 
   public void rotateShooterPID() {
     double currentAngle = getEncoderAngle();
-    if (currentAngle < -50 || currentAngle > 1) {
+    if (currentAngle < -50 || currentAngle > 10) {
       setFailure(true);
     } else {
       double output = rotatePID.calculate(currentAngle);
@@ -180,7 +180,7 @@ public class ShooterRotation extends SubsystemABC {
   }
 
   public void readEncoderAngleWithoutOffset() {
-    double angle = shooterRotateEncoder.get() * 360;
+    double angle = encoderValue.get() * 360;
     if(angle < -340) {
       angle += 360;
     } else if (angle > 10) {
@@ -191,8 +191,14 @@ public class ShooterRotation extends SubsystemABC {
   }
 
   public void readEncoderAngle() {
-    encoderAngle.set(shooterRotateEncoder.get() * 360 - currentArmRotationSupplier.getAsDouble());
-    encoderAngleLog.append(shooterRotateEncoder.get() * 360 - currentArmRotationSupplier.getAsDouble());
+    double angle = shooterRotateEncoder.get() * 360 - currentArmRotationSupplier.getAsDouble();
+    if(angle < -340) {
+      angle += 360;
+    } else if (angle > 10) {
+      angle -= 360;
+    }
+    encoderAngle.set(angle);
+    encoderAngleLog.append(angle);
   }
 
 }

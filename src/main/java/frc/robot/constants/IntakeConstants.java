@@ -20,7 +20,7 @@ public class IntakeConstants {
   
   public final static double kWristNotePosition = 214;
   public final static double kWristIdlePosition = 70;
-  public final static double kWristShooterFeederSetpoint = 7;
+  public final static double kWristShooterFeederSetpoint = 7; //Problem?
 
   public static final double kWheelSpeed = -0.25;
   public static final double kRotateSpeed = 0.20;

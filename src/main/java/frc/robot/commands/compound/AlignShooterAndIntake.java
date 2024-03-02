@@ -32,14 +32,14 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
                 () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
             new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint)
                 .andThen(
-                    new WaitCommand(0.2)
+                    new WaitCommand(0.75)
                         .andThen(
                             new ParallelCommandGroup(
                                 new IntakeIn(intakeWheels, () -> 0.4),
                                 new EjectNote(servos))
                                 .until(breakBeamSensorShooter::getBeamBroken)
                                 .andThen(new ParallelDeadlineGroup(
-                                    new WaitCommand(0.25),
+                                    new WaitCommand(0.6),
                                     new IntakeIn(intakeWheels, () -> 0.4),
                                     new EjectNote(servos))))));
   }

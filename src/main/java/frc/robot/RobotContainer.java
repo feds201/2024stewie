@@ -29,10 +29,13 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -43,12 +46,15 @@ import frc.robot.commands.Intake.RotateWristBasic;
 import frc.robot.commands.Intake.RotateWristPIDInfinite;
 import frc.robot.commands.Intake.RotateWristPID;
 import frc.robot.commands.arm.RotateArm;
+import frc.robot.commands.autons.DriveForwardForTime;
 import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.compound.AlignShooterAndIntake;
 import frc.robot.commands.compound.AlignToAprilTag;
 import frc.robot.commands.compound.DeployIntake;
 import frc.robot.commands.compound.ResetIntake;
 import frc.robot.commands.compound.ShootNoteAtSpeaker;
+import frc.robot.commands.compound.ShootNoteAtSpeakerOnly;
+import frc.robot.commands.compound.SpitOutNote;
 import frc.robot.commands.controller.ToggleRumble;
 import frc.robot.commands.shooter.StopServos;
 import frc.robot.commands.shooter.EjectNote;
@@ -111,8 +117,10 @@ public class RobotContainer {
   private final BreakBeamSensorShooter breakBeamSensorShooter;
   private final BreakBeamSensorIntake breakBeamSensorIntake;
 
-  private final CommandXboxController driverController;
-  private final CommandXboxController operatorController;
+  public final CommandXboxController driverController;
+  public final CommandXboxController operatorController;
+
+  SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   ShuffleboardTab commandsTab = Shuffleboard.getTab("commands");
 
@@ -149,13 +157,59 @@ public class RobotContainer {
     setupClimberCommands();
     setupIntakeCommands();
     setupShooterCommands();
-    setErrorTriggers();
+    setupErrorTriggers();
+    setupAutonCommands();
 
     Shuffleboard.getTab("swerve").add("Swerve PID", drivetrain.pid);
+
+  }
+
+  private void setupAutonCommands() {
+    autonChooser.setDefaultOption("Rotate Arm To Zero Pos",
+        new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
+
+    autonChooser.addOption("Shoot In Front of Speaker",
+        new ParallelCommandGroup(
+            new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+            new SequentialCommandGroup(
+                new WaitCommand(6),
+                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))));
+
+    autonChooser.addOption("Move Back and Shoot Speaker",
+        new ParallelCommandGroup(
+            new DriveForwardForTime(drivetrain, 2),
+            new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+            new SequentialCommandGroup(
+                new WaitCommand(6),
+                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos),
+                new WaitCommand(2),
+                new ParallelCommandGroup(
+                    new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0)))));
+
+    autonChooser.addOption("Step Back Fade Away and Run",
+        new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                new DriveForwardForTime(drivetrain, 2),
+                new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+                new SequentialCommandGroup(
+                    new WaitCommand(6),
+                    new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))),
+            new DriveForwardForTime(drivetrain, 5)));
+
+    // autonChooser.addOption("Aim and Shoot Auton", new ParallelCommandGroup(
+    // new RotateArm(arm, () ->
+    // ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+    // new SequentialCommandGroup(
+    // new WaitCommand(6),
+    // new AimToAprilTag(drivetrain, driverController::getLeftX,
+    // driverController::getLeftY),
+    // new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))));
+
+    Shuffleboard.getTab("autons").add(autonChooser);
   }
 
   private void configureDefaultCommands() {
-    drivetrain.setDefaultCommand(
+    drivetrain.setDefaultCommand(new ParallelCommandGroup(
         drivetrain.applyRequest(() -> {
           return drive
               .withVelocityX(-driverController.getLeftY()
@@ -164,7 +218,16 @@ public class RobotContainer {
                   * SwerveConstants.MaxSpeed)
               .withRotationalRate(-driverController.getRightX() *
                   SwerveConstants.MaxAngularRate);
-        }));
+        }), new RepeatCommand(
+            new InstantCommand(
+                () -> {
+                  SmartDashboard.putNumber("left y", -driverController.getLeftY()
+                      * SwerveConstants.MaxSpeed);
+                  SmartDashboard.putNumber("left x", -driverController.getLeftX()
+                      * SwerveConstants.MaxSpeed);
+                  SmartDashboard.putNumber("right x", -driverController.getRightX() *
+                      SwerveConstants.MaxAngularRate);
+                }))));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(),
@@ -174,6 +237,9 @@ public class RobotContainer {
     drivetrain
         .registerTelemetry(
             logger::telemeterize);
+
+    shooterRotation.setDefaultCommand(new RotateShooter(shooterRotation,
+        () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint));
   }
 
   private void configureDriverController() {
@@ -185,14 +251,26 @@ public class RobotContainer {
 
     driverController.leftTrigger()
         .onTrue(
-            new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake, driverController, operatorController))
+            new SequentialCommandGroup(
+                new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake)))
+        // new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels, servos,
+        // breakBeamSensorShooter),
+        // new ParallelCommandGroup(
+        // new ToggleRumble(driverController, 0.5),
+        // new ToggleRumble(operatorController, 0.5))))
+        
         .onFalse(new ResetIntake(wrist, intakeWheels));
+            driverController.rightTrigger()
+        .onTrue(new SpitOutNote(wrist, intakeWheels))
+        .onFalse(new ResetIntake(wrist, intakeWheels));
+
   }
 
   public void configureOperatorController() {
     // LOAD BUTTON
     operatorController.leftBumper()
-        .onTrue(new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels, servos, breakBeamSensorShooter))
+        .onTrue(new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
+            servos, breakBeamSensorShooter))
         .onFalse(new ParallelCommandGroup(
             new RotateShooter(shooterRotation, () -> -5),
             new ResetIntake(wrist, intakeWheels)));
@@ -207,33 +285,37 @@ public class RobotContainer {
     operatorController.leftTrigger()
         .onTrue(new ShootNoteAtSpeaker(wrist, shooterRotation, shooterWheels, servos))
         .onFalse(new ParallelCommandGroup(
-            new RotateShooter(shooterRotation, () -> -5),
+            new RotateShooterBasic(shooterRotation, () -> 0),
             new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
             new StopServos(servos)));
 
-    operatorController.a().onTrue(new RotateShooter(shooterRotation,
-        () -> LimelightUtils.GetShooterAngle(ExportedVariables.Distance)))
-        .onFalse(new RotateShooterBasic(shooterRotation, () -> 0));
+
+    // operatorController.a().onTrue(new RotateShooter(shooterRotation,
+    // () -> LimelightUtils.GetShooterAngle(ExportedVariables.Distance)))
+    // .onFalse(new RotateShooterBasic(shooterRotation, () -> 0));
 
   }
 
-  private void setErrorTriggers() {
+  private void setupErrorTriggers() {
     new Trigger(wrist::getFailure).whileTrue(
-        new ParallelCommandGroup(
-            new ToggleRumble(driverController, 10000),
-            new ToggleRumble(operatorController, 10000)));
+        new RepeatCommand(
+            new ParallelCommandGroup(
+                new ToggleRumble(driverController, 0.25),
+                new ToggleRumble(operatorController, 0.25))));
     new Trigger(arm::getFailure).whileTrue(
-        new ParallelCommandGroup(
-            new ToggleRumble(driverController, 10000),
-            new ToggleRumble(operatorController, 10000)));
+        new RepeatCommand(
+            new ParallelCommandGroup(
+                new ToggleRumble(driverController, 0.25),
+                new ToggleRumble(operatorController, 0.25))));
     new Trigger(shooterRotation::getFailure).whileTrue(
-        new ParallelCommandGroup(
-            new ToggleRumble(driverController, 10000),
-            new ToggleRumble(operatorController, 10000)));
+        new RepeatCommand(
+            new ParallelCommandGroup(
+                new ToggleRumble(driverController, 0.25),
+                new ToggleRumble(operatorController, 0.25))));
   }
 
   public Command getAutonomousCommand() {
-    return new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint); // runAuto;
+    return autonChooser.getSelected(); // runAuto;
     // return null;
   }
 

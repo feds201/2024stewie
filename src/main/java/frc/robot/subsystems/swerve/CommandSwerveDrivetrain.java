@@ -57,7 +57,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         pid.setTolerance(.25, 0.05); // allowable angle error
         pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
         pid.setIntegratorRange(-0.2, 0.2);
-        pid.setSetpoint(-10); // 0 = apriltag angle
+        pid.setSetpoint(-5); // 0 = apriltag angle
 
     }
 
@@ -141,13 +141,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         /* This allows us to correct the perspective in case the robot code restarts mid-match */
         /* Otherwise, only check and apply the operator perspective if the DS is disabled */
         /* This ensures driving behavior doesn't change until an explicit disable event occurs during testing*/
-        if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
-            DriverStation.getAlliance().ifPresent((allianceColor) -> {
-                this.setOperatorPerspectiveForward(
-                        allianceColor == Alliance.Red ? RedAlliancePerspectiveRotation
-                                : BlueAlliancePerspectiveRotation);
-                hasAppliedOperatorPerspective = true;
-            });
-        }
+        // if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
+        //     DriverStation.getAlliance().ifPresent((allianceColor) -> {
+        //         this.setOperatorPerspectiveForward(
+        //                 allianceColor == Alliance.Red ? RedAlliancePerspectiveRotation
+        //                         : BlueAlliancePerspectiveRotation);
+        //         hasAppliedOperatorPerspective = true;
+        //     });
+        // }
+        
     }
 }

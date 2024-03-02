@@ -128,7 +128,7 @@ public class Arm extends SubsystemABC {
   private DoubleLogEntry armRotationEncoderAngleLog = new DoubleLogEntry(log, "/arm/rotationAngle");
   private DoubleLogEntry armInternalEncoderValueLog = new DoubleLogEntry(log, "/arm/internalValue");
   private DoubleLogEntry armInternalEncoderAngleLog = new DoubleLogEntry(log, "/arm/internalAngle");
-  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/arm/internalAngle");
+  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/arm/failure");
 
   // SETTERS
   public void setOutput(double output) {

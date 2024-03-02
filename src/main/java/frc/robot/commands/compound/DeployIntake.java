@@ -23,16 +23,16 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DeployIntake extends SequentialCommandGroup {
   /** Creates a new DeployIntake. */
-  public DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation,
-      BreakBeamSensorIntake breakBeamSensorIntake, CommandXboxController driverController,
-      CommandXboxController operatorController) {
+  public 
+  DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation,
+      BreakBeamSensorIntake breakBeamSensorIntake) {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ParallelDeadlineGroup(
             new RotateWristPID(wrist, IntakeConstants.kWristNotePosition),
-            new RotateShooter(shooterRotation, () -> -5),
+            // new RotateShooter(shooterRotation, () -> -5),
             new IntakeIn(intakeWheels, () -> -0.5)),
         new IntakeIn(intakeWheels, () -> -0.5)
             .until(breakBeamSensorIntake::getBeamBroken),
@@ -43,10 +43,6 @@ public class DeployIntake extends SequentialCommandGroup {
             new ParallelDeadlineGroup(
                 new RotateWristPID(wrist,
                     IntakeConstants.kWristIdlePosition),
-                new IntakeIn(intakeWheels, () -> 0))),
-        new ParallelDeadlineGroup(
-            new WaitCommand(0.5),
-            new ToggleRumble(driverController, 0.5),
-            new ToggleRumble(operatorController, 0.5)));
+                new IntakeIn(intakeWheels, () -> 0))));
   }
 }
