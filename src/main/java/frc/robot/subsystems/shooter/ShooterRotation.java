@@ -170,7 +170,7 @@ public class ShooterRotation extends SubsystemABC {
 
   public void readEncoderValue() {
     double encoder = shooterRotateEncoder.get();
-    if(encoder < -1) {
+    if(encoder < -340/360) {
       encoder += 1;
     } else if (encoder > 10/360) {
       encoder -= 1;
@@ -181,7 +181,7 @@ public class ShooterRotation extends SubsystemABC {
 
   public void readEncoderAngleWithoutOffset() {
     double angle = shooterRotateEncoder.get() * 360;
-    if(angle < -360) {
+    if(angle < -340) {
       angle += 360;
     } else if (angle > 10) {
       angle -= 360;

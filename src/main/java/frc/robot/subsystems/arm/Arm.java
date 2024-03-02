@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.arm;
 
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.BooleanEntry;
@@ -11,6 +12,7 @@ import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
@@ -74,6 +76,7 @@ public class Arm extends SubsystemABC {
   }
 
   public void rotateArmToTarget() {
+    SmartDashboard.putNumber("arm pid", pid.calculate(getArmAngle()));
     this.setOutput(pid.calculate(getArmAngle()));
   }
 
@@ -132,7 +135,9 @@ public class Arm extends SubsystemABC {
     armOutput.set(output);
     armOutputLog.append(armOutput.get());
 
-    armRotation.set(armOutput.get());
+    VoltageOut voltage = new VoltageOut(output);
+
+    armRotation.setControl(voltage.withOutput(output));
   }
 
   public void setTarget(double target) {

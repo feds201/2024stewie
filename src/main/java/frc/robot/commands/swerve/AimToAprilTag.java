@@ -34,7 +34,7 @@ public class AimToAprilTag extends Command {
     }
 
     public boolean isFinished() {
-        return false;
+        return c_swerve.getPIDAtSetpoint();
     }
 
     public void execute() {
