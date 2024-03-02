@@ -100,30 +100,32 @@ public class RobotContainer {
     private final Arm arm;
     private final Climber climber;
 
-    private final FrontCamera frontCamera;
-    private final BackCamera backCamera;
-    private final DashBoardManager visionManager;
-    private final BreakBeamSensorShooter breakBeamSensorShooter;
-    private final BreakBeamSensorIntake breakBeamSensorIntake;
+
+//   private final FrontCamera frontCamera;
+  private final BackCamera backCamera;
+  private final DashBoardManager visionManager;
+  private final BreakBeamSensorShooter breakBeamSensorShooter;
+  private final BreakBeamSensorIntake breakBeamSensorIntake;
 
     private final CommandXboxController driverController;
     private final CommandXboxController operatorController;
 
     ShuffleboardTab commandsTab = Shuffleboard.getTab("commands");
 
-    public RobotContainer() {
-        arm = new Arm();
-        shooterWheels = new ShooterWheels();
-        shooterRotation = new ShooterRotation(arm::getArmAngle);
-        climber = new Climber();
-        wrist = new Wrist();
-        intakeWheels = new IntakeWheels();
-        frontCamera = new FrontCamera();
-        backCamera = new BackCamera();
-        visionManager = new DashBoardManager();
-        servos = new ShooterServos();
-        breakBeamSensorShooter = new BreakBeamSensorShooter();
-        breakBeamSensorIntake = new BreakBeamSensorIntake();
+  public RobotContainer() {
+    arm = new Arm();
+    shooterWheels = new ShooterWheels();
+    shooterRotation = new ShooterRotation(arm::getArmAngle);
+    climber = new Climber();
+    wrist = new Wrist();
+    intakeWheels = new IntakeWheels();
+    // frontCamera = new FrontCamera();
+    backCamera = new BackCamera();
+    visionManager = new DashBoardManager();
+    servos = new ShooterServos();
+    breakBeamSensorShooter = new BreakBeamSensorShooter();
+    breakBeamSensorIntake = new BreakBeamSensorIntake();
+   
 
         arm.getShuffleboardTab().add("arm", arm);
         shooterWheels.getShuffleboardTab().add("shooter wheels", shooterWheels);
@@ -289,9 +291,10 @@ public class RobotContainer {
                         new ToggleRumble(operatorController, 10000)));
     }
 
-    public Command getAutonomousCommand() {
-        return runAuto;
-    }
+  public Command getAutonomousCommand() {
+    return runAuto;
+    // return null;
+  }
 
     private void setupIntakeCommands() {
         // Intake = Wrist + IntakeWheels
