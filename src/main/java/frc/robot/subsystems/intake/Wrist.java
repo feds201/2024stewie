@@ -31,6 +31,7 @@ public class Wrist extends SubsystemABC {
   private DoubleEntry rotationTarget;
 
   private BooleanEntry failure;
+  private BooleanEntry towardShooter;
 
   /** Creates a new Intake. */
   public Wrist() {
@@ -45,11 +46,10 @@ public class Wrist extends SubsystemABC {
     rotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
     rotationAngle = ntTable.getDoubleTopic("rotation_angle").getEntry(0);
     rotationTarget = ntTable.getDoubleTopic("rotation_target").getEntry(0);
-    failure = ntTable.getBooleanTopic("rotation_target").getEntry(false);
+    failure = ntTable.getBooleanTopic("failure").getEntry(false);
+    towardShooter = ntTable.getBooleanTopic("toward_shooter").getEntry(false);
 
-    SmartDashboard.putNumber("WRIST BEFORE", wristRotationEncoder.get());
-    wristRotationEncoder.setPositionOffset(0.7439);
-    SmartDashboard.putNumber("WRIST AFTER", wristRotationEncoder.get());
+    wristRotationEncoder.setPositionOffset(0);
 
     setupShuffleboard();
     seedNetworkTables();
@@ -58,14 +58,11 @@ public class Wrist extends SubsystemABC {
   @Override
   public void setupShuffleboard() {
     tab.add("PID Controller", pid);
-    // tab.add("Wrist Voltage", wristVoltage);
-    // tab.add("Rotation Encoder Value", rotationEncoderValue);
-    // tab.add("Rotation Angle", rotationAngle);
-    // tab.add("Rotation Target", rotationTarget);
   }
 
   @Override
   public void periodic() {
+    wristRotationEncoder.setPositionOffset(0.7439);
     // This method will be called once per scheduler run
     writePeriodicOutputs();
   }
@@ -88,6 +85,7 @@ public class Wrist extends SubsystemABC {
   }
 
   public void setPIDTarget(double target) {
+    // TODO MOVE THIS OUT
     if(target < 0  || target > 230) 
     {
       setFailure(true);
@@ -126,30 +124,56 @@ public class Wrist extends SubsystemABC {
   private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/intake/rotationValue");
   private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/intake/rotationAngle");
   private DoubleLogEntry rotationTargetLog = new DoubleLogEntry(log, "/intake/rotationTarget");
-  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/intake/error");
+  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/intake/failure");
+  private BooleanLogEntry towardShooterLog = new BooleanLogEntry(log, "/intake/towardShooter");
 
   // SETTERS
   public void setWristVoltage(double voltage) {
     wristVoltage.set(voltage);
     wristVoltageLog.append(voltage);
 
+    if(voltage > 0) {
+      setTowardIntake(false);
+    } else {
+      setTowardIntake(true);
+    }
+
     wristRotation.set(voltage); // TODO FIGURE OUT HOW TO CAP THIS
   }
 
   public void readWristAngle() {
-    double rotationAngleValue = wristRotationEncoder.get() * 360;
+    double rawEncoderValue = wristRotationEncoder.get();
+    double rotationAngleValue = rawEncoderValue * 360;
+
+    SmartDashboard.putNumber("Wrist Encoder Value", rawEncoderValue);
+    SmartDashboard.putNumber("Wrist Angle Raw (enc * 360)", rawEncoderValue * 360);
+
+    SmartDashboard.putNumber("Wrist Abs Position", wristRotationEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Wrist Abs Position W/ Offset", wristRotationEncoder.getAbsolutePosition() - wristRotationEncoder.getPositionOffset());
+    SmartDashboard.putNumber("Wrist Angle Position", wristRotationEncoder.getAbsolutePosition() * 360);
+    SmartDashboard.putNumber("Wrist Angle Position W/ Offset", (wristRotationEncoder.getAbsolutePosition() - wristRotationEncoder.getPositionOffset()) * 360);
+
+    if (rawEncoderValue < 0) {
+      SmartDashboard.putNumber("Encoder negative", rawEncoderValue*180 + 360);
+    } else {
+      SmartDashboard.putNumber("Encoder positive", rawEncoderValue*180);
+    }
+
     if(rotationAngleValue > 300) {
       rotationAngleValue -= 360;
     } else if (rotationAngleValue < -50) {
       rotationAngleValue += 360;
     }
+
+    SmartDashboard.putNumber("Wrist after wrap around check", rotationAngleValue);
+
     rotationAngle.set(rotationAngleValue);
     rotationAngleLog.append(rotationAngleValue);
   }
 
   public void readIntakeEncoder() {
     double rotationValue = wristRotationEncoder.get();
-    if(rotationValue > 250/360) {
+    if(rotationValue > 300/360) {
       rotationValue -= 1;
     } else if (rotationValue < -50/360) {
       rotationValue += 1;
@@ -167,4 +191,9 @@ public class Wrist extends SubsystemABC {
     failure.set(failureValue);
     failureLog.append(failureValue);
   }
+
+  public void setTowardIntake(boolean state) {
+    towardShooter.set(state);
+    towardShooterLog.append(state);
+  } 
 }

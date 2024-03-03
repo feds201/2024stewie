@@ -46,6 +46,7 @@ import frc.robot.commands.Intake.RotateWristBasic;
 import frc.robot.commands.Intake.RotateWristPIDInfinite;
 import frc.robot.commands.Intake.RotateWristPID;
 import frc.robot.commands.arm.RotateArm;
+import frc.robot.commands.arm.RotateArmManual;
 import frc.robot.commands.autons.DriveForwardForTime;
 import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.compound.AlignShooterAndIntake;
@@ -175,7 +176,7 @@ public class RobotContainer {
                 new WaitCommand(6),
                 new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))));
 
-    autonChooser.addOption("Move Back and Shoot Speaker",
+    autonChooser.addOption("Step Back Fade Away",
         new ParallelCommandGroup(
             new DriveForwardForTime(drivetrain, 2),
             new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
@@ -195,6 +196,16 @@ public class RobotContainer {
                     new WaitCommand(6),
                     new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))),
             new DriveForwardForTime(drivetrain, 5)));
+
+    autonChooser.addOption("Shoot and Scram", 
+        new SequentialCommandGroup(
+            new ParallelDeadlineGroup(
+                new WaitCommand(9),
+                new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+                new SequentialCommandGroup(
+                    new WaitCommand(5),
+                    new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))),
+            new DriveForwardForTime(drivetrain, 6)));
 
     // autonChooser.addOption("Aim and Shoot Auton", new ParallelCommandGroup(
     // new RotateArm(arm, () ->
@@ -240,6 +251,8 @@ public class RobotContainer {
 
     shooterRotation.setDefaultCommand(new RotateShooter(shooterRotation,
         () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint));
+
+    arm.setDefaultCommand(new RotateArmManual(arm, () -> -operatorController.getLeftY()));
   }
 
   private void configureDriverController() {
@@ -258,11 +271,12 @@ public class RobotContainer {
         // new ParallelCommandGroup(
         // new ToggleRumble(driverController, 0.5),
         // new ToggleRumble(operatorController, 0.5))))
+
+        .onFalse(new ResetIntake(wrist, intakeWheels));
         
-        .onFalse(new ResetIntake(wrist, intakeWheels));
-            driverController.rightTrigger()
-        .onTrue(new SpitOutNote(wrist, intakeWheels))
-        .onFalse(new ResetIntake(wrist, intakeWheels));
+        driverController.rightTrigger()
+          .onTrue(new SpitOutNote(wrist, intakeWheels))
+          .onFalse(new ResetIntake(wrist, intakeWheels));
 
   }
 
@@ -289,6 +303,9 @@ public class RobotContainer {
             new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
             new StopServos(servos)));
 
+    operatorController.b()
+          .onTrue(new SpitOutNote(wrist, intakeWheels))
+          .onFalse(new ResetIntake(wrist, intakeWheels));
 
     // operatorController.a().onTrue(new RotateShooter(shooterRotation,
     // () -> LimelightUtils.GetShooterAngle(ExportedVariables.Distance)))

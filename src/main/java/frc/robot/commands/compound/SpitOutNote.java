@@ -21,10 +21,10 @@ public class SpitOutNote extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new RotateWristPID(wrist, 100),
+      new RotateWristPID(wrist, 105),
       new ParallelDeadlineGroup(
         new WaitCommand(2), 
-        new IntakeIn(wheels, () -> 0.8))
+        new IntakeIn(wheels, () -> 1))
     );
   }
 }

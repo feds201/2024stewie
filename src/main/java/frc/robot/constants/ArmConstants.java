@@ -37,6 +37,10 @@ public class ArmConstants {
    public static final double kArmRotationDelay = 3;
 
    public static final double kArmGearReduction = 50;
+   public static final double kHoldThreshold = 0.01;
+   public static final double kArmSpeedScaler = 4;
+
+
    public static TalonFXConfiguration GetArmMotorConfiguration() {
       TalonFXConfiguration configs = new TalonFXConfiguration();
 

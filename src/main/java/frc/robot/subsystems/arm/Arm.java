@@ -31,6 +31,10 @@ public class Arm extends SubsystemABC {
   private DoubleEntry armRotationEncoderAngle;
   private DoubleEntry armInternalEncoderValue;
   private DoubleEntry armInternalEncoderAngle;
+
+  private DoubleEntry armHoldAngle;
+  private BooleanEntry armHoldActive;
+
   private BooleanEntry failure;
 
   public Arm() {
@@ -49,6 +53,8 @@ public class Arm extends SubsystemABC {
     armInternalEncoderValue = ntTable.getDoubleTopic("rotation_value_internal").getEntry(0);
     armInternalEncoderAngle = ntTable.getDoubleTopic("rotation_angle_internal").getEntry(0);
     failure = ntTable.getBooleanTopic("rotation_angle_internal").getEntry(false);
+    armHoldAngle = ntTable.getDoubleTopic("hold_angle").getEntry(0);
+    armHoldActive = ntTable.getBooleanTopic("arm_hold_active").getEntry(false);
 
     armRotationEncoder.setPositionOffset(0.3473);
 
@@ -60,8 +66,12 @@ public class Arm extends SubsystemABC {
   public void seedNetworkTables() {
     setOutput(0);
     setTarget(0);
+    setArmHoldActive(false);
+    setArmHoldAngle(0);
     getOutput();
     getTarget();
+    getArmHoldAngle();
+    getArmHoldActive();
   }
 
   @Override
@@ -69,6 +79,34 @@ public class Arm extends SubsystemABC {
     tab.add("armRotation talon", armRotation);
     tab.add("armRotationEncoder", armRotationEncoder);
     tab.add("pid controller", pid);
+  }
+
+  public void rotateOrHold(double power) {
+    SmartDashboard.putNumber("power to the arm", power);
+    if(Math.abs(power) < ArmConstants.kHoldThreshold) { // if there is no power to the controller, hold
+      hold();
+    } else if(getArmAngle() < 10 && power < 0) { // if you are falling and the angle is less than 10, then dont move
+      setOutput(0);
+      setArmHoldActive(false);
+    } else if (getArmAngle() > 90 && power > 0) { // if you are rising and the angle is greater than 90, then hold 90
+      hold(90);
+    } else { // else move using the output from the controller
+      setOutput(power);
+      setArmHoldActive(false);
+    }
+  }
+
+  public void hold() {
+    hold(getArmAngle());
+  }
+
+  public void hold(double angle) {
+    if(!getArmHoldActive()) {
+      setArmHoldAngle(angle);
+      setArmHoldActive(true);
+      setPIDTarget(getArmHoldAngle());
+    }
+    rotateArmToTarget();
   }
 
   public boolean isArmAtTarget() {
@@ -122,6 +160,14 @@ public class Arm extends SubsystemABC {
     return failure.get();
   }
 
+  public double getArmHoldAngle() {
+    return armHoldAngle.get();
+  }
+
+  public boolean getArmHoldActive() {
+    return armHoldActive.get();
+  }
+
   private DoubleLogEntry armTargetLog = new DoubleLogEntry(log, "/arm/target");
   private DoubleLogEntry armOutputLog = new DoubleLogEntry(log, "/arm/output");
   private DoubleLogEntry armRotationEncoderValueLog = new DoubleLogEntry(log, "/arm/rotationValue");
@@ -129,6 +175,8 @@ public class Arm extends SubsystemABC {
   private DoubleLogEntry armInternalEncoderValueLog = new DoubleLogEntry(log, "/arm/internalValue");
   private DoubleLogEntry armInternalEncoderAngleLog = new DoubleLogEntry(log, "/arm/internalAngle");
   private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/arm/failure");
+  private DoubleLogEntry armHoldAngleLog = new DoubleLogEntry(log, "/arm/armHoldAngle");
+  private BooleanLogEntry armHoldActiveLog = new BooleanLogEntry(log, "/arm/armHoldActive");
 
   // SETTERS
   public void setOutput(double output) {
@@ -168,5 +216,15 @@ public class Arm extends SubsystemABC {
   public void readInternalEncoder() {
     armInternalEncoderValue.set(armRotation.getPosition().getValueAsDouble());
     armInternalEncoderValueLog.append(armInternalEncoderValue.get());
+  }
+
+  public void setArmHoldAngle(double angle) {
+    armHoldAngle.set(angle);
+    armHoldAngleLog.append(angle);
+  }
+
+  public void setArmHoldActive(boolean state) {
+    armHoldActive.set(state);
+    armHoldActiveLog.append(state);
   }
 }
