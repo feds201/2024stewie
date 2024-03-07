@@ -197,7 +197,7 @@ public class RobotContainer {
                     new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))),
             new DriveForwardForTime(drivetrain, 5)));
 
-    autonChooser.addOption("Shoot and Scram", 
+    autonChooser.addOption("Shoot and Scram",
         new SequentialCommandGroup(
             new ParallelDeadlineGroup(
                 new WaitCommand(9),
@@ -205,7 +205,9 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                     new WaitCommand(5),
                     new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))),
-            new DriveForwardForTime(drivetrain, 6)));
+            new ParallelCommandGroup(
+                new RotateShooterBasic(shooterRotation, () -> 0),
+                new DriveForwardForTime(drivetrain, 6))));
 
     // autonChooser.addOption("Aim and Shoot Auton", new ParallelCommandGroup(
     // new RotateArm(arm, () ->
@@ -249,9 +251,6 @@ public class RobotContainer {
         .registerTelemetry(
             logger::telemeterize);
 
-    shooterRotation.setDefaultCommand(new RotateShooter(shooterRotation,
-        () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint));
-
     arm.setDefaultCommand(new RotateArmManual(arm, () -> -operatorController.getLeftY()));
   }
 
@@ -273,10 +272,10 @@ public class RobotContainer {
         // new ToggleRumble(operatorController, 0.5))))
 
         .onFalse(new ResetIntake(wrist, intakeWheels));
-        
-        driverController.rightTrigger()
-          .onTrue(new SpitOutNote(wrist, intakeWheels))
-          .onFalse(new ResetIntake(wrist, intakeWheels));
+
+    driverController.rightTrigger()
+        .onTrue(new SpitOutNote(wrist, intakeWheels))
+        .onFalse(new ResetIntake(wrist, intakeWheels));
 
   }
 
@@ -304,8 +303,8 @@ public class RobotContainer {
             new StopServos(servos)));
 
     operatorController.b()
-          .onTrue(new SpitOutNote(wrist, intakeWheels))
-          .onFalse(new ResetIntake(wrist, intakeWheels));
+        .onTrue(new SpitOutNote(wrist, intakeWheels))
+        .onFalse(new ResetIntake(wrist, intakeWheels));
 
     // operatorController.a().onTrue(new RotateShooter(shooterRotation,
     // () -> LimelightUtils.GetShooterAngle(ExportedVariables.Distance)))
