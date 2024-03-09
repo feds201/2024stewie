@@ -6,6 +6,7 @@ package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake.IntakeWheels;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
@@ -19,10 +20,10 @@ public class IntakeUntilNoteIn extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed)
+        new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)
             .until(() -> irSensor.getBeamBroken()),
         new ParallelDeadlineGroup(
-            // new WaitCommand(IntakeConstants.WristPID.kDistanceSensorDetectedDelay), This should not be necessary
-            new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed)));
+            new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay), // This should not be necessary
+            new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)));
   }
 }

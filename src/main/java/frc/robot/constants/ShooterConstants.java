@@ -42,6 +42,7 @@ public class ShooterConstants {
 
     public static final int kThickWheelServoPort = 1;
     public static final int kThinWheelServoPort = 2;
+    public static final double kHandoffDelay = 0;
 
     public static TalonFXConfiguration GetWheelsConfiguration() {
         TalonFXConfiguration configs = new TalonFXConfiguration();

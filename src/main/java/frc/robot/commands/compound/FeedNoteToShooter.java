@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.Intake.IntakeIn;
+import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.Intake.RotateWristPIDInfinite;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.shooter.RotateShooter;
@@ -39,6 +39,6 @@ public class FeedNoteToShooter extends ParallelCommandGroup {
                 new SequentialCommandGroup(
                     new WaitCommand(ShooterConstants.kRotateShooterDelay),
                     new ParallelDeadlineGroup(
-                        new IntakeIn(wheels, () -> IntakeConstants.kWheelSpeed))))));
+                        new RunIntakeWheels(wheels, () -> IntakeConstants.kIntakeNoteWheelSpeed))))));
   }
 }

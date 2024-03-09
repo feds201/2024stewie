@@ -38,7 +38,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Intake.IntakeIn;
+import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.Intake.IntakeUntilNoteIn;
 import frc.robot.commands.Intake.RotateWristBasic;
 import frc.robot.commands.Intake.RotateWristPID;
@@ -309,24 +309,24 @@ public class RobotContainer {
     // Intake = Wrist + IntakeWheels
     // INTAKE
     intakeWheels.getShuffleboardTab().add("Run Intake Wheels",
-        new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed));
+        new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed));
 
     intakeWheels.getShuffleboardTab().add("Run Intake Wheels Backwards",
-        new IntakeIn(intakeWheels, () -> -IntakeConstants.kWheelSpeed));
+        new RunIntakeWheels(intakeWheels, () -> -IntakeConstants.kIntakeNoteWheelSpeed));
 
-    GenericEntry wristSpeed = wrist.getShuffleboardTab()
-        .add("Wrist Speed", IntakeConstants.kRotateSpeed)
-        .withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", 0, "max", 0.8, "blockIncrement", 0.005))
-        .getEntry();
+    // GenericEntry wristSpeed = wrist.getShuffleboardTab()
+    //     .add("Wrist Speed", IntakeConstants.kRotateSpeed)
+    //     .withWidget(BuiltInWidgets.kNumberSlider)
+    //     .withProperties(Map.of("min", 0, "max", 0.8, "blockIncrement", 0.005))
+    //     .getEntry();
 
-    wrist.getShuffleboardTab().add("Rotate Intake Simple",
-        new RotateWristBasic(wrist,
-            () -> wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
+    // wrist.getShuffleboardTab().add("Rotate Intake Simple",
+    //     new RotateWristBasic(wrist,
+    //         () -> wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
 
-    wrist.getShuffleboardTab().add("Rotate Intake Backwards Simple",
-        new RotateWristBasic(wrist,
-            () -> -wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
+    // wrist.getShuffleboardTab().add("Rotate Intake Backwards Simple",
+    //     new RotateWristBasic(wrist,
+    //         () -> -wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
 
     wrist.getShuffleboardTab().add("Rotate Note Position",
         new RotateWristPID(wrist,
