@@ -62,7 +62,7 @@ public class Wrist extends SubsystemABC {
 
   @Override
   public void periodic() {
-    wristRotationEncoder.setPositionOffset(0.7439);
+    wristRotationEncoder.setPositionOffset(0);
     // This method will be called once per scheduler run
     writePeriodicOutputs();
   }
@@ -85,14 +85,8 @@ public class Wrist extends SubsystemABC {
   }
 
   public void setPIDTarget(double target) {
-    // TODO MOVE THIS OUT
-    if(target < 0  || target > 230) 
-    {
-      setFailure(true);
-    } else {
-      setTarget(target);
-      pid.setSetpoint(target);
-    }
+    setTarget(target);
+    pid.setSetpoint(target);
   }
 
   public boolean pidAtSetpoint() {
@@ -132,7 +126,7 @@ public class Wrist extends SubsystemABC {
     wristVoltage.set(voltage);
     wristVoltageLog.append(voltage);
 
-    if(voltage > 0) {
+    if (voltage > 0) {
       setTowardIntake(false);
     } else {
       setTowardIntake(true);
@@ -149,21 +143,23 @@ public class Wrist extends SubsystemABC {
     SmartDashboard.putNumber("Wrist Angle Raw (enc * 360)", rawEncoderValue * 360);
 
     SmartDashboard.putNumber("Wrist Abs Position", wristRotationEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Wrist Abs Position W/ Offset", wristRotationEncoder.getAbsolutePosition() - wristRotationEncoder.getPositionOffset());
+    SmartDashboard.putNumber("Wrist Abs Position W/ Offset",
+        wristRotationEncoder.getAbsolutePosition() - wristRotationEncoder.getPositionOffset());
     SmartDashboard.putNumber("Wrist Angle Position", wristRotationEncoder.getAbsolutePosition() * 360);
-    SmartDashboard.putNumber("Wrist Angle Position W/ Offset", (wristRotationEncoder.getAbsolutePosition() - wristRotationEncoder.getPositionOffset()) * 360);
+    SmartDashboard.putNumber("Wrist Angle Position W/ Offset",
+        (wristRotationEncoder.getAbsolutePosition() - wristRotationEncoder.getPositionOffset()) * 360);
 
     if (rawEncoderValue < 0) {
-      SmartDashboard.putNumber("Encoder negative", rawEncoderValue*180 + 360);
+      SmartDashboard.putNumber("Encoder negative", rawEncoderValue * 180 + 360);
     } else {
-      SmartDashboard.putNumber("Encoder positive", rawEncoderValue*180);
+      SmartDashboard.putNumber("Encoder positive", rawEncoderValue * 180);
     }
 
-    if(rotationAngleValue > 300) {
-      rotationAngleValue -= 360;
-    } else if (rotationAngleValue < -50) {
-      rotationAngleValue += 360;
-    }
+    // if(rotationAngleValue > 300) {
+    // rotationAngleValue -= 360;
+    // } else if (rotationAngleValue < -50) {
+    // rotationAngleValue += 360;
+    // }
 
     SmartDashboard.putNumber("Wrist after wrap around check", rotationAngleValue);
 
@@ -173,9 +169,9 @@ public class Wrist extends SubsystemABC {
 
   public void readIntakeEncoder() {
     double rotationValue = wristRotationEncoder.get();
-    if(rotationValue > 300/360) {
+    if (rotationValue > 300 / 360) {
       rotationValue -= 1;
-    } else if (rotationValue < -50/360) {
+    } else if (rotationValue < -50 / 360) {
       rotationValue += 1;
     }
     rotationEncoderValue.set(rotationValue);
@@ -195,5 +191,5 @@ public class Wrist extends SubsystemABC {
   public void setTowardIntake(boolean state) {
     towardShooter.set(state);
     towardShooterLog.append(state);
-  } 
+  }
 }

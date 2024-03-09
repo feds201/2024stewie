@@ -20,10 +20,10 @@ public class IntakeUntilNoteIn extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed)
+        new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)
             .until(() -> irSensor.getBeamBroken()),
         new ParallelDeadlineGroup(
-            new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay),
-            new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed)));
+            new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay), // This should not be necessary
+            new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)));
   }
 }

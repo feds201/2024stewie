@@ -41,9 +41,9 @@ public class ShootNoteAtSpeaker extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new RotateWristPID(wrist, IntakeConstants.kWristIdlePosition),
+        new RotateWristPID(wrist, IntakeConstants.WristPID.kWristIdlePosition),
         new ParallelCommandGroup(
-            new RotateWristPIDInfinite(wrist, IntakeConstants.kWristIdlePosition),
+            new RotateWristPIDInfinite(wrist, IntakeConstants.WristPID.kWristIdlePosition),
             new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos)));
             
   }

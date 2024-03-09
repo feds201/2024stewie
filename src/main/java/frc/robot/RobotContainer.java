@@ -20,7 +20,6 @@ package frc.robot;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,11 +38,9 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.intake.IntakeUntilNoteIn;
 import frc.robot.commands.intake.RotateWristBasic;
-import frc.robot.commands.intake.RotateWristPIDInfinite;
 import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.arm.RotateArmManual;
@@ -56,21 +53,18 @@ import frc.robot.commands.compound.ResetIntake;
 import frc.robot.commands.compound.ShootNoteAtSpeaker;
 import frc.robot.commands.compound.ShootNoteAtSpeakerOnly;
 import frc.robot.commands.compound.SpitOutNote;
-import frc.robot.commands.controller.ToggleRumble;
 import frc.robot.commands.shooter.StopServos;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.commands.shooter.ShootNoteVelocity;
-import frc.robot.commands.shooter.ShootNoteVoltage;
-import frc.robot.commands.swerve.AimToAprilTag;
 import frc.robot.constants.*;
 import frc.robot.constants.DIOConstants.Intake;
-import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterServos;
@@ -78,11 +72,8 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
-import frc.robot.subsystems.vision_sys.LockTag.Joystick;
-import frc.robot.subsystems.vision_sys.LockTag.RotationSource;
 import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
 import frc.robot.subsystems.vision_sys.camera.BackCamera;
-import frc.robot.subsystems.vision_sys.camera.FrontCamera;
 import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.utils.LimelightUtils;
 import frc.robot.utils.Telemetry;
@@ -160,8 +151,6 @@ public class RobotContainer {
     setupShooterCommands();
     setupErrorTriggers();
     setupAutonCommands();
-
-    Shuffleboard.getTab("swerve").add("Swerve PID", drivetrain.pid);
 
   }
 
@@ -293,6 +282,7 @@ public class RobotContainer {
         .onTrue(new AlignToAprilTag(drivetrain, driverController, operatorController))
         .onFalse(new ParallelDeadlineGroup(
             new WaitCommand(0.2),
+            
             drivetrain.applyRequest(() -> brake)));
 
     operatorController.leftTrigger()
@@ -305,29 +295,10 @@ public class RobotContainer {
     operatorController.b()
         .onTrue(new SpitOutNote(wrist, intakeWheels))
         .onFalse(new ResetIntake(wrist, intakeWheels));
-
-    // operatorController.a().onTrue(new RotateShooter(shooterRotation,
-    // () -> LimelightUtils.GetShooterAngle(ExportedVariables.Distance)))
-    // .onFalse(new RotateShooterBasic(shooterRotation, () -> 0));
-
   }
 
   private void setupErrorTriggers() {
-    new Trigger(wrist::getFailure).whileTrue(
-        new RepeatCommand(
-            new ParallelCommandGroup(
-                new ToggleRumble(driverController, 0.25),
-                new ToggleRumble(operatorController, 0.25))));
-    new Trigger(arm::getFailure).whileTrue(
-        new RepeatCommand(
-            new ParallelCommandGroup(
-                new ToggleRumble(driverController, 0.25),
-                new ToggleRumble(operatorController, 0.25))));
-    new Trigger(shooterRotation::getFailure).whileTrue(
-        new RepeatCommand(
-            new ParallelCommandGroup(
-                new ToggleRumble(driverController, 0.25),
-                new ToggleRumble(operatorController, 0.25))));
+    // There should be some feedback for an "failure mode" but rumbling the controller continuously was obnoxious lol.
   }
 
   public Command getAutonomousCommand() {
@@ -339,42 +310,42 @@ public class RobotContainer {
     // Intake = Wrist + IntakeWheels
     // INTAKE
     intakeWheels.getShuffleboardTab().add("Run Intake Wheels",
-        new IntakeIn(intakeWheels, () -> IntakeConstants.kWheelSpeed));
+        new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed));
 
     intakeWheels.getShuffleboardTab().add("Run Intake Wheels Backwards",
-        new IntakeIn(intakeWheels, () -> -IntakeConstants.kWheelSpeed));
+        new RunIntakeWheels(intakeWheels, () -> -IntakeConstants.kIntakeNoteWheelSpeed));
 
-    GenericEntry wristSpeed = wrist.getShuffleboardTab()
-        .add("Wrist Speed", IntakeConstants.kRotateSpeed)
-        .withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", 0, "max", 0.3, "blockIncrement", 0.005))
-        .getEntry();
+    // GenericEntry wristSpeed = wrist.getShuffleboardTab()
+    //     .add("Wrist Speed", IntakeConstants.kRotateSpeed)
+    //     .withWidget(BuiltInWidgets.kNumberSlider)
+    //     .withProperties(Map.of("min", 0, "max", 0.8, "blockIncrement", 0.005))
+    //     .getEntry();
 
-    wrist.getShuffleboardTab().add("Rotate Intake Simple",
-        new RotateWristBasic(wrist,
-            () -> wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
+    // wrist.getShuffleboardTab().add("Rotate Intake Simple",
+    //     new RotateWristBasic(wrist,
+    //         () -> wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
 
-    wrist.getShuffleboardTab().add("Rotate Intake Backwards Simple",
-        new RotateWristBasic(wrist,
-            () -> -wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
+    // wrist.getShuffleboardTab().add("Rotate Intake Backwards Simple",
+    //     new RotateWristBasic(wrist,
+    //         () -> -wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
 
     wrist.getShuffleboardTab().add("Rotate Note Position",
         new RotateWristPID(wrist,
-            IntakeConstants.kWristNotePosition));
+            IntakeConstants.WristPID.kWristNotePosition));
 
     wrist.getShuffleboardTab().add("Rotate Idle Position",
         new RotateWristPID(wrist,
-            IntakeConstants.kWristIdlePosition));
+            IntakeConstants.WristPID.kWristIdlePosition));
 
     wrist.getShuffleboardTab().add("Rotate Shooter Position",
         new RotateWristPID(wrist,
-            IntakeConstants.kWristShooterFeederSetpoint));
+            IntakeConstants.WristPID.kWristShooterFeederSetpoint));
 
     wrist.getShuffleboardTab().add("Rotate until note in intake",
         new SequentialCommandGroup(
-            new RotateWristPID(wrist, IntakeConstants.kWristNotePosition),
+            new RotateWristPID(wrist, IntakeConstants.WristPID.kWristNotePosition),
             new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake),
-            new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint)
+            new RotateWristPID(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint)
 
         ));
   }

@@ -7,10 +7,11 @@ package frc.robot.commands.compound;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
+import frc.robot.constants.IntakeConstants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -21,10 +22,10 @@ public class SpitOutNote extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new RotateWristPID(wrist, 105),
+      new RotateWristPID(wrist, IntakeConstants.WristPID.kSpitOutPosition),
       new ParallelDeadlineGroup(
         new WaitCommand(2), 
-        new IntakeIn(wheels, () -> 1))
+        new RunIntakeWheels(wheels, () -> IntakeConstants.kSpitOutNoteWheelSpeed))
     );
   }
 }

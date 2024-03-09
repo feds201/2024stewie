@@ -6,12 +6,9 @@ package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.RunIntakeWheels;
+import frc.robot.commands.intake.IntakeUntilNoteIn;
 import frc.robot.commands.intake.RotateWristPID;
-import frc.robot.commands.controller.ToggleRumble;
-import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
@@ -22,27 +19,20 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DeployIntake extends SequentialCommandGroup {
-  /** Creates a new DeployIntake. */
-  public 
-  DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation,
-      BreakBeamSensorIntake breakBeamSensorIntake) {
+    /** Creates a new DeployIntake. */
+    public DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation,
+            BreakBeamSensorIntake breakBeamSensorIntake) {
 
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-        new ParallelDeadlineGroup(
-            new RotateWristPID(wrist, IntakeConstants.kWristNotePosition),
-            // new RotateShooter(shooterRotation, () -> -5),
-            new IntakeIn(intakeWheels, () -> -0.5)),
-        new IntakeIn(intakeWheels, () -> -0.5)
-            .until(breakBeamSensorIntake::getBeamBroken),
-        new SequentialCommandGroup(
-            new ParallelDeadlineGroup(
-                new WaitCommand(0.14),
-                new IntakeIn(intakeWheels, () -> -0.5)),
-            new ParallelDeadlineGroup(
-                new RotateWristPID(wrist,
-                    IntakeConstants.kWristIdlePosition),
-                new IntakeIn(intakeWheels, () -> 0))));
-  }
+        // Add your commands in the addCommands() call, e.g.
+        // addCommands(new FooCommand(), new BarCommand());
+        addCommands(
+                new ParallelDeadlineGroup(
+                        new RotateWristPID(wrist, IntakeConstants.WristPID.kWristNotePosition),
+                        new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)),
+                new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake),
+                new ParallelDeadlineGroup(
+                        new RotateWristPID(wrist,
+                                IntakeConstants.WristPID.kWristIdlePosition),
+                        new RunIntakeWheels(intakeWheels, () -> 0)));
+    }
 }

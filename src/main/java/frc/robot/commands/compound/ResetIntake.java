@@ -5,7 +5,7 @@
 package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeWheels;
@@ -20,7 +20,7 @@ public class ResetIntake extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new RotateWristPID(wrist, IntakeConstants.kWristIdlePosition),
-        new IntakeIn(intakeWheels, () -> 0));
+        new RotateWristPID(wrist, IntakeConstants.WristPID.kWristIdlePosition),
+        new RunIntakeWheels(intakeWheels, () -> 0));
   }
 }

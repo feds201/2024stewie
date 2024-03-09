@@ -18,7 +18,7 @@ public class ShooterConstants {
 
         public static final double kArmSubwooferSetpoint = -10; // 7 feet 10 inches
         public static final double kArm60InchSetpoint = -15; // 5 feet away
-        public static final double kShooterRotationFeederSetpoint = -36;
+        public static final double kShooterRotationFeederSetpoint = -26;
 
         public static PIDController GetRotationPID() {
             PIDController pid = new PIDController(kRotateP, kRotateI,
@@ -42,6 +42,7 @@ public class ShooterConstants {
 
     public static final int kThickWheelServoPort = 1;
     public static final int kThinWheelServoPort = 2;
+    public static final double kHandoffDelay = 0;
 
     public static TalonFXConfiguration GetWheelsConfiguration() {
         TalonFXConfiguration configs = new TalonFXConfiguration();

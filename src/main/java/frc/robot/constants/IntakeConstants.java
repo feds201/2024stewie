@@ -10,6 +10,13 @@ public class IntakeConstants {
     public final static double kIZone = Double.POSITIVE_INFINITY;
     public final static double kRotationTolerance = 5;
 
+    public static final double kSpitOutPosition = 205;
+    public final static double kWristNotePosition = 295;
+    public final static double kWristIdlePosition = 170;
+    public final static double kWristShooterFeederSetpoint = 86; // Problem?
+
+    
+
     public static PIDController GetWristPID() {
       PIDController pid = new PIDController(kP, kI, kD);
       pid.setIZone(kIZone);
@@ -17,13 +24,10 @@ public class IntakeConstants {
       return pid;
     }
   }
+
+  public static final double kIntakeNoteWheelSpeed = -0.6;
+  public static final double kSpitOutNoteWheelSpeed = 1;
+  public static final double kHandoffNoteWheelSpeed = 0.4;
+  public static final double kDistanceSensorDetectedDelay = 0.4;
   
-  public final static double kWristNotePosition = 214;
-  public final static double kWristIdlePosition = 70;
-  public final static double kWristShooterFeederSetpoint = 7; //Problem?
-
-  public static final double kWheelSpeed = -0.25;
-  public static final double kRotateSpeed = 0.20;
-
-  public static final double kDistanceSensorDetectedDelay = 0.1;
 }

@@ -7,7 +7,7 @@ package frc.robot.commands.compound;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooter;
@@ -30,17 +30,17 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
     addCommands(
             new RotateShooter(shooterRotation,
                 () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
-            new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint)
+            new RotateWristPID(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint)
                 .andThen(
                     new WaitCommand(0.75)
                         .andThen(
                             new ParallelCommandGroup(
-                                new IntakeIn(intakeWheels, () -> 0.4),
+                                new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
                                 new EjectNote(servos))
                                 .until(breakBeamSensorShooter::getBeamBroken)
                                 .andThen(new ParallelDeadlineGroup(
-                                    new WaitCommand(0.6),
-                                    new IntakeIn(intakeWheels, () -> 0.4),
+                                    new WaitCommand(ShooterConstants.kHandoffDelay),
+                                    new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
                                     new EjectNote(servos))))));
   }
 }

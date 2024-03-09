@@ -9,12 +9,12 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.IntakeWheels;
 
-public class IntakeIn extends Command {
+public class RunIntakeWheels extends Command {
   /** Creates a new IntakeIn. */
   private final IntakeWheels c_intake;
   private final DoubleSupplier c_intakeVoltage;
 
-  public IntakeIn(IntakeWheels intake, DoubleSupplier intakeVoltage) {
+  public RunIntakeWheels(IntakeWheels intake, DoubleSupplier intakeVoltage) {
     c_intake = intake;
     c_intakeVoltage = intakeVoltage;
 
