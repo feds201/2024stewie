@@ -3,7 +3,6 @@ package frc.robot.constants;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -60,12 +59,6 @@ public class ArmConstants {
       motionMagicConfigs.MotionMagicCruiseVelocity = 10; // TODO: FOR SURE TUNE THESE DAWG!!!
       motionMagicConfigs.MotionMagicAcceleration = 10;
       motionMagicConfigs.MotionMagicJerk = 10;
-
-      // SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = configs.SoftwareLimitSwitch;
-      // softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
-      // softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
-      // softwareLimitSwitchConfigs.ForwardSoftLimitThreshold = 40 * kArmGearReduction;
-      // softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = 1 * kArmGearReduction;
 
       return configs;
    }

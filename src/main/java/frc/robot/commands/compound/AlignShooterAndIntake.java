@@ -30,7 +30,7 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
     addCommands(
             new RotateShooter(shooterRotation,
                 () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
-            new RotateWristPID(wrist, IntakeConstants.kWristShooterFeederSetpoint)
+            new RotateWristPID(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint)
                 .andThen(
                     new WaitCommand(0.75)
                         .andThen(

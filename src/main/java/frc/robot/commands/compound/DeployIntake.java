@@ -31,7 +31,7 @@ public class DeployIntake extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ParallelDeadlineGroup(
-            new RotateWristPID(wrist, IntakeConstants.kWristNotePosition),
+            new RotateWristPID(wrist, IntakeConstants.WristPID.kWristNotePosition),
             // new RotateShooter(shooterRotation, () -> -5),
             new IntakeIn(intakeWheels, () -> -0.5)),
         new IntakeIn(intakeWheels, () -> -0.5)
@@ -42,7 +42,7 @@ public class DeployIntake extends SequentialCommandGroup {
                 new IntakeIn(intakeWheels, () -> -0.5)),
             new ParallelDeadlineGroup(
                 new RotateWristPID(wrist,
-                    IntakeConstants.kWristIdlePosition),
+                    IntakeConstants.WristPID.kWristIdlePosition),
                 new IntakeIn(intakeWheels, () -> 0))));
   }
 }

@@ -20,7 +20,7 @@ public class ResetIntake extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new RotateWristPID(wrist, IntakeConstants.kWristIdlePosition),
+        new RotateWristPID(wrist, IntakeConstants.WristPID.kWristIdlePosition),
         new IntakeIn(intakeWheels, () -> 0));
   }
 }

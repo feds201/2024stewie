@@ -33,7 +33,7 @@ public class FeedNoteToShooter extends ParallelCommandGroup {
         new SequentialCommandGroup( 
             new WaitCommand(ArmConstants.kArmRotationDelay), //Wait 3 seconds
             new ParallelCommandGroup(
-                new RotateWristPIDInfinite(wrist, IntakeConstants.kWristShooterFeederSetpoint), //Rotate Intake to the setpoint (7) (90 degrees)
+                new RotateWristPIDInfinite(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint), //Rotate Intake to the setpoint (7) (90 degrees)
                 new RotateShooter(shooterRotation,
                     () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint), //PROBLEM (NOT ROTATING)
                 new SequentialCommandGroup(
