@@ -5,11 +5,11 @@
 package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.commands.Intake.IntakeIn;
-import frc.robot.commands.Intake.RotateWristPID;
+import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.Intake.IntakeWheels;
-import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

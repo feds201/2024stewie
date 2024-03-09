@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Intake.IntakeIn;
-import frc.robot.commands.Intake.RotateWristPID;
+import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.RotateWristPID;
 import frc.robot.commands.controller.ToggleRumble;
 import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.Intake.IntakeWheels;
-import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.shooter.ShooterRotation;
 
