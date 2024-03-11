@@ -9,7 +9,10 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
@@ -29,7 +32,8 @@ public class ShooterRotation extends SubsystemABC {
   private final DutyCycleEncoder shooterRotateEncoder; // Through Bore Encoder
   private final DoubleSupplier currentArmRotationSupplier;
 
-  private final PIDController rotatePID = ShooterConstants.RotationPIDForExternalEncoder.GetRotationPID();
+  private final PIDController  rotatePID = ShooterConstants.Rotation.GetRotationPID();
+  private final ArmFeedforward rotateFF  = ShooterConstants.Rotation.GetRotationFF();
 
   private final DoubleEntry rotateVoltage;
   private final DoubleEntry rotateTarget;
@@ -67,6 +71,7 @@ public class ShooterRotation extends SubsystemABC {
     tab.add("shooter rotate encoder", shooterRotateEncoder);
     tab.add("shoote rotate motor", shooterRotate);
     tab.add("rotation pid controller", rotatePID);
+    // tab.add("rotation ff", rotateFF);
   }
 
   @Override
@@ -99,13 +104,13 @@ public class ShooterRotation extends SubsystemABC {
     if (currentAngle < -50 || currentAngle > 10) {
       setFailure(true);
     } else {
-      double output = rotatePID.calculate(currentAngle);
-      SmartDashboard.putNumber("current target", rotatePID.getSetpoint());
-      SmartDashboard.putNumber("current angle", getEncoderAngle());
-      SmartDashboard.putNumber("current output", output);
-      SmartDashboard.putNumber("current kP", rotatePID.getP());
-      SmartDashboard.putNumber("current kI", rotatePID.getI());
-      SmartDashboard.putNumber("current kD", rotatePID.getD());
+      double pid = rotatePID.calculate(currentAngle);
+      double ff = rotateFF.calculate(rotatePID.getSetpoint(), -0.001, 0); // KEEP THIS NEGATIVE! The 
+      
+      double output = pid + ff;
+      SmartDashboard.putNumber("shooterRotation/total output", output);
+      SmartDashboard.putNumber("shooterRotation/FF", ff);
+      SmartDashboard.putNumber("shooterRotation/angle supplied to ff", rotatePID.getSetpoint());
 
       setRotateVoltage(output); // positive direction is towards intake, when it should be away from intake
     }
@@ -115,6 +120,14 @@ public class ShooterRotation extends SubsystemABC {
   public void periodic() {
     // This method will be called once per scheduler run
     writePeriodicOutputs();
+
+    SmartDashboard.putNumber("shooterRotation/current target position", rotatePID.getSetpoint());
+    SmartDashboard.putNumber("shooterRotation/position error",          rotatePID.getPositionError());
+    SmartDashboard.putNumber("shooterRotation/position error",          rotatePID.getVelocityError());
+    SmartDashboard.putNumber("shooterRotation/current angle",           getEncoderAngle());
+    SmartDashboard.putNumber("shooterRotation/current kP",              rotatePID.getP());
+    SmartDashboard.putNumber("shooterRotation/current kI",              rotatePID.getI());
+    SmartDashboard.putNumber("shooterRotation/current kD",              rotatePID.getD());
   }
 
   // GETTERS
@@ -170,9 +183,9 @@ public class ShooterRotation extends SubsystemABC {
 
   public void readEncoderValue() {
     double encoder = shooterRotateEncoder.get();
-    if(encoder < -340/360) {
+    if (encoder < -340 / 360) {
       encoder += 1;
-    } else if (encoder > 10/360) {
+    } else if (encoder > 10 / 360) {
       encoder -= 1;
     }
     encoderValue.set(encoder);
@@ -181,7 +194,7 @@ public class ShooterRotation extends SubsystemABC {
 
   public void readEncoderAngleWithoutOffset() {
     double angle = encoderValue.get() * 360;
-    if(angle < -340) {
+    if (angle < -340) {
       angle += 360;
     } else if (angle > 10) {
       angle -= 360;
@@ -192,7 +205,7 @@ public class ShooterRotation extends SubsystemABC {
 
   public void readEncoderAngle() {
     double angle = shooterRotateEncoder.get() * 360 - currentArmRotationSupplier.getAsDouble();
-    if(angle < -340) {
+    if (angle < -340) {
       angle += 360;
     } else if (angle > 10) {
       angle -= 360;

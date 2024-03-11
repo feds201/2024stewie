@@ -3,31 +3,54 @@ package frc.robot.constants;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class ShooterConstants {
-    public static class RotationPIDForExternalEncoder {
-        public static final double kRotateP = 0.012;
-        public static final double kRotateI = 0.001;
-        public static final double kRotateD = 0;
+    public static class Rotation {
 
-        public static final double kRotateTolerance = 0.5;
-        public static final double kRotateIZone = Double.POSITIVE_INFINITY;
+        // PID CONSTANTS
+        // public static final double kP = 0.012;
+        // public static final double kI = 0.001;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+
+        public static final double kGoalTolerance = 0.5;
+        public static final double kIZone = Double.POSITIVE_INFINITY;
         public static final double kIMax = 0.05;
         public static final double kIMin = -0.05;
+
+        public static final double kS = 0.022;
+        public static final double kG = 0.02;
+        public static final double kV = 0;
+        public static final double kA = 0;
+
+        // // TRAPEZOIDAL PROFILE CONSTANTS
+        // public static final double kMaxSpeed = 0.1;
+        // public static final double kMaxAcceleration = 4;
+
+        // SETPOINTS
 
         public static final double kArmSubwooferSetpoint = -10; // 7 feet 10 inches
         public static final double kArm60InchSetpoint = -15; // 5 feet away
         public static final double kShooterRotationFeederSetpoint = -26;
 
         public static PIDController GetRotationPID() {
-            PIDController pid = new PIDController(kRotateP, kRotateI,
-                    kRotateD);
+            PIDController pid = new PIDController(kP, kI, kD);
 
-            pid.setTolerance(kRotateTolerance);
-            pid.setIZone(kRotateIZone);
+            pid.setTolerance(kGoalTolerance);
+            pid.setIZone(kIZone);
             pid.setIntegratorRange(kIMin, kIMax);
+
             return pid;
+        }
+
+        public static ArmFeedforward GetRotationFF() {
+            ArmFeedforward rotationFF = new ArmFeedforward(kS, kG, kV, kA);
+            return rotationFF;
         }
     }
 

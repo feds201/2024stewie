@@ -8,15 +8,15 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.intake.RotateWristPIDInfinite;
+import frc.robot.commands.Intake.RotateWristPIDInfinite;
+import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
+import frc.robot.subsystems.Intake.IntakeWheels;
+import frc.robot.subsystems.Intake.Wrist;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.shooter.ShooterRotation;
 
@@ -35,7 +35,7 @@ public class FeedNoteToShooter extends ParallelCommandGroup {
             new ParallelCommandGroup(
                 new RotateWristPIDInfinite(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint), //Rotate Intake to the setpoint (7) (90 degrees)
                 new RotateShooter(shooterRotation,
-                    () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint), //PROBLEM (NOT ROTATING)
+                    () -> ShooterConstants.Rotation.kShooterRotationFeederSetpoint), //PROBLEM (NOT ROTATING)
                 new SequentialCommandGroup(
                     new WaitCommand(ShooterConstants.kRotateShooterDelay),
                     new ParallelDeadlineGroup(

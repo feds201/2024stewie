@@ -7,14 +7,14 @@ package frc.robot.commands.compound;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.intake.RotateWristPID;
+import frc.robot.commands.Intake.RotateWristPID;
+import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooter;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
+import frc.robot.subsystems.Intake.IntakeWheels;
+import frc.robot.subsystems.Intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterServos;
@@ -29,7 +29,7 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
             new RotateShooter(shooterRotation,
-                () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
+                () -> ShooterConstants.Rotation.kShooterRotationFeederSetpoint),
             new RotateWristPID(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint)
                 .andThen(
                     new WaitCommand(0.75)

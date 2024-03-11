@@ -38,10 +38,10 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.intake.IntakeUntilNoteIn;
-import frc.robot.commands.intake.RotateWristBasic;
-import frc.robot.commands.intake.RotateWristPID;
+import frc.robot.commands.Intake.IntakeUntilNoteIn;
+import frc.robot.commands.Intake.RotateWristBasic;
+import frc.robot.commands.Intake.RotateWristPID;
+import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.arm.RotateArmManual;
 import frc.robot.commands.autons.DriveForwardForTime;
@@ -61,10 +61,10 @@ import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.commands.shooter.ShootNoteVelocity;
 import frc.robot.constants.*;
 import frc.robot.constants.DIOConstants.Intake;
+import frc.robot.subsystems.Intake.IntakeWheels;
+import frc.robot.subsystems.Intake.Wrist;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterServos;
@@ -371,7 +371,7 @@ public class RobotContainer {
             () -> shooterSpeed.getDouble(ShooterConstants.kShootVelocity)));
 
     shooterTab.add("Slider Arm Rotation", new RotateShooter(shooterRotation,
-        () -> ShooterConstants.RotationPIDForExternalEncoder.kArm60InchSetpoint));
+        () -> ShooterConstants.Rotation.kArm60InchSetpoint));
 
     shooterTab.add("Shooter feed note position TESTING",
         new RotateShooter(shooterRotation, () -> -30));

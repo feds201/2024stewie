@@ -6,6 +6,15 @@
     "transitory": {
       "Shuffleboard": {
         "open": true,
+        "shooter": {
+          "open": true,
+          "shoote rotate motor": {
+            "open": true
+          },
+          "shooter rotation": {
+            "open": true
+          }
+        },
         "shooterRotation": {
           "open": true,
           "rotation pid controller": {
@@ -20,7 +29,10 @@
         "Wrist Angle Position W": {
           "open": true
         },
-        "open": true
+        "open": true,
+        "shooterRotation": {
+          "open": true
+        }
       },
       "arm": {
         "open": true
@@ -32,6 +44,9 @@
         "open": true
       },
       "irsensor": {
+        "open": true
+      },
+      "shooter": {
         "open": true
       },
       "shooterRotation": {
@@ -74,7 +89,7 @@
       "/Shuffleboard/shooter/Slider Arm Rotation": "Command",
       "/Shuffleboard/shooter/Spin Servos": "Command",
       "/Shuffleboard/shooter/Stop Servos": "Command",
-      "/Shuffleboard/shooter/rotation pid controller": "PIDController",
+      "/Shuffleboard/shooter/rotation pid controller": "ProfiledPIDController",
       "/Shuffleboard/shooter/servo": "Subsystem",
       "/Shuffleboard/shooter/servo thick side": "Subsystem",
       "/Shuffleboard/shooter/shoote rotate motor": "Motor Controller",
@@ -156,7 +171,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [
@@ -204,6 +222,62 @@
                 1.0
               ],
               "id": "NT:/SmartDashboard/Wrist after wrap around check"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 163,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/shooterRotation/current angle"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <3>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 216,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/shooter/shoote rotate motor/Value"
             }
           ]
         }
