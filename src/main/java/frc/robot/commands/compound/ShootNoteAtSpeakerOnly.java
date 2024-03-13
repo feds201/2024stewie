@@ -21,19 +21,23 @@ import frc.robot.utils.LimelightUtils;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootNoteAtSpeakerOnly extends ParallelCommandGroup {
-  /** Creates a new ShootNoteAtSpeakerOnly. 
-   * @param shooterRotation 
-   * @param shooterWheels 
-   * @param servos */
+  /**
+   * Creates a new ShootNoteAtSpeakerOnly.
+   * 
+   * @param shooterRotation
+   * @param shooterWheels
+   * @param servos
+   */
   public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new RotateShooter(shooterRotation,
-                () -> LimelightUtils.GetShooterAngle(
-                    ExportedVariables.Distance)),
-            new ShootNoteMotionMagicVelocity(shooterWheels, () -> -80),
-            new SequentialCommandGroup(
-                new WaitCommand(2),
-                new EjectNote(servos)));
+        () -> LimelightUtils.GetSpeedAngle(
+            ExportedVariables.Distance).angle),
+        new ShootNoteMotionMagicVelocity(shooterWheels,
+            () -> LimelightUtils.GetSpeedAngle(ExportedVariables.Distance).speed),
+        new SequentialCommandGroup(
+            new WaitCommand(2),
+            new EjectNote(servos)));
   }
 }

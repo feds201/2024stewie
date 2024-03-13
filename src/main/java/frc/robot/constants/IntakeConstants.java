@@ -10,10 +10,10 @@ public class IntakeConstants {
     public final static double kIZone = Double.POSITIVE_INFINITY;
     public final static double kRotationTolerance = 5;
 
-    public static final double kSpitOutPosition = 205;
-    public final static double kWristNotePosition = 295;
-    public final static double kWristIdlePosition = 170;
-    public final static double kWristShooterFeederSetpoint = 86; // Problem?
+    public static final double kSpitOutPosition = 138;
+    public final static double kWristNotePosition = 236;
+    public final static double kWristIdlePosition = 112;
+    public final static double kWristShooterFeederSetpoint = 39; // TODO: Ideally all of the above positions should be based on this "home" position so we only have to change this
 
     
 
@@ -27,7 +27,7 @@ public class IntakeConstants {
 
   public static final double kIntakeNoteWheelSpeed = -0.6;
   public static final double kSpitOutNoteWheelSpeed = 1;
-  public static final double kHandoffNoteWheelSpeed = 0.4;
-  public static final double kDistanceSensorDetectedDelay = 0.4;
+  public static final double kHandoffNoteWheelSpeed = 0.6;
+  public static final double kDistanceSensorDetectedDelay = 0.1;
   
 }

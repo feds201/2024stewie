@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -13,11 +13,13 @@ import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.SubsystemABC;
+import frc.robot.subsystems.leds.Leds;
 
 public class Wrist extends SubsystemABC {
   private final CANSparkMax wristRotation;
@@ -63,6 +65,10 @@ public class Wrist extends SubsystemABC {
   @Override
   public void periodic() {
     wristRotationEncoder.setPositionOffset(0);
+     if(!wristRotationEncoder.isConnected()) { 
+      wristRotation.setVoltage(0); 
+    }
+
     // This method will be called once per scheduler run
     writePeriodicOutputs();
   }
@@ -191,5 +197,10 @@ public class Wrist extends SubsystemABC {
   public void setTowardIntake(boolean state) {
     towardShooter.set(state);
     towardShooterLog.append(state);
+   
   }
 }
+
+
+
+

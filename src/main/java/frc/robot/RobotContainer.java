@@ -38,10 +38,10 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.intake.IntakeUntilNoteIn;
-import frc.robot.commands.intake.RotateWristBasic;
-import frc.robot.commands.intake.RotateWristPID;
+import frc.robot.commands.Intake.IntakeUntilNoteIn;
+import frc.robot.commands.Intake.RotateWristBasic;
+import frc.robot.commands.Intake.RotateWristPID;
+import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArm;
 import frc.robot.commands.arm.RotateArmManual;
 import frc.robot.commands.autons.DriveForwardForTime;
@@ -63,8 +63,9 @@ import frc.robot.constants.*;
 import frc.robot.constants.DIOConstants.Intake;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
+import frc.robot.subsystems.leds.Leds;
+import frc.robot.subsystems.Intake.IntakeWheels;
+import frc.robot.subsystems.Intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterServos;
@@ -102,6 +103,7 @@ public class RobotContainer {
   private final IntakeWheels intakeWheels;
   private final Arm arm;
   private final Climber climber;
+  private final Leds leds;
 
   // private final FrontCamera frontCamera;
   private final BackCamera backCamera;
@@ -129,6 +131,7 @@ public class RobotContainer {
     servos = new ShooterServos();
     breakBeamSensorShooter = new BreakBeamSensorShooter();
     breakBeamSensorIntake = new BreakBeamSensorIntake();
+    leds = new Leds();
 
     arm.getShuffleboardTab().add("arm", arm);
     shooterWheels.getShuffleboardTab().add("shooter wheels", shooterWheels);
@@ -241,6 +244,8 @@ public class RobotContainer {
             logger::telemeterize);
 
     arm.setDefaultCommand(new RotateArmManual(arm, () -> -operatorController.getLeftY()));
+
+    shooterWheels.setDefaultCommand(new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
   }
 
   private void configureDriverController() {
@@ -272,14 +277,16 @@ public class RobotContainer {
     // LOAD BUTTON
     operatorController.leftBumper()
         .onTrue(new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
-            servos, breakBeamSensorShooter))
+            servos, breakBeamSensorShooter, leds))
         .onFalse(new ParallelCommandGroup(
-            new RotateShooter(shooterRotation, () -> -5),
+            //new RotateShooter(shooterRotation, () -> -5),
             new ResetIntake(wrist, intakeWheels)));
 
     // AUTO AIM
     operatorController.rightTrigger()
         .onTrue(new AlignToAprilTag(drivetrain, driverController, operatorController))
+        
+        
         .onFalse(new ParallelDeadlineGroup(
             new WaitCommand(0.2),
             
@@ -360,15 +367,10 @@ public class RobotContainer {
     ShuffleboardTab shooterTab = shooterWheels.getShuffleboardTab();
 
     // SHOOTER
-    GenericEntry shooterSpeed = shooterTab
-        .add("Shooter Velocity", -80)
-        .withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", -200, "max", -30, "blockIncrement", 2))
-        .getEntry();
 
     shooterTab.add("Run Shooter velocity",
-        new ShootNoteVelocity(shooterWheels,
-            () -> shooterSpeed.getDouble(ShooterConstants.kShootVelocity)));
+        new ShootNoteMotionMagicVelocity(shooterWheels,
+            () -> -80));
 
     shooterTab.add("Slider Arm Rotation", new RotateShooter(shooterRotation,
         () -> ShooterConstants.RotationPIDForExternalEncoder.kArm60InchSetpoint));
@@ -380,16 +382,9 @@ public class RobotContainer {
     shooterTab.add("Stop Servos", new StopServos(servos));
 
     shooterTab.add("Shoot Note Full Command",
-        new ParallelCommandGroup(
-            new RotateShooter(shooterRotation,
-                () -> LimelightUtils.GetShooterAngle(
-                    ExportedVariables.Distance)),
-            new ShootNoteVelocity(shooterWheels,
-                () -> shooterSpeed.getDouble(
-                    ShooterConstants.kShootVelocity)),
-            new SequentialCommandGroup(
-                new WaitCommand(5),
-                new StopServos(servos))));
+        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos));
+
+
   }
 
   private void setupClimberCommands() {

@@ -3,7 +3,29 @@ package frc.robot.utils;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LimelightUtils {
-    public static double GetShooterAngle(double limelightDistance) {
+    public static class SpeedAngle {
+        public double speed;
+        public double angle;
+
+        public SpeedAngle(double s, double a) {
+            this.speed = s;
+            this.angle = a;
+        }
+
+        public SpeedAngle() {
+            this.speed = 0;
+            this.angle = 0;
+        }
+    }
+
+    public static SpeedAngle GetSpeedAngle(double limelightDistance) {
+        SpeedAngle speedAngle = new SpeedAngle();
+        speedAngle.angle = getAngle(limelightDistance);
+        speedAngle.speed = getSpeed(limelightDistance);
+        return speedAngle;
+    }
+
+    private static double getAngle(double limelightDistance) {
         SmartDashboard.putNumber("Supplied Distance to Shooter", limelightDistance);
         if (limelightDistance < 1) {
             return -5;
@@ -63,8 +85,16 @@ public class LimelightUtils {
             return -59;
         } else if (limelightDistance < 7.875) { // 7.75
             return -59;
-        } else {                                // 8
+        } else { // 8
             return -59.5;
+        }
+    }
+
+    private static double getSpeed(double limelightDistance) {
+        if(limelightDistance < 2) {
+            return -50;
+        } else {
+            return -80;
         }
     }
 }

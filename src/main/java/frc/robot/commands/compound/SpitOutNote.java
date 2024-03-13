@@ -7,10 +7,10 @@ package frc.robot.commands.compound;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.intake.RotateWristPID;
-import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
+import frc.robot.subsystems.Intake.IntakeWheels;
+import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.commands.Intake.RotateWristPID;
+import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.constants.IntakeConstants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

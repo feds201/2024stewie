@@ -18,7 +18,7 @@ public class ShooterConstants {
 
         public static final double kArmSubwooferSetpoint = -10; // 7 feet 10 inches
         public static final double kArm60InchSetpoint = -15; // 5 feet away
-        public static final double kShooterRotationFeederSetpoint = -26;
+        public static final double kShooterRotationFeederSetpoint = -34;
 
         public static PIDController GetRotationPID() {
             PIDController pid = new PIDController(kRotateP, kRotateI,

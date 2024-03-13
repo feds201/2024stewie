@@ -15,7 +15,7 @@ public class Leds extends SubsystemBase {
   private double currentColor;
 
   public Leds() {
-    leds = new Spark(3); // We treat the Leds as a servo which is coming in from PWM port 6
+    leds = new Spark(0); // We treat the Leds as a servo which is coming in from PWM port 6
     currentColor = 0.59;
   }
 
