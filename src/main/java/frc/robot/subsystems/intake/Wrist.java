@@ -42,7 +42,7 @@ public class Wrist extends SubsystemABC {
     wristRotation = new CANSparkMax(CANConstants.Intake.kIntakeWrist, MotorType.kBrushless);
     wristRotationEncoder = new DutyCycleEncoder(DIOConstants.Intake.kIntakeRotateEncoder);
 
-    setupNetworkTables("intake");
+    setupNetworkTables("Intake");
 
     wristVoltage = ntTable.getDoubleTopic("wrist_voltage").getEntry(0);
     rotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
@@ -120,12 +120,12 @@ public class Wrist extends SubsystemABC {
     return failure.get();
   }
 
-  private DoubleLogEntry wristVoltageLog = new DoubleLogEntry(log, "/intake/output");
-  private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/intake/rotationValue");
-  private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/intake/rotationAngle");
-  private DoubleLogEntry rotationTargetLog = new DoubleLogEntry(log, "/intake/rotationTarget");
-  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/intake/failure");
-  private BooleanLogEntry towardShooterLog = new BooleanLogEntry(log, "/intake/towardShooter");
+  private DoubleLogEntry wristVoltageLog = new DoubleLogEntry(log, "/Intake/output");
+  private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/Intake/rotationValue");
+  private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/Intake/rotationAngle");
+  private DoubleLogEntry rotationTargetLog = new DoubleLogEntry(log, "/Intake/rotationTarget");
+  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/Intake/failure");
+  private BooleanLogEntry towardShooterLog = new BooleanLogEntry(log, "/Intake/towardShooter");
 
   // SETTERS
   public void setWristVoltage(double voltage) {

@@ -6,6 +6,7 @@ package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intake.RotateWristPID;
 import frc.robot.commands.Intake.RunIntakeWheels;
@@ -25,26 +26,27 @@ import frc.robot.subsystems.shooter.ShooterServos;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AlignShooterAndIntake extends ParallelCommandGroup {
-  /** Creates a new AlignShooterAndIntake. */
-  public AlignShooterAndIntake(ShooterRotation shooterRotation, Wrist wrist, IntakeWheels intakeWheels, ShooterServos servos, BreakBeamSensorShooter breakBeamSensorShooter, Leds leds) {
-    
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-            new RotateShooter(shooterRotation,
-                () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
-            new RotateWristPID(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint)
-                .andThen(
-                    new WaitCommand(0.75)
-                        .andThen(
-                            new ParallelCommandGroup(
-                                new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
-                                new EjectNote(servos))
-                                .until(breakBeamSensorShooter::getBeamBroken)
-                                .andThen(new ParallelDeadlineGroup(
-                                    new WaitCommand(ShooterConstants.kHandoffDelay),
-                                    new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
-                                    new EjectNote(servos))))));
-                                    new SetLEDColor(leds, Leds.LedColors.ORANGE);
-  }
+        /** Creates a new AlignShooterAndIntake. */
+        public AlignShooterAndIntake(ShooterRotation shooterRotation, Wrist wrist, IntakeWheels intakeWheels, ShooterServos servos, BreakBeamSensorShooter breakBeamSensorShooter, Leds leds) {
+
+                // Add your commands in the addCommands() call, e.g.
+                // addCommands(new FooCommand(), new BarCommand());
+                addCommands(
+                        new RotateShooter(shooterRotation,
+                                () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
+                        new RotateWristPID(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint),
+						new SequentialCommandGroup(
+								new SetLEDColor(leds, Leds.LedColors.GREEN),
+								new WaitCommand(2),
+								new ParallelCommandGroup(
+										new SetLEDColor(leds, Leds.LedColors.VIOLET),
+                                        new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
+                                        new EjectNote(servos))
+                                        .until(breakBeamSensorShooter::getBeamBroken)
+                                        .andThen(new ParallelDeadlineGroup(
+                                                new WaitCommand(ShooterConstants.kHandoffDelay),
+                                                new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
+                                                new EjectNote(servos),
+                                                new SetLEDColor(leds, Leds.LedColors.ORANGE)))));
+        }
 }

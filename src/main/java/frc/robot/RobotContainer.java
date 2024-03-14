@@ -179,6 +179,9 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                     new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0)))));
 
+    autonChooser.addOption("TestCode",
+            drivetrain.getAutoPath("test"));
+
     autonChooser.addOption("Step Back Fade Away and Run",
         new SequentialCommandGroup(
             new ParallelCommandGroup(
@@ -348,7 +351,7 @@ public class RobotContainer {
         new RotateWristPID(wrist,
             IntakeConstants.WristPID.kWristShooterFeederSetpoint));
 
-    wrist.getShuffleboardTab().add("Rotate until note in intake",
+    wrist.getShuffleboardTab().add("Rotate until note in Intake",
         new SequentialCommandGroup(
             new RotateWristPID(wrist, IntakeConstants.WristPID.kWristNotePosition),
             new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake),

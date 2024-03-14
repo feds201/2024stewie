@@ -33,7 +33,8 @@ public class ShooterWheels extends SubsystemABC {
     shooterTopMain = new TalonFX(CANConstants.Shooter.kShooterTop);
     shooterBottomFollower = new TalonFX(CANConstants.Shooter.kShooterBottom);
     shooterTopMain.getConfigurator().apply(ShooterConstants.GetWheelsConfiguration());
-    shooterBottomFollower.setControl(new StrictFollower(shooterTopMain.getDeviceID()));
+    shooterBottomFollower.getConfigurator().apply(ShooterConstants.GetWheelsConfiguration());
+//    shooterBottomFollower.setControl(new StrictFollower(shooterTopMain.getDeviceID()));
 
     SignalLogger.start();
     SignalLogger.setPath("/media/sda1/ctre-logs/");
@@ -100,6 +101,7 @@ public class ShooterWheels extends SubsystemABC {
     VelocityVoltage velocityOut = new VelocityVoltage(0);
     velocityOut.Slot = 0;
     shooterTopMain.setControl(velocityOut.withVelocity(velocity));
+    shooterBottomFollower.setControl(velocityOut.withVelocity(velocity));
   }
 
   public void setShootVelocityMotionMagic(double velocity) {
@@ -108,6 +110,7 @@ public class ShooterWheels extends SubsystemABC {
 
     motionMagic.Slot = 0;
     shooterTopMain.setControl(motionMagic.withVelocity(velocity));
+    shooterBottomFollower.setControl(motionMagic.withVelocity(velocity));
   }
 
   public void setShootVoltage(double voltage) {
@@ -116,5 +119,6 @@ public class ShooterWheels extends SubsystemABC {
 
     DutyCycleOut voltageOut = new DutyCycleOut(0);
     shooterTopMain.setControl(voltageOut.withOutput(voltage));
+    shooterBottomFollower.setControl(voltageOut.withOutput(voltage));
   }
 }

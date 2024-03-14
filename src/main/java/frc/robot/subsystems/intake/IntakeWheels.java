@@ -24,7 +24,7 @@ public class IntakeWheels extends SubsystemABC {
 
     intakeWheel = new CANSparkMax(CANConstants.Intake.kIntakeWheels, MotorType.kBrushless);
 
-    setupNetworkTables("intake");
+    setupNetworkTables("Intake");
 
     intakeVoltage = ntTable.getDoubleTopic("wheels_voltage").getEntry(0);
 
@@ -42,7 +42,7 @@ public class IntakeWheels extends SubsystemABC {
     // This method will be called once per scheduler run
     writePeriodicOutputs();
 
-    SmartDashboard.putNumber("intake bus voltage", intakeWheel.getBusVoltage());
+    SmartDashboard.putNumber("Intake bus voltage", intakeWheel.getBusVoltage());
   }
 
   @Override
@@ -61,7 +61,7 @@ public class IntakeWheels extends SubsystemABC {
     return intakeVoltage.get();
   }
 
-  private DoubleLogEntry intakeVoltageLog = new DoubleLogEntry(log, "/intake/target");
+  private DoubleLogEntry intakeVoltageLog = new DoubleLogEntry(log, "/Intake/target");
 
   // SETTERS
   public void setIntakeWheels(double voltage) {
