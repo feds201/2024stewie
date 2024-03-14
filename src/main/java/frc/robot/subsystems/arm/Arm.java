@@ -85,7 +85,7 @@ public class Arm extends SubsystemABC {
     SmartDashboard.putNumber("power to the arm", power);
     if(Math.abs(power) < ArmConstants.kHoldThreshold) { // if there is no power to the controller, hold
       hold();
-    } else if(getArmAngle() < 10 && power < 0) { // if you are falling and the angle is less than 10, then dont move
+    } else if(getArmAngle() < 5 && power < 0) { // if you are falling and the angle is less than 5, then dont move
       setOutput(0);
       setArmHoldActive(false);
     } else if (getArmAngle() > 90 && power > 0) { // if you are rising and the angle is greater than 90, then hold 90

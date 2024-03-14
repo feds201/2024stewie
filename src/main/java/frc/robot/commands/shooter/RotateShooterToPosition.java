@@ -9,11 +9,11 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.ShooterRotation;
 
-public class RotateShooter extends Command {
+public class RotateShooterToPosition extends Command {
   private final ShooterRotation c_shooterRotation;
   private final DoubleSupplier c_ShooterAngle;
 
-  public RotateShooter(ShooterRotation shooterRotation, DoubleSupplier shooterAngle) {
+  public RotateShooterToPosition(ShooterRotation shooterRotation, DoubleSupplier shooterAngle) {
     c_shooterRotation= shooterRotation;
     c_ShooterAngle = shooterAngle;
     addRequirements(c_shooterRotation);

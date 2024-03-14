@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.shooter.EjectNote;
-import frc.robot.commands.shooter.RotateShooter;
+import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterServos;
@@ -31,13 +31,13 @@ public class ShootNoteAtSpeakerOnly extends ParallelCommandGroup {
   public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RotateShooter(shooterRotation,
+    addCommands(new RotateShooterToPosition(shooterRotation,
         () -> LimelightUtils.GetSpeedAngle(
             ExportedVariables.Distance).angle),
         new ShootNoteMotionMagicVelocity(shooterWheels,
             () -> LimelightUtils.GetSpeedAngle(ExportedVariables.Distance).speed),
         new SequentialCommandGroup(
-            new WaitCommand(2),
+            new WaitCommand(1),
             new EjectNote(servos)));
   }
 }

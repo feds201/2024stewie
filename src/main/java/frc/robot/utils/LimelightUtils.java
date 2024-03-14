@@ -92,7 +92,7 @@ public class LimelightUtils {
 
     private static double getSpeed(double limelightDistance) {
         if(limelightDistance < 2) {
-            return -50;
+            return -60;
         } else {
             return -80;
         }

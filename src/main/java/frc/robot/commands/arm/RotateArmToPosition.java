@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.arm.Arm;
 
-public class RotateArm extends Command {
+public class RotateArmToPosition extends Command {
     /** Creates a new RotateArm. */
     private final Arm c_arm;
     private final DoubleSupplier c_angle;
     private final boolean c_failure;
 
-    public RotateArm(Arm arm, DoubleSupplier desiredAngle) {
+    public RotateArmToPosition(Arm arm, DoubleSupplier desiredAngle) {
         c_arm = arm;
         c_angle = desiredAngle;
         addRequirements(c_arm);
@@ -51,12 +51,12 @@ public class RotateArm extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        c_arm.stopArmRotation();
+        c_arm.rotateOrHold(0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return c_failure || false; //c_arm.isArmAtTarget();
+        return c_failure || c_arm.isArmAtTarget();
     }
 }

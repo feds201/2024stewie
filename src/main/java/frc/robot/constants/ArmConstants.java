@@ -10,12 +10,12 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class ArmConstants {
    public static class ArmPIDForExternalEncoder {
-      public static final double kP = 0.15;
-      public static final double kI = 0.01;
+      public static final double kP = 0.175;
+      public static final double kI = 0.015;
       public static final double kD = 0;
       public static final double kF = 0;
 
-      public static final double kRotationTolerance = 0.5;
+      public static final double kRotationTolerance = 1;
       public static final double kIZone = Double.POSITIVE_INFINITY;
       public static final double kIMin = -0.05;
       public static final double kIMax = 0.05;
