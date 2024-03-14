@@ -1,0 +1,86 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.5247064340282543,
+      "y": 6.670053340106681
+    },
+    "rotation": 60.30084557245001
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Blue Path Amp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DeployIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FeedNoteToShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ResetIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignToAprilTag"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootNoteAtSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Path Top 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of Blue Path Amp"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
