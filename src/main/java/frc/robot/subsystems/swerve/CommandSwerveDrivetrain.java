@@ -54,7 +54,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             startSimThread();
         }
 
-        pid.setTolerance(.25, 0.05); // allowable angle error
+        pid.setTolerance(.5, 0.05); // allowable angle error
         pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
         pid.setIntegratorRange(-0.2, 0.2);
         pid.setSetpoint(-5); // 0 = apriltag angle

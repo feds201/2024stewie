@@ -27,10 +27,10 @@ public class LimelightUtils {
 
     private static double getAngle(double limelightDistance) {
         SmartDashboard.putNumber("Supplied Distance to Shooter", limelightDistance);
-        if (limelightDistance < 1) {
-            return -5;
+        if (limelightDistance < 0.5) {
+            return -1;
         } else if (limelightDistance < 1.125) { // 1
-            return -5;
+            return -6;
         } else if (limelightDistance < 1.375) { // 1.25
             return -15;
         } else if (limelightDistance < 1.625) { // 1.5
@@ -92,7 +92,7 @@ public class LimelightUtils {
 
     private static double getSpeed(double limelightDistance) {
         if(limelightDistance < 2) {
-            return -60;
+            return -80;
         } else {
             return -80;
         }

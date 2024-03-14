@@ -53,6 +53,7 @@ import frc.robot.commands.compound.ShootFromHandoff;
 import frc.robot.commands.compound.ShootNoteAtSpeakerOnly;
 import frc.robot.commands.compound.SpitOutNote;
 import frc.robot.commands.controller.ToggleRumble;
+import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.commands.shooter.StopServos;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooterToPosition;
@@ -214,7 +215,15 @@ public class RobotContainer {
                                 new RotateShooterBasic(shooterRotation, () -> 0),
                                 new DriveForwardForTime(drivetrain, 6))));
 
-        autonChooser.addOption("simple", drivetrain.getAutoPath("Simple"));
+        autonChooser.addOption("Place Arm Down and 2 note move then shoot", new ParallelCommandGroup(
+                new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+                new SequentialCommandGroup(
+                        new WaitCommand(0.8), drivetrain.getAutoPath("2 Note Move Then Shoot"))));
+
+        autonChooser.addOption("Place Arm Down and 2 note", new ParallelCommandGroup(
+                new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+                new SequentialCommandGroup(
+                        new WaitCommand(0.8), drivetrain.getAutoPath("2 Note Shoot Then Move"))));
 
         // autonChooser.addOption("Aim and Shoot Auton", new ParallelCommandGroup(
         // new RotateArm(arm, () ->
@@ -296,13 +305,22 @@ public class RobotContainer {
 
         // AUTO AIM
         operatorController.rightTrigger()
-                .onTrue(new AlignToAprilTag(drivetrain, driverController, operatorController))
+                .onTrue(new AlignToAprilTag(drivetrain, driverController, operatorController)
+                        .andThen(
+                                new ParallelCommandGroup(
+                                        new SetLEDColor(leds, Leds.LedColors.RED),
+                                        new ToggleRumble(driverController, 0.3),
+                                        new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ParallelDeadlineGroup(
                         new WaitCommand(0.2),
                         drivetrain.applyRequest(() -> brake)));
 
         operatorController.leftTrigger()
-                .onTrue(new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos))
+                .onTrue(new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos)
+                        .andThen(new ParallelCommandGroup(
+                                new SetLEDColor(leds, Leds.LedColors.GREEN),
+                                new ToggleRumble(driverController, 0.3),
+                                new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ParallelCommandGroup(
                         new RotateShooterBasic(shooterRotation, () -> 0),
                         new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),

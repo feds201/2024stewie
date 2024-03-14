@@ -35,7 +35,6 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
         new SequentialCommandGroup(
             new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint),
             new SetLEDColor(leds, Leds.LedColors.GREEN),
-            new WaitCommand(0.5),
             new ParallelCommandGroup(
                 new SetLEDColor(leds, Leds.LedColors.VIOLET),
                 new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
