@@ -34,9 +34,7 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
             () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
         new SequentialCommandGroup(
             new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint),
-            new SetLEDColor(leds, Leds.LedColors.GREEN),
             new ParallelCommandGroup(
-                new SetLEDColor(leds, Leds.LedColors.VIOLET),
                 new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
                 new EjectNote(servos))
                 .until(breakBeamSensorShooter::getBeamBroken)

@@ -7,6 +7,7 @@ package frc.robot.commands.compound;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intake.RotateWristToPosition;
@@ -42,10 +43,10 @@ public class ShootFromHandoff extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
-        new ParallelCommandGroup(
-            new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristIdlePosition),
-            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos)));
-            
+        new ParallelDeadlineGroup(
+            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos),
+            new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristIdlePosition)));
+
   }
 
 }

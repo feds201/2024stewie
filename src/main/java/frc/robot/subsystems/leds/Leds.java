@@ -16,7 +16,7 @@ public class Leds extends SubsystemBase {
 
   public Leds() {
     leds = new Spark(0); // We treat the Leds as a servo which is coming in from PWM port 6
-    currentColor = 0.59;
+    currentColor = Leds.LedColors.NEUTRAL;
   }
 
   public void setLedColor(double color) {
@@ -48,6 +48,7 @@ public class Leds extends SubsystemBase {
     public final static double VIOLET = 0.91;
     public final static double WHITE = 0.93;
     public final static double BLACK = 0.99;
+    public final static double NEUTRAL = 0.59;
 
     public static String ColorToString(double color) {
       if (color == RED) {

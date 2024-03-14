@@ -44,7 +44,6 @@ import frc.robot.commands.arm.RotateArmManual;
 import frc.robot.commands.autons.DriveForwardForTime;
 import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.compound.AlignShooterAndIntake;
-import frc.robot.commands.compound.AlignToAprilTag;
 import frc.robot.commands.compound.DeployIntake;
 import frc.robot.commands.compound.IntakeUntilNoteIn;
 import frc.robot.commands.compound.PlaceInAmp;
@@ -55,6 +54,7 @@ import frc.robot.commands.compound.SpitOutNote;
 import frc.robot.commands.controller.ToggleRumble;
 import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.commands.shooter.StopServos;
+import frc.robot.commands.swerve.AimToAprilTag;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.RotateShooterBasic;
@@ -284,8 +284,9 @@ public class RobotContainer {
                         new SequentialCommandGroup(
                                 new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake),
                                 new ParallelCommandGroup(
-                                        new ToggleRumble(driverController, 0.5),
-                                        new ToggleRumble(operatorController, 0.5))))
+                                        new SetLEDColor(leds, Leds.LedColors.RED),
+                                        new ToggleRumble(driverController, 0.3),
+                                        new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ResetIntake(wrist, intakeWheels));
 
         driverController.rightTrigger()
@@ -305,10 +306,11 @@ public class RobotContainer {
 
         // AUTO AIM
         operatorController.rightTrigger()
-                .onTrue(new AlignToAprilTag(drivetrain, driverController, operatorController)
+                .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX,
+                        driverController::getLeftY)
                         .andThen(
                                 new ParallelCommandGroup(
-                                        new SetLEDColor(leds, Leds.LedColors.RED),
+                                        new SetLEDColor(leds, Leds.LedColors.GREEN),
                                         new ToggleRumble(driverController, 0.3),
                                         new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ParallelDeadlineGroup(
@@ -317,21 +319,32 @@ public class RobotContainer {
 
         operatorController.leftTrigger()
                 .onTrue(new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos)
-                        .andThen(new ParallelCommandGroup(
-                                new SetLEDColor(leds, Leds.LedColors.GREEN),
-                                new ToggleRumble(driverController, 0.3),
-                                new ToggleRumble(operatorController, 0.3))))
+                        .andThen(
+                                new ParallelCommandGroup(
+                                        new SetLEDColor(leds, Leds.LedColors.NEUTRAL),
+                                        new ToggleRumble(driverController, 0.3),
+                                        new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ParallelCommandGroup(
                         new RotateShooterBasic(shooterRotation, () -> 0),
                         new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
                         new StopServos(servos)));
 
         operatorController.b()
-                .onTrue(new SpitOutNote(wrist, intakeWheels))
+                .onTrue(new SpitOutNote(wrist, intakeWheels)
+                        .andThen(
+                                new ParallelCommandGroup(
+                                        new SetLEDColor(leds, Leds.LedColors.NEUTRAL),
+                                        new ToggleRumble(driverController, 0.3),
+                                        new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ResetIntake(wrist, intakeWheels));
 
         operatorController.a()
-                .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds))
+                .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds)
+                        .andThen(
+                                new ParallelCommandGroup(
+                                        new SetLEDColor(leds, Leds.LedColors.NEUTRAL),
+                                        new ToggleRumble(driverController, 0.3),
+                                        new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ParallelCommandGroup(
                         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
                         new RotateArmToPosition(arm, () -> 0),

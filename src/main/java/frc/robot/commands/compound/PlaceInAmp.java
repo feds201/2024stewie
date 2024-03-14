@@ -19,12 +19,12 @@ public class PlaceInAmp extends SequentialCommandGroup {
   public PlaceInAmp(Wrist wrist, IntakeWheels wheels, Arm arm, Leds leds) {
     addCommands(
         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kAmpPosition),
-        new SetLEDColor(leds, Leds.LedColors.BLUE),
-        new ParallelCommandGroup(
-            new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition),
+        new ParallelDeadlineGroup(
             new SequentialCommandGroup(
                 new WaitCommand(4), // sometimes even the greatest of robots have the dumbest solutions :sadge:
-                new RunIntakeWheels(wheels, () -> IntakeConstants.kAmpInWheelSpeed),
-                new SetLEDColor(leds, Leds.LedColors.RED))));
+                new ParallelDeadlineGroup(
+                    new WaitCommand(2),
+                    new RunIntakeWheels(wheels, () -> IntakeConstants.kAmpInWheelSpeed))),
+            new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition)));
   }
 }
