@@ -163,6 +163,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("ShootFromHandoff",
                 new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos));
         NamedCommands.registerCommand("StopShooterWheelsPls", new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
+        NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
+                driverController::getLeftY));
     }
 
     private void setupAutonCommands() {
@@ -250,15 +252,15 @@ public class RobotContainer {
                             .withRotationalRate(-driverController.getRightX() *
                                     SwerveConstants.MaxAngularRate);
                 }), new RepeatCommand(
-                        new InstantCommand(
-                                () -> {
-                                    SmartDashboard.putNumber("left y", -driverController.getLeftY()
-                                            * SwerveConstants.MaxSpeed);
-                                    SmartDashboard.putNumber("left x", -driverController.getLeftX()
-                                            * SwerveConstants.MaxSpeed);
-                                    SmartDashboard.putNumber("right x", -driverController.getRightX() *
-                                            SwerveConstants.MaxAngularRate);
-                                }))));
+                new InstantCommand(
+                        () -> {
+                            SmartDashboard.putNumber("left y", -driverController.getLeftY()
+                                    * SwerveConstants.MaxSpeed);
+                            SmartDashboard.putNumber("left x", -driverController.getLeftX()
+                                    * SwerveConstants.MaxSpeed);
+                            SmartDashboard.putNumber("right x", -driverController.getRightX() *
+                                    SwerveConstants.MaxAngularRate);
+                        }))));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(),

@@ -96,6 +96,12 @@
         {
           "type": "named",
           "data": {
+            "name": "AlignToAprilTag"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootFromHandoff"
           }
         }
