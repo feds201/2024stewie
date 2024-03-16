@@ -43,12 +43,10 @@ public class ShootFromHandoff extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        //new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
-        new ParallelDeadlineGroup(
-            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos).andThen(
-              new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristIdlePosition))
-      
-            ));
+        // new RotateWristToPosition(wrist,
+        // IntakeConstants.WristPID.kWristIdlePosition),
+        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos),
+        new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition));
 
   }
 

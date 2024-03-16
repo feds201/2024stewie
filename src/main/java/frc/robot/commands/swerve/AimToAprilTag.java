@@ -2,6 +2,7 @@ package frc.robot.commands.swerve;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -18,8 +19,9 @@ public class AimToAprilTag extends Command {
 
     private final DoubleSupplier c_leftX, c_leftY;
     private double startTime;
-    private final double timeout = 5.0; // Time limit in seconds
+    private final double timeout = 2.0; // Time limit in seconds
     private final double rangeTolerance = 0.3; // Range within which to consider aligned
+    private double lastOutput = 1;
 
     public AimToAprilTag(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY) {
         c_swerve = swerve;
@@ -36,21 +38,27 @@ public class AimToAprilTag extends Command {
 
     public boolean isFinished() {
         // Check for PID at setpoint or timeout
-        return c_swerve.getPIDAtSetpoint() || Timer.getFPGATimestamp() - startTime > timeout;
+        return c_swerve.getPIDAtSetpoint();// || Math.abs(lastOutput) < SwerveConstants.kAlignmentOutput;
     }
 
     public void execute() {
-        // Additional check for being within range
-        if (Math.abs(VisionVariables.BackCam.target.getX()) < rangeTolerance) {
-            isFinished(); // Force completion if within range
-        } else {
+        double output = c_swerve.getPIDRotation(VisionVariables.BackCam.target.getX());
+
+        SmartDashboard.putNumber("alignment/output", output);
+
+        // // Additional check for being within range
+        // if (Math.abs(VisionVariables.BackCam.target.getX()) < rangeTolerance) {
+        //     isFinished(); // Force completion if within range
+        // } else {
             c_swerve.setControl(drive
                     .withVelocityX(-c_leftX.getAsDouble()
                             * SwerveConstants.MaxSpeed)
                     .withVelocityY(-c_leftY.getAsDouble()
                             * SwerveConstants.MaxSpeed)
-                    .withRotationalRate(c_swerve.getPIDRotation(VisionVariables.BackCam.target.getX())));
-        }
+                    .withRotationalRate(output));
+
+              lastOutput = output;      
+        // }
     }
 
     public void end(boolean interrupted) {

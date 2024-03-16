@@ -16,7 +16,7 @@ public class Leds extends SubsystemBase {
   private final Spark leds;
 
   private double currentColor;
-  private DriverStation.Alliance currentAlliance;
+  private DriverStation.Alliance currentAlliance = null;
 
   public Leds() {
     leds = new Spark(0); // We treat the Leds as a servo which is coming in from PWM port 5
@@ -46,9 +46,9 @@ public class Leds extends SubsystemBase {
   }
 
   public double getAllianceColor() {
-    if(currentAlliance.equals(DriverStation.Alliance.Red)) {
+    if(currentAlliance != null && currentAlliance.equals(DriverStation.Alliance.Red)) {
       return LedColors.RED;
-    } else if (currentAlliance.equals(DriverStation.Alliance.Blue)) {
+    } else if (currentAlliance != null && currentAlliance.equals(DriverStation.Alliance.Blue)) {
       return LedColors.BLUE;
     } else {
       return LedColors.FOREST;
