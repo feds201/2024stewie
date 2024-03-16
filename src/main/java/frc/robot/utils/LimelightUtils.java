@@ -50,51 +50,51 @@ public class LimelightUtils {
         } else if (limelightDistance < 3.375) { // 3.25
             return -29;
         } else if (limelightDistance < 3.625) { // 3.5
-            return -31;
-        } else if (limelightDistance < 3.875) { // 3.75
-            return -33;
-        } else if (limelightDistance < 4.125) { // 4
-            return -35;
-        } else if (limelightDistance < 4.375) { // 4.25
-            return -29;
-        } else if (limelightDistance < 4.625) { // 4.5
-            return -30;
-        } else if (limelightDistance < 4.875) { // 4.75
-            return -29;
-        } else if (limelightDistance < 5.125) { // 5
-            return -30;
-        } else if (limelightDistance < 5.375) { // 5.25
-            return -31;
-        } else if (limelightDistance < 5.625) { // 5.5
             return -32;
-        } else if (limelightDistance < 5.875) { // 5.75
-            return -33;
-        } else if (limelightDistance < 6.125) { // 6
+        } else if (limelightDistance < 3.875) { // 3.75
             return -34;
-        } else if (limelightDistance < 6.375) { // 6.25
+        } else if (limelightDistance < 4.125) { // 4
+            return -33;
+        } else if (limelightDistance < 4.375) { // 4.25
+            return -33;
+        } else if (limelightDistance < 4.625) { // 4.5
+            return -33.5;
+        } else if (limelightDistance < 4.875) { // 4.75
+            return -33.5;
+        } else if (limelightDistance < 5.125) { // 5
+            return -34;
+        } else if (limelightDistance < 5.375) { // 5.25
             return -35;
-        } else if (limelightDistance < 6.625) { // 6.5
+        } else if (limelightDistance < 5.625) { // 5.5
+            return -35.5;
+        } else if (limelightDistance < 5.875) { // 5.75
+            return -35.5;
+        } else if (limelightDistance < 6.125) { // 6
             return -36;
+        } else if (limelightDistance < 6.375) { // 6.25
+            return -36;
+        } else if (limelightDistance < 6.625) { // 6.5
+            return -36.5;
         } else if (limelightDistance < 6.875) { // 6.75
-            return -57;
+            return -36.5;
         } else if (limelightDistance < 7.125) { // 7
-            return -57.5;
+            return -37;
         } else if (limelightDistance < 7.375) { // 7.25
-            return -58;
+            return -37;
         } else if (limelightDistance < 7.625) { // 7.5
-            return -59;
+            return -37.5;
         } else if (limelightDistance < 7.875) { // 7.75
-            return -59;
+            return -37.5;
         } else { // 8
-            return -59.5;
+            return -38;
         }
     }
 
     private static double getSpeed(double limelightDistance) {
-        if(limelightDistance < 2) {
+        if(limelightDistance < 4) {
             return -80;
         } else {
-            return -80;
+            return -100;
         }
     }
 }

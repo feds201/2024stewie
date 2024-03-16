@@ -22,7 +22,7 @@ public class ArmConstants {
 
       public static final double kArmRotationFeederSetpoint = 2;
       public static final double kArmInnerWingSetpoint = 30;
-      public static  final double kAmpPosition = 26.5;
+      public static  final double kAmpPosition = 29;
 
       public static PIDController GetArmPID() {
          PIDController pid = new PIDController(kP, kI, kD);

@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.leds;
 
+import java.util.Optional;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,12 +14,45 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Leds extends SubsystemBase {
   /** Creates a new Leds. */
   private final Spark leds;
-  
+
   private double currentColor;
+  private DriverStation.Alliance currentAlliance;
 
   public Leds() {
-    leds = new Spark(0); // We treat the Leds as a servo which is coming in from PWM port 6
-    currentColor = Leds.LedColors.NEUTRAL;
+    leds = new Spark(0); // We treat the Leds as a servo which is coming in from PWM port 5
+
+    currentColor = LedColors.FOREST;
+  }
+
+  public void setLEDToAllianceColor() {
+    Optional<DriverStation.Alliance> allianceColor = DriverStation.getAlliance();
+
+    if(allianceColor.isPresent()) {
+      SmartDashboard.putString("current alliance color", allianceColor.get().toString());
+    }
+
+    if (allianceColor.isEmpty()) {
+      currentColor = Leds.LedColors.GRAY;  
+    } else if(allianceColor.get().equals(DriverStation.Alliance.Red)) {
+      currentColor = Leds.LedColors.RED;
+      currentAlliance = DriverStation.Alliance.Red;
+    } else if (allianceColor.get().equals(DriverStation.Alliance.Blue)) {
+      currentColor = Leds.LedColors.BLUE;
+      currentAlliance = DriverStation.Alliance.Blue;
+    } else {
+      currentColor = -0.59; // FIRE!!
+                            // ALSO THIS SHOULD *NEVER* HAPPEN
+    }
+  }
+
+  public double getAllianceColor() {
+    if(currentAlliance.equals(DriverStation.Alliance.Red)) {
+      return LedColors.RED;
+    } else if (currentAlliance.equals(DriverStation.Alliance.Blue)) {
+      return LedColors.BLUE;
+    } else {
+      return LedColors.FOREST;
+    }
   }
 
   public void setLedColor(double color) {
@@ -34,6 +70,10 @@ public class Leds extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(currentColor == LedColors.FOREST) {
+      setLEDToAllianceColor();
+    }
+
     runLeds(getLedColor());
     SmartDashboard.putBoolean("ARE WE RUNNING??", leds.isAlive());
     SmartDashboard.putString("Current LED Color", LedColors.ColorToString(getLedColor()));
@@ -47,8 +87,10 @@ public class Leds extends SubsystemBase {
     public final static double BLUE = 0.87;
     public final static double VIOLET = 0.91;
     public final static double WHITE = 0.93;
+    public final static double GRAY  = 0.95;
     public final static double BLACK = 0.99;
-    public final static double NEUTRAL = 0.59;
+    public final static double NEUTRAL = -0.45; // Strobe color rainbow
+    public final static double FOREST = -0.47; // FOREST!!
 
     public static String ColorToString(double color) {
       if (color == RED) {
@@ -77,6 +119,15 @@ public class Leds extends SubsystemBase {
       }
       if (color == RED) {
         return "Red";
+      }
+      if (color == NEUTRAL) {
+        return "Neutral";
+      }
+      if (color == GRAY) {
+        return "Gray";
+      }
+      if (color == FOREST) {
+        return "Confetti";
       }
       return "Unknown";
     }

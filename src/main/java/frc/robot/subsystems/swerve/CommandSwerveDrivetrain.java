@@ -46,19 +46,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean hasAppliedOperatorPerspective = false;
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
-        
+    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
+
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
-
-        pid.setTolerance(.5); // allowable angle error
-        pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
-        pid.setIntegratorRange(-0.2, 0.2);
-        pid.setSetpoint(-5); // 0 = apriltag angle
-
+        setupPIDController();
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
@@ -67,8 +63,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        setupPIDController();
+    }
 
-        pid.setTolerance(.25, 0.05); // allowable angle error
+    public void setupPIDController() {
+        pid.setTolerance(1); // allowable angle error
         pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
         pid.setIntegratorRange(-0.2, 0.2);
         pid.setSetpoint(-10); // 0 = apriltag angle
@@ -108,7 +107,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                         TunerConstants.kSpeedAt12VoltsMps,
                         driveBaseRadius,
                         new ReplanningConfig()),
-                () -> DriverStation.getAlliance().get() ==Alliance.Red, // Change this if the path needs to be flipped on red vs blue
+                () -> DriverStation.getAlliance().get() == Alliance.Red, // Change this if the path needs to be flipped
+                                                                         // on red vs blue
                 this); // Subsystem for requirements
     }
 
@@ -138,18 +138,30 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     @Override
     public void periodic() {
         /* Periodically try to apply the operator perspective */
-        /* If we haven't applied the operator perspective before, then we should apply it regardless of DS state */
-        /* This allows us to correct the perspective in case the robot code restarts mid-match */
-        /* Otherwise, only check and apply the operator perspective if the DS is disabled */
-        /* This ensures driving behavior doesn't change until an explicit disable event occurs during testing*/
+        /*
+         * If we haven't applied the operator perspective before, then we should apply
+         * it regardless of DS state
+         */
+        /*
+         * This allows us to correct the perspective in case the robot code restarts
+         * mid-match
+         */
+        /*
+         * Otherwise, only check and apply the operator perspective if the DS is
+         * disabled
+         */
+        /*
+         * This ensures driving behavior doesn't change until an explicit disable event
+         * occurs during testing
+         */
         // if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
-        //     DriverStation.getAlliance().ifPresent((allianceColor) -> {
-        //         this.setOperatorPerspectiveForward(
-        //                 allianceColor == Alliance.Red ? RedAlliancePerspectiveRotation
-        //                         : BlueAlliancePerspectiveRotation);
-        //         hasAppliedOperatorPerspective = true;
-        //     });
+        // DriverStation.getAlliance().ifPresent((allianceColor) -> {
+        // this.setOperatorPerspectiveForward(
+        // allianceColor == Alliance.Red ? RedAlliancePerspectiveRotation
+        // : BlueAlliancePerspectiveRotation);
+        // hasAppliedOperatorPerspective = true;
+        // });
         // }
-        
+
     }
 }

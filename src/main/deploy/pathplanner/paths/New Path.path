@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3599577968386725,
-        "y": 5.091342490377289
+        "x": 2.577030538676463,
+        "y": 5.890564858052794
       },
       "isLocked": false,
       "linkedName": null
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 2.55,
-        "y": 4.538793692972002
+        "y": 5.89
       },
       "prevControl": {
-        "x": 2.3131933725405913,
-        "y": 5.1110763759989055
+        "x": 2.537562767433229,
+        "y": 5.900431800863602
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -49.85278293931994,
+    "rotation": 5.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "MiddleStart 3 CloseNotes",
   "previewStartingState": {
-    "rotation": 5.0,
+    "rotation": -33.69,
     "velocity": 0
   },
   "useDefaultConstraints": true

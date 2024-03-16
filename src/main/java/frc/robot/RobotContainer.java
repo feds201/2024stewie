@@ -25,6 +25,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Intake.RotateWristToPosition;
 import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
@@ -96,7 +98,7 @@ public class RobotContainer {
     private final IntakeWheels intakeWheels;
     private final Arm arm;
     private final Climber climber;
-    private final Leds leds;
+    public final Leds leds;
 
     // private final FrontCamera frontCamera;
     private final BackCamera backCamera;
@@ -284,7 +286,7 @@ public class RobotContainer {
                         new SequentialCommandGroup(
                                 new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake),
                                 new ParallelCommandGroup(
-                                        new SetLEDColor(leds, Leds.LedColors.RED),
+                                        new SetLEDColor(leds, Leds.LedColors.YELLOW),
                                         new ToggleRumble(driverController, 0.3),
                                         new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ResetIntake(wrist, intakeWheels));
@@ -298,11 +300,13 @@ public class RobotContainer {
     public void configureOperatorController() {
         // LOAD BUTTON
         operatorController.leftBumper()
-                .onTrue(new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
-                        servos, breakBeamSensorShooter, leds))
-                .onFalse(new ParallelCommandGroup(
-                        // new RotateShooter(shooterRotation, () -> -5),
-                        new ResetIntake(wrist, intakeWheels)));
+                .onTrue(new ParallelCommandGroup(
+                        new RotateArmToPosition(arm, () -> 0),
+                        new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
+                                servos, breakBeamSensorShooter, leds)));
+                // .onFalse(new ParallelCommandGroup(
+                //         // new RotateShooter(shooterRotation, () -> -5),
+                //          new ResetIntake(wrist, intakeWheels)));
 
         // AUTO AIM
         operatorController.rightTrigger()
@@ -310,10 +314,11 @@ public class RobotContainer {
                         driverController::getLeftY)
                         .andThen(
                                 new ParallelCommandGroup(
-                                        new SetLEDColor(leds, Leds.LedColors.GREEN),
+                                        new SetLEDColor(leds, Leds.LedColors.VIOLET),
                                         new ToggleRumble(driverController, 0.3),
                                         new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ParallelDeadlineGroup(
+                        
                         new WaitCommand(0.2),
                         drivetrain.applyRequest(() -> brake)));
 
@@ -321,19 +326,20 @@ public class RobotContainer {
                 .onTrue(new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos)
                         .andThen(
                                 new ParallelCommandGroup(
-                                        new SetLEDColor(leds, Leds.LedColors.NEUTRAL),
+                                        new SetLEDColor(leds, Leds.LedColors.ORANGE),
                                         new ToggleRumble(driverController, 0.3),
                                         new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ParallelCommandGroup(
                         new RotateShooterBasic(shooterRotation, () -> 0),
                         new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
+                        new ResetIntake(wrist, intakeWheels),
                         new StopServos(servos)));
 
         operatorController.b()
                 .onTrue(new SpitOutNote(wrist, intakeWheels)
                         .andThen(
                                 new ParallelCommandGroup(
-                                        new SetLEDColor(leds, Leds.LedColors.NEUTRAL),
+                                        new SetLEDColor(leds, Leds.LedColors.WHITE),
                                         new ToggleRumble(driverController, 0.3),
                                         new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ResetIntake(wrist, intakeWheels));
@@ -342,13 +348,16 @@ public class RobotContainer {
                 .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds)
                         .andThen(
                                 new ParallelCommandGroup(
-                                        new SetLEDColor(leds, Leds.LedColors.NEUTRAL),
+                                        new SetLEDColor(leds, Leds.LedColors.BLACK),
                                         new ToggleRumble(driverController, 0.3),
                                         new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ParallelCommandGroup(
                         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
                         new RotateArmToPosition(arm, () -> 0),
                         new RunIntakeWheels(intakeWheels, () -> 0)));
+
+
+        // new Trigger(breakBeamSensorShooter::getBeamBroken).onTrue(new SetLEDColor(leds, Leds.LedColors.ORANGE));
 
     }
 

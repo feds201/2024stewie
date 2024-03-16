@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.55,
-        "y": 5.89
+        "x": 3.5,
+        "y": 2.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3599577968386725,
-        "y": 5.091342490377289
+        "x": 4.132947187432837,
+        "y": 3.7961118383775228
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.55,
-        "y": 4.538793692972002
+        "x": 7.875578828080734,
+        "y": 4.1046482092964185
       },
       "prevControl": {
-        "x": 2.3131933725405913,
-        "y": 5.1110763759989055
+        "x": 6.875578828080734,
+        "y": 4.1046482092964185
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,21 +32,21 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -49.85278293931994,
-    "rotateFast": false
+    "rotation": 0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "MiddleStart 3 CloseNotes",
+  "folder": "FarBottome, FarCenter, FarTopMiddle",
   "previewStartingState": {
-    "rotation": 5.0,
+    "rotation": -37.60000000000002,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

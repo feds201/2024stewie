@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.78,
+      "y": 4.58
+    },
+    "rotation": -60.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -12,25 +18,6 @@
           }
         },
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "DeployIntake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "MiddleStart to AmpNote"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 0.3
@@ -41,9 +28,28 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceStart to FarBottom"
+                }
+              },
+              {
                 "type": "named",
                 "data": {
-                  "name": "AlignToAprilTag"
+                  "name": "DeployIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FarBottom to Shoot1"
                 }
               },
               {
@@ -58,13 +64,19 @@
         {
           "type": "named",
           "data": {
+            "name": "AlignToAprilTag"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootNoteAtSpeaker"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
+            "waitTime": 0.2
           }
         },
         {
@@ -74,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp note to middle Note"
+                  "pathName": "Shoot1 to FarCenter"
                 }
               },
               {
@@ -87,25 +99,13 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "New Path"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AlignToAprilTag"
+                  "pathName": "FarCenter to Shoot2"
                 }
               },
               {
@@ -120,13 +120,19 @@
         {
           "type": "named",
           "data": {
+            "name": "AlignToAprilTag"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootNoteAtSpeaker"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
+            "waitTime": 0.2
           }
         },
         {
@@ -136,7 +142,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "MiddleNote to SourceNote"
+                  "pathName": "Shoot2 to FarTopMiddle"
                 }
               },
               {
@@ -151,7 +157,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.3
+            "waitTime": 0.2
           }
         },
         {
@@ -159,9 +165,9 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "AlignToAprilTag"
+                  "pathName": "FarTopMiddle to Shoot3"
                 }
               },
               {
@@ -176,13 +182,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootNoteAtSpeaker"
+            "name": "AlignToAprilTag"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "ShootNoteAtSpeaker"
           }
         }
       ]

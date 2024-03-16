@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision_sys.camera;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.vision_sys.VisionVariables;
 import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
@@ -59,8 +60,8 @@ public class FrontCamera extends vision_sys {
                 CheckTarget(),
                 note.getAngle()
         );
-//        VisionVariables.FrontCam.distance = note.getDistance();
-//        SmartDashboard.putNumber("Note-Distance",note.getDistance());
+       VisionVariables.FrontCam.distance = note.getDistance();
+       SmartDashboard.putNumber("Note-Distance",note.getDistance());
 
         VisionVariables.FrontCam.tv = (int) table.getEntry("tv").getNumber(0).doubleValue();
         VisionVariables.FrontCam.CameraMode = table.getEntry("camMode").getNumber(0);

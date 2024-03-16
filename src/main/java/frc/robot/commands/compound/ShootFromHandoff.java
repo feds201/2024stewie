@@ -17,6 +17,7 @@ import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterServos;
 import frc.robot.subsystems.shooter.ShooterWheels;
@@ -42,10 +43,12 @@ public class ShootFromHandoff extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
+        //new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
         new ParallelDeadlineGroup(
-            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos),
-            new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristIdlePosition)));
+            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos).andThen(
+              new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristIdlePosition))
+      
+            ));
 
   }
 

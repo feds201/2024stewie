@@ -38,7 +38,6 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
                 new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
                 new EjectNote(servos))
                 .until(breakBeamSensorShooter::getBeamBroken)
-                .andThen(new SetLEDColor(leds, Leds.LedColors.GREEN))
         // Since the beambreak is now end of motion for the note, this is not necessary
         // anymore.
         // .andThen(new ParallelDeadlineGroup(
