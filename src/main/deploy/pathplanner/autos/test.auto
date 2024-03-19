@@ -2,19 +2,32 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.0,
-      "y": 7.0
+      "x": 1.25,
+      "y": 5.55
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "test1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "To First Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootNoteAtSpeakerOnly"
+                }
+              }
+            ]
           }
         }
       ]

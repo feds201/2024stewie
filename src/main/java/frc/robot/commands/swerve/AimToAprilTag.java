@@ -22,6 +22,7 @@ public class AimToAprilTag extends Command {
     private final double timeout = 2.0; // Time limit in seconds
     private final double rangeTolerance = 0.3; // Range within which to consider aligned
     private double lastOutput = 1;
+    private double axisofinit;
 
     public AimToAprilTag(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY) {
         c_swerve = swerve;
@@ -33,7 +34,8 @@ public class AimToAprilTag extends Command {
 
     public void initialize() {
         c_swerve.resetPID();
-        startTime = Timer.getFPGATimestamp(); // Start the timer
+
+
     }
 
     public boolean isFinished() {
@@ -42,7 +44,9 @@ public class AimToAprilTag extends Command {
     }
 
     public void execute() {
-        double output = c_swerve.getPIDRotation(VisionVariables.BackCam.target.getX());
+        axisofinit =  (double) Math.round(VisionVariables.BackCam.target.getX() * 100) /100;
+
+        double output = c_swerve.getPIDRotation(axisofinit);
 
         SmartDashboard.putNumber("alignment/output", output);
 

@@ -45,14 +45,7 @@ import frc.robot.commands.arm.RotateArmToPosition;
 import frc.robot.commands.arm.RotateArmManual;
 import frc.robot.commands.autons.DriveForwardForTime;
 import frc.robot.commands.climber.ExtendClimber;
-import frc.robot.commands.compound.AlignShooterAndIntake;
-import frc.robot.commands.compound.DeployIntake;
-import frc.robot.commands.compound.IntakeUntilNoteIn;
-import frc.robot.commands.compound.PlaceInAmp;
-import frc.robot.commands.compound.ResetIntake;
-import frc.robot.commands.compound.ShootFromHandoff;
-import frc.robot.commands.compound.ShootNoteAtSpeakerOnly;
-import frc.robot.commands.compound.SpitOutNote;
+import frc.robot.commands.compound.*;
 import frc.robot.commands.controller.ToggleRumble;
 import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.commands.shooter.StopServos;
@@ -163,11 +156,13 @@ public class RobotContainer {
                 new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake));
         NamedCommands.registerCommand("AlignShooterAndIntake",
                 new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels, servos, breakBeamSensorShooter, leds));
-        NamedCommands.registerCommand("ShootFromHandoff",
+        NamedCommands.registerCommand("ShootFromHandoff",//
                 new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos));
         NamedCommands.registerCommand("StopShooterWheelsPls", new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
         NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
                 driverController::getLeftY));
+    //    NamedCommands.registerCommand("FeedNoteToShooter", new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
+            //    servos, breakBeamSensorShooter, leds));
     }
 
     private void setupAutonCommands() {
@@ -221,6 +216,9 @@ public class RobotContainer {
                         new ParallelCommandGroup(
                                 new RotateShooterBasic(shooterRotation, () -> 0),
                                 new DriveForwardForTime(drivetrain, 6))));
+
+        autonChooser.addOption("Shoot while in motion",
+                drivetrain.getAutoPath("WPathPLSWORK"));
 
         autonChooser.addOption("Place Arm Down and 2 note move then shoot", new ParallelCommandGroup(
                 new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),

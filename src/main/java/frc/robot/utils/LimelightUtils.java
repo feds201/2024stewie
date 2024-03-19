@@ -25,6 +25,8 @@ public class LimelightUtils {
         return speedAngle;
     }
 
+    //Farther Negative is Shallower, Towards Zero is steeper.
+
     private static double getAngle(double limelightDistance) {
         SmartDashboard.putNumber("Supplied Distance to Shooter", limelightDistance);
         if (limelightDistance < 0.5) {
@@ -58,7 +60,7 @@ public class LimelightUtils {
         } else if (limelightDistance < 4.375) { // 4.25
             return -33;
         } else if (limelightDistance < 4.625) { // 4.5
-            return -33.5;
+            return -3;
         } else if (limelightDistance < 4.875) { // 4.75
             return -33.5;
         } else if (limelightDistance < 5.125) { // 5
@@ -66,7 +68,7 @@ public class LimelightUtils {
         } else if (limelightDistance < 5.375) { // 5.25
             return -35;
         } else if (limelightDistance < 5.625) { // 5.5
-            return -35.5;
+            return -35.8;
         } else if (limelightDistance < 5.875) { // 5.75
             return -35.5;
         } else if (limelightDistance < 6.125) { // 6
@@ -76,9 +78,9 @@ public class LimelightUtils {
         } else if (limelightDistance < 6.625) { // 6.5
             return -36.5;
         } else if (limelightDistance < 6.875) { // 6.75
-            return -36.5;
+            return -37.6;
         } else if (limelightDistance < 7.125) { // 7
-            return -37;
+            return -37.3;
         } else if (limelightDistance < 7.375) { // 7.25
             return -37;
         } else if (limelightDistance < 7.625) { // 7.5
