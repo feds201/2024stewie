@@ -35,7 +35,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    public static final PIDController pid = new PIDController(0.04, .01, .009);
+//    public static final PIDController pid = new PIDController(0.04, .01, .009);
+    public static final PIDController pid =  new PIDController(.1, .055, .02);
+
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
@@ -70,7 +72,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         pid.setTolerance(1); // allowable angle error
         pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
         pid.setIntegratorRange(-0.2, 0.2);
-        pid.setSetpoint(-10); // 0 = apriltag angle
+        pid.setSetpoint(0); // 0 = apriltag angle
     }
 
     public boolean getPIDAtSetpoint() {

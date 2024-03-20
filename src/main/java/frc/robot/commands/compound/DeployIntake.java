@@ -20,7 +20,7 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DeployIntake extends SequentialCommandGroup {
     /** Creates a new DeployIntake. */
-    public DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation, BreakBeamSensorIntake breakBeamSensorIntake) {
+    public DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation, BreakBeamSensorIntake breakBeamSensorIntake, Leds leds) {
 
         // Add your commands in the addCommands() call, e.g.
         // addCommands(new FooCommand(), new BarCommand());
@@ -28,7 +28,7 @@ public class DeployIntake extends SequentialCommandGroup {
                 new ParallelDeadlineGroup(
                         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristNotePosition),
                         new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)),
-                new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake),
+                new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake, leds),
                 new ParallelDeadlineGroup(
                         new RotateWristToPosition(wrist,
                                 IntakeConstants.WristPID.kWristIdlePosition),

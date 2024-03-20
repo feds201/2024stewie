@@ -36,7 +36,8 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
             new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint),
             new ParallelCommandGroup(
                 new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
-                new EjectNote(servos))
+                new EjectNote(servos),
+                    new SetLEDColor(leds, Leds.LedColors.GREEN))
                 .until(breakBeamSensorShooter::getBeamBroken)
         // Since the beambreak is now end of motion for the note, this is not necessary
         // anymore.

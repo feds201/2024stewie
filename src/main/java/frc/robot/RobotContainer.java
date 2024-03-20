@@ -25,7 +25,6 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,7 +37,6 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Intake.RotateWristToPosition;
 import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
@@ -67,11 +65,8 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
-import frc.robot.subsystems.vision_sys.VisionVariables;
-import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
 import frc.robot.subsystems.vision_sys.camera.BackCamera;
 import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
-import frc.robot.utils.LimelightUtils;
 import frc.robot.utils.Telemetry;
 
 public class RobotContainer {
@@ -153,7 +148,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ShootNoteAtSpeakerOnly",
                 new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, breakBeamSensorShooter));
         NamedCommands.registerCommand("DeployIntake",
-                new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake));
+                new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake,leds));
         NamedCommands.registerCommand("AlignShooterAndIntake",
                 new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels, servos, breakBeamSensorShooter, leds));
         NamedCommands.registerCommand("ShootFromHandoff",//
@@ -161,8 +156,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopShooterWheelsPls", new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
         NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
                 driverController::getLeftY));
-    //    NamedCommands.registerCommand("FeedNoteToShooter", new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
-            //    servos, breakBeamSensorShooter, leds));
+        //    NamedCommands.registerCommand("FeedNoteToShooter", new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
+        //    servos, breakBeamSensorShooter, leds));
         NamedCommands.registerCommand("DropIntake", new DropIntake(wrist));
     }
 
@@ -288,7 +283,7 @@ public class RobotContainer {
         driverController.leftTrigger()
                 .onTrue(
                         new SequentialCommandGroup(
-                                new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake),
+                                new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake,leds),
                                 new ParallelCommandGroup(
                                         new SetLEDColor(leds, Leds.LedColors.YELLOW),
                                         new ToggleRumble(driverController, 0.3),
@@ -308,9 +303,9 @@ public class RobotContainer {
                         new RotateArmToPosition(arm, () -> 0),
                         new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                                 servos, breakBeamSensorShooter, leds)));
-                // .onFalse(new ParallelCommandGroup(
-                //         // new RotateShooter(shooterRotation, () -> -5),
-                //          new ResetIntake(wrist, intakeWheels)));
+        // .onFalse(new ParallelCommandGroup(
+        //         // new RotateShooter(shooterRotation, () -> -5),
+        //          new ResetIntake(wrist, intakeWheels)));
 
         // AUTO AIM
         operatorController.rightTrigger()
@@ -325,7 +320,9 @@ public class RobotContainer {
                         drivetrain.applyRequest(() -> brake)));
 
         operatorController.leftTrigger()
-                .onTrue(new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos, breakBeamSensorShooter)
+                .onTrue(new SequentialCommandGroup(
+						new SetLEDColor(leds, leds.getAllianceColor()),
+		                new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos, breakBeamSensorShooter))
                         .andThen(
                                 new ParallelCommandGroup(
                                         new SetLEDColor(leds, leds.getAllianceColor()),
@@ -335,13 +332,13 @@ public class RobotContainer {
                         new RotateShooterBasic(shooterRotation, () -> 0),
                         new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
                         new ResetIntake(wrist, intakeWheels)
-                      ));
+                ));
 
         operatorController.b()
                 .onTrue(new SpitOutNote(wrist, intakeWheels)
                         .andThen(
                                 new ParallelCommandGroup(
-                                        new SetLEDColor(leds, leds.getLedColor()),
+                                        new SetLEDColor(leds, leds.getAllianceColor()),
                                         new ToggleRumble(driverController, 0.3),
                                         new ToggleRumble(operatorController, 0.3))))
                 .onFalse(new ResetIntake(wrist, intakeWheels));
@@ -411,7 +408,7 @@ public class RobotContainer {
         wrist.getShuffleboardTab().add("Rotate until note in Intake",
                 new SequentialCommandGroup(
                         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristNotePosition),
-                        new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake),
+                        new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake, leds),
                         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint)
 
                 ));

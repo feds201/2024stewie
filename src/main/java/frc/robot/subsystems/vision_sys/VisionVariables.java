@@ -8,7 +8,6 @@ public class VisionVariables {
     public static class ExportedVariables {
         public static double Distance;
         public static int AngleForShooter;
-        public static double pid_value_for_Alignmen;
     }
 
     public static class FrontCam {
