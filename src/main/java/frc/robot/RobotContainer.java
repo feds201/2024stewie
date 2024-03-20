@@ -151,18 +151,19 @@ public class RobotContainer {
 
     private void registerAllAutoCommands() {
         NamedCommands.registerCommand("ShootNoteAtSpeakerOnly",
-                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos));
+                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, breakBeamSensorShooter));
         NamedCommands.registerCommand("DeployIntake",
                 new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake));
         NamedCommands.registerCommand("AlignShooterAndIntake",
                 new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels, servos, breakBeamSensorShooter, leds));
         NamedCommands.registerCommand("ShootFromHandoff",//
-                new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos));
+                new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos, breakBeamSensorShooter));
         NamedCommands.registerCommand("StopShooterWheelsPls", new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
         NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
                 driverController::getLeftY));
     //    NamedCommands.registerCommand("FeedNoteToShooter", new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
             //    servos, breakBeamSensorShooter, leds));
+        NamedCommands.registerCommand("DropIntake", new DropIntake(wrist));
     }
 
     private void setupAutonCommands() {
@@ -176,7 +177,7 @@ public class RobotContainer {
                                 () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                         new SequentialCommandGroup(
                                 new WaitCommand(6),
-                                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))));
+                                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, breakBeamSensorShooter))));
 
         autonChooser.addOption("Step Back Fade Away",
                 new ParallelCommandGroup(
@@ -185,7 +186,7 @@ public class RobotContainer {
                                 () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                         new SequentialCommandGroup(
                                 new WaitCommand(6),
-                                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos),
+                                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, breakBeamSensorShooter),
                                 new WaitCommand(2),
                                 new ParallelCommandGroup(
                                         new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0)))));
@@ -201,7 +202,7 @@ public class RobotContainer {
                                         () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                                 new SequentialCommandGroup(
                                         new WaitCommand(6),
-                                        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))),
+                                        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, breakBeamSensorShooter))),
                         new DriveForwardForTime(drivetrain, 5)));
 
         autonChooser.addOption("Shoot and Scram",
@@ -212,7 +213,7 @@ public class RobotContainer {
                                         () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                                 new SequentialCommandGroup(
                                         new WaitCommand(5),
-                                        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))),
+                                        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, breakBeamSensorShooter))),
                         new ParallelCommandGroup(
                                 new RotateShooterBasic(shooterRotation, () -> 0),
                                 new DriveForwardForTime(drivetrain, 6))));
@@ -324,7 +325,7 @@ public class RobotContainer {
                         drivetrain.applyRequest(() -> brake)));
 
         operatorController.leftTrigger()
-                .onTrue(new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos)
+                .onTrue(new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos, breakBeamSensorShooter)
                         .andThen(
                                 new ParallelCommandGroup(
                                         new SetLEDColor(leds, leds.getAllianceColor()),
@@ -333,8 +334,8 @@ public class RobotContainer {
                 .onFalse(new ParallelCommandGroup(
                         new RotateShooterBasic(shooterRotation, () -> 0),
                         new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
-                        new ResetIntake(wrist, intakeWheels),
-                        new StopServos(servos)));
+                        new ResetIntake(wrist, intakeWheels)
+                      ));
 
         operatorController.b()
                 .onTrue(new SpitOutNote(wrist, intakeWheels)
@@ -441,7 +442,7 @@ public class RobotContainer {
         shooterTab.add("Stop Servos", new StopServos(servos));
 
         shooterTab.add("Shoot Note Full Command",
-                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos));
+                new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, breakBeamSensorShooter));
 
     }
 

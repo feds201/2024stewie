@@ -1,7 +1,9 @@
 package frc.robot.commands.swerve;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
@@ -23,6 +25,7 @@ public class AimToAprilTag extends Command {
     private final double rangeTolerance = 0.3; // Range within which to consider aligned
     private double lastOutput = 1;
     private double axisofinit;
+    public static PIDController rotationPID = createPIDController();
 
     public AimToAprilTag(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY) {
         c_swerve = swerve;
@@ -44,12 +47,11 @@ public class AimToAprilTag extends Command {
     }
 
     public void execute() {
-        axisofinit =  (double) Math.round(VisionVariables.BackCam.target.getX() * 100) /100;
 
-        double output = c_swerve.getPIDRotation(axisofinit);
+        double output = rotationPID.calculate(VisionVariables.BackCam.target.getX());
 
-        SmartDashboard.putNumber("alignment/output", output);
-
+        SmartDashboard.putNumber("errorVal",VisionVariables.BackCam.target.getX());
+        SmartDashboard.putNumber("Output", output);
         // // Additional check for being within range
         // if (Math.abs(VisionVariables.BackCam.target.getX()) < rangeTolerance) {
         //     isFinished(); // Force completion if within range
@@ -67,5 +69,13 @@ public class AimToAprilTag extends Command {
 
     public void end(boolean interrupted) {
         // Additional logic for timeout or completion here if needed
+    }
+    private static PIDController createPIDController() {
+        PIDController pid = new PIDController(.075, .055, .02);
+        Shuffleboard.getTab("swerve").add("april tag pid", pid);
+        pid.setTolerance(.25); // allowable angle error
+        pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
+        pid.setSetpoint(-10); // 0 = apriltag angle
+        return pid;
     }
 }

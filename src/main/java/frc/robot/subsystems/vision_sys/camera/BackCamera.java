@@ -1,8 +1,10 @@
 package frc.robot.subsystems.vision_sys.camera;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.vision_sys.VisionVariables;
@@ -19,6 +21,7 @@ public class BackCamera extends vision_sys {
     public static NetworkTable table;
     public static VisionObject tag;
     public Random random = new Random();
+//    public static PIDController rotationPID = createPIDController();
 
     public BackCamera() {
         dashBoardManager = new DashBoardManager();
@@ -72,6 +75,11 @@ public class BackCamera extends vision_sys {
                 tag.getAngle()
         );
         SmartDashboard.putNumber("Estimated Shooter Angle",  setShooterAngle(tag));
+//        try {
+//            VisionVariables.ExportedVariables.pid_value_for_Alignmen = rotationPID.calculate(VisionVariables.BackCam.target.getX());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         if (CheckTarget()) {
             VisionVariables.BackCam.target = tag;
@@ -80,6 +88,14 @@ public class BackCamera extends vision_sys {
             SmartDashboard.putNumber("Distance", VisionVariables.ExportedVariables.Distance);
         }
     }
+//    private static PIDController createPIDController() {
+//        PIDController pid = new PIDController(.05, .025, .001);
+//        Shuffleboard.getTab("swerve").add("april tag pid", pid);
+//        pid.setTolerance(5); // allowable angle error
+//        pid.enableContinuousInput(0, 180); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
+//        pid.setSetpoint(0); // 0 = apriltag angle
+//        return pid;
+//    }
 
 
 }

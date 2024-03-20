@@ -39,13 +39,13 @@ public class ShootFromHandoff extends SequentialCommandGroup {
    */
 
   public ShootFromHandoff(Wrist wrist, ShooterRotation shooterRotation, ShooterWheels shooterWheels,
-      ShooterServos servos) {
+      ShooterServos servos, BreakBeamSensorShooter irsensor) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         // new RotateWristToPosition(wrist,
         // IntakeConstants.WristPID.kWristIdlePosition),
-        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos),
+        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, irsensor),
         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition));
 
   }
