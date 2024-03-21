@@ -131,6 +131,8 @@ public class RobotContainer {
                 driverController = new CommandXboxController(OIConstants.kDriverController);
                 operatorController = new CommandXboxController(OIConstants.kOperatorController);
 
+                
+
                 registerAllAutoCommands();
                 configureDefaultCommands();
                 configureDriverController();

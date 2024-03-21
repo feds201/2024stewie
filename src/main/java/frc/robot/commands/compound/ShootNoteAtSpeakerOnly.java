@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.shooter.EjectNote;
-import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
@@ -30,7 +29,7 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
    * @param shooterWheels
    * @param servos
    */
-  public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, BreakBeamSensorShooter irsensor) {
+  public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, BreakBeamSensorShooter thing) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -43,7 +42,6 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
                 () -> LimelightUtils.GetSpeedAngle(ExportedVariables.Distance).speed),
             new SequentialCommandGroup(
                 new WaitCommand(1),
-                new EjectNote(servos).until( () -> !irsensor.getBeamBroken())
-            )));
+                new EjectNote(servos))));
   }
 }

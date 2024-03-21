@@ -19,6 +19,9 @@
         "Wrist Angle Position W": {
           "open": true
         },
+        "alignment": {
+          "open": true
+        },
         "open": true
       },
       "distance_sensor": {
@@ -108,6 +111,7 @@
       "/Shuffleboard/shooterWheels/shooter top main": "Motor Controller",
       "/Shuffleboard/shooterWheels/shooter wheels": "Subsystem",
       "/Shuffleboard/swerve/Swerve PID": "PIDController",
+      "/Shuffleboard/swerve/april tag pid": "PIDController",
       "/Shuffleboard/wrist/PID Controller": "PIDController",
       "/Shuffleboard/wrist/Rotate Intake Backwards Simple": "Command",
       "/Shuffleboard/wrist/Rotate Intake PID": "Command",
@@ -133,11 +137,6 @@
     "Plot <0>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
           "backgroundColor": [
             0.0,
             0.0,
@@ -190,6 +189,15 @@
                 1.0
               ],
               "id": "NT:/limelight-april/tx"
+            },
+            {
+              "color": [
+                0.5764706134796143,
+                0.4705882668495178,
+                0.3764706254005432,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/alignment/output"
             }
           ]
         }
