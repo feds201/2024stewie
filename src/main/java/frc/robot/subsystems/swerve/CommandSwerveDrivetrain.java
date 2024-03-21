@@ -75,6 +75,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         pid.setSetpoint(0); // 0 = apriltag angle
     }
 
+    public void setTarget(double target) {
+        pid.setSetpoint(target);
+    }
+
     public boolean getPIDAtSetpoint() {
         return pid.atSetpoint();
     }

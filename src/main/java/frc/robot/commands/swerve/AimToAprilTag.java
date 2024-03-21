@@ -11,6 +11,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision_sys.VisionVariables;
+import frc.robot.utils.LimelightUtils;
 
 public class AimToAprilTag extends Command {
         private final CommandSwerveDrivetrain c_swerve;
@@ -25,11 +26,13 @@ public class AimToAprilTag extends Command {
         private final double rangeTolerance = 0.3; // Range within which to consider aligned
         private double lastOutput = 1;
         private double axisofinit;
+        private DoubleSupplier c_limelightDistance;
 
-        public AimToAprilTag(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY) {
+        public AimToAprilTag(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY, DoubleSupplier limelightDistance) {
                 c_swerve = swerve;
                 c_leftX = leftX;
                 c_leftY = leftY;
+                c_limelightDistance = limelightDistance;
 
                 addRequirements(swerve);
         }
@@ -37,6 +40,7 @@ public class AimToAprilTag extends Command {
 		public void initialize() {
                 SmartDashboard.putBoolean("AimToAPrilTagCommand", true);
                 c_swerve.resetPID();
+                c_swerve.setTarget(LimelightUtils.MapDistanceToOffset(c_limelightDistance.getAsDouble()));
         }
 
         public boolean isFinished() {
@@ -59,7 +63,7 @@ public class AimToAprilTag extends Command {
                         .withRotationalRate(output));
                 lastOutput = output;
 
-				if (Math.abs(output)  <= 0.37)  {
+				if (Math.abs(output) <= 0.37)  {
 						SmartDashboard.putBoolean("AimToAPrilTagCommand", false);
 				}
         }

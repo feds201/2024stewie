@@ -5,7 +5,7 @@
       "x": 0.78,
       "y": 4.58
     },
-    "rotation": -87.84000000000003
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "To First Note"
+            "pathName": "SourceStart to SourceNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimToAprilTag"
           }
         },
         {
@@ -65,7 +71,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Inch Forward"
+                        "pathName": "Copy of To First Note Source Note"
                       }
                     }
                   ]
@@ -91,12 +97,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootFromHandoff"
           }
         }
       ]

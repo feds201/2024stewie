@@ -25,6 +25,19 @@ public class LimelightUtils {
         return speedAngle;
     }
 
+    public static double MapDistanceToOffset(double limelightDistance){
+        if(limelightDistance < 1) {
+            return 0;
+        } else if (limelightDistance < 2) {
+            return -3;
+        } else if (limelightDistance < 3) {
+            return -6;
+        } else {
+            return -10;
+        }
+    }
+
+
     private static double getAngle(double limelightDistance) {
         SmartDashboard.putNumber("Supplied Distance to Shooter", limelightDistance);
         if (limelightDistance < 0.5) {
