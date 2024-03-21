@@ -29,6 +29,7 @@ public class VisionObject {
     private double area;
     private ObjectType type;
 
+
     public VisionObject(double x, double y, double area, ObjectType type) {
         this.x = x;
         this.y = y;
@@ -38,6 +39,10 @@ public class VisionObject {
 
     public double getX() {
         return x;
+    }
+
+    public  boolean isPresent(){
+		    return table.getEntry("tv").getDouble(0) == 1.0;
     }
 
     public void setX(double x) {
