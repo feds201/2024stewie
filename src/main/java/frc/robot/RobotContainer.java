@@ -166,7 +166,7 @@ public class RobotContainer {
                 // NamedCommands.registerCommand("FeedNoteToShooter", new
                 // AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                 // servos, breakBeamSensorShooter, leds));
-                NamedCommands.registerCommand("DropIntake", new DropIntake(wrist));
+                NamedCommands.registerCommand("DropIntake", new DropIntake(wrist, arm));
         }
 
         private void setupAutonCommands() {
@@ -387,7 +387,10 @@ public class RobotContainer {
                                                                                 new ToggleRumble(operatorController,
                                                                                                 0.3))))
                                 .onFalse(new ResetIntake(wrist, intakeWheels));
-
+                operatorController.povUp()
+                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition));
+                operatorController.povDown()
+                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
                 operatorController.a()
                                 .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds)
                                                 .andThen(

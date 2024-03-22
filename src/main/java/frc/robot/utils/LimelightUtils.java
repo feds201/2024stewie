@@ -1,6 +1,7 @@
 package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.vision_sys.utils.VisionObject;
 
 public class LimelightUtils {
     public static class SpeedAngle {
@@ -32,6 +33,12 @@ public class LimelightUtils {
             return -3;
         } else if (limelightDistance < 3) {
             return -6;
+        } else if(limelightDistance < 4){
+            return -7;
+        }else if(limelightDistance < 5) {    
+            return -7;
+        } else if (limelightDistance < 6) {
+            return -8;
         } else {
             return -10;
         }
@@ -40,7 +47,9 @@ public class LimelightUtils {
 
     private static double getAngle(double limelightDistance) {
         SmartDashboard.putNumber("Supplied Distance to Shooter", limelightDistance);
-        if (limelightDistance < 0.5) {
+        if (!VisionObject.isPresent()){
+            return -33;
+        } else if (limelightDistance < 0.5) {
             return -1;
         } else if (limelightDistance < 1.125) { // 1
             return -6;
@@ -67,21 +76,21 @@ public class LimelightUtils {
         } else if (limelightDistance < 3.875) { // 3.75
             return -33;
         } else if (limelightDistance < 4.125) { // 4
-            return -35;
+            return -33;
         } else if (limelightDistance < 4.375) { // 4.25
-            return -29;
+            return -31;
         } else if (limelightDistance < 4.625) { // 4.5
-            return -30;
+            return -34.5;
         } else if (limelightDistance < 4.875) { // 4.75
             return -29;
         } else if (limelightDistance < 5.125) { // 5
-            return -30;
+            return -34;
         } else if (limelightDistance < 5.375) { // 5.25
-            return -31;
+            return -32.5;
         } else if (limelightDistance < 5.625) { // 5.5
             return -32;
         } else if (limelightDistance < 5.875) { // 5.75
-            return -33;
+            return -34.2;
         } else if (limelightDistance < 6.125) { // 6
             return -34;
         } else if (limelightDistance < 6.375) { // 6.25
@@ -89,17 +98,17 @@ public class LimelightUtils {
         } else if (limelightDistance < 6.625) { // 6.5
             return -36;
         } else if (limelightDistance < 6.875) { // 6.75
-            return -57;
+            return -37;
         } else if (limelightDistance < 7.125) { // 7
-            return -57.5;
+            return -37.5;
         } else if (limelightDistance < 7.375) { // 7.25
-            return -58;
+            return -38;
         } else if (limelightDistance < 7.625) { // 7.5
-            return -59;
+            return -39;
         } else if (limelightDistance < 7.875) { // 7.75
-            return -59;
+            return -39;
         } else { // 8
-            return -59.5;
+            return -39.5;
         }
     }
 

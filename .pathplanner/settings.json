@@ -3,12 +3,13 @@
   "robotLength": 0.66,
   "holonomicMode": true,
   "pathFolders": [
-    "FarBottome, FarCenter, FarTopMiddle",
     "MiddleStart 3 CloseNotes",
-    "StraightBack ",
+    "FarBottome, FarCenter, FarTopMiddle",
     "Simple"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Troy"
+  ],
   "defaultMaxVel": 2.0,
   "defaultMaxAccel": 2.0,
   "defaultMaxAngVel": 540.0,
