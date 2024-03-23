@@ -138,7 +138,7 @@ public class RobotContainer {
                 configureDriverController();
                 configureOperatorController();
 
-                setupArmCommands();
+                setupArmCommands();;
                 setupClimberCommands();
                 setupIntakeCommands();
                 setupShooterCommands();
@@ -180,7 +180,7 @@ public class RobotContainer {
                                                 new RotateArmToPosition(arm,
                                                                 () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                                                 new SequentialCommandGroup(
-                                                                new WaitCommand(6),
+                                                                new WaitCommand(0.5),
                                                                 new ShootNoteAtSpeakerOnly(shooterRotation,
                                                                                 shooterWheels, servos,
                                                                                 breakBeamSensorShooter))));
@@ -211,7 +211,7 @@ public class RobotContainer {
                                                                 new RotateArmToPosition(arm,
                                                                                 () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                                                                 new SequentialCommandGroup(
-                                                                                new WaitCommand(6),
+                                                                                new WaitCommand(3),
                                                                                 new ShootNoteAtSpeakerOnly(
                                                                                                 shooterRotation,
                                                                                                 shooterWheels, servos,
