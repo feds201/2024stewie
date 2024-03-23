@@ -237,8 +237,11 @@ public class RobotContainer {
                                                                 new RotateShooterBasic(shooterRotation, () -> 0),
                                                                 new DriveForwardForTime(drivetrain, 6))));
 
-                autonChooser.addOption("Shoot while in motion",
-                                drivetrain.getAutoPath("WPathPLSWORK"));
+                autonChooser.addOption("Red-2Note-CenterStart",
+                        drivetrain.getAutoPath("Red-2Note-CenterStart"));
+                    ;
+                autonChooser.addOption("Blue-2Note-CenterStart",
+                                drivetrain.getAutoPath("Blue-2Note-CenterStart"));
 
                 autonChooser.addOption("Place Arm Down and 2 note move then shoot", new ParallelCommandGroup(
                                 new RotateArmToPosition(arm,
@@ -408,7 +411,8 @@ public class RobotContainer {
                                                                 IntakeConstants.WristPID.kWristIdlePosition),
                                                 new RotateArmToPosition(arm, () -> 0),
                                                 new RunIntakeWheels(intakeWheels, () -> 0)));
-
+//                operatorController.x()
+////                                .whileTrue(new Wr)
                 // new Trigger(breakBeamSensorShooter::getBeamBroken).onTrue(new
                 // SetLEDColor(leds, Leds.LedColors.ORANGE));
 

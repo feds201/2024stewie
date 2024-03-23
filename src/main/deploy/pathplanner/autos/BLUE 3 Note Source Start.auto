@@ -140,6 +140,12 @@
         {
           "type": "named",
           "data": {
+            "name": "AlignShooterAndIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootFromHandoff"
           }
         },
