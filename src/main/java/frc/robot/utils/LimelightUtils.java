@@ -60,13 +60,13 @@ public class LimelightUtils {
         } else if (limelightDistance < 1.875) { // 1.75
             return -17;
         } else if (limelightDistance < 2.125) { // 2
-            return -18;
+            return -19.5;
         } else if (limelightDistance < 2.375) { // 2.25
-            return -19;
+            return -20;
         } else if (limelightDistance < 2.625) { // 2.5
-            return -23;
+            return -24.5;
         } else if (limelightDistance < 2.875) { // 2.75
-            return -25;
+            return -27;
         } else if (limelightDistance < 3.125) { // 3
             return -27;
         } else if (limelightDistance < 3.375) { // 3.25

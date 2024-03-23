@@ -3,9 +3,11 @@
   "robotLength": 0.66,
   "holonomicMode": true,
   "pathFolders": [
-    "MiddleStart 3 CloseNotes",
     "FarBottome, FarCenter, FarTopMiddle",
-    "Simple"
+    "MiddleStart 3 CloseNotes",
+    "SourceStart RED",
+    "Simple",
+    "Source Start 3 Note BLUE"
   ],
   "autoFolders": [
     "Troy"

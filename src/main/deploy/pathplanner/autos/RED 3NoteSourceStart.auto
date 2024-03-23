@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.78,
-      "y": 4.58
+      "x": 15.73,
+      "y": 4.57
     },
-    "rotation": -60.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -14,38 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SourceStart to FirstShoot"
+            "pathName": "RED 3NoteSourceStart 1"
           }
         },
         {
-          "type": "deadline",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootNoteAtSpeakerOnly"
-                }
-              }
-            ]
+            "name": "ShootFromHandoff"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "StopShooterWheelsPls"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "G"
           }
         },
         {
@@ -59,9 +40,22 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "H"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "RED 3NoteSourceStart 2"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -71,17 +65,17 @@
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "I"
-                }
-              },
               {
                 "type": "named",
                 "data": {
                   "name": "AlignShooterAndIntake"
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RED 3NoteSourceStart 3"
+                }
               }
             ]
           }
@@ -89,7 +83,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootNoteAtSpeaker"
+            "name": "ShootFromHandoff"
           }
         },
         {
@@ -109,9 +103,22 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "J"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "RED 3NoteSourceStart 4"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -120,7 +127,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootNoteAtSpeaker"
+            "name": "AlignShooterAndIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootFromHandoff"
           }
         },
         {
