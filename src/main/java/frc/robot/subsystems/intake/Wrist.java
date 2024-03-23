@@ -57,6 +57,11 @@ public class Wrist extends SubsystemABC {
     seedNetworkTables();
   }
 
+
+  public boolean isSafe() {
+    return false;
+  }
+
   @Override
   public void setupShuffleboard() {
     tab.add("PID Controller", pid);
@@ -65,8 +70,8 @@ public class Wrist extends SubsystemABC {
   @Override
   public void periodic() {
     wristRotationEncoder.setPositionOffset(0);
-     if(!wristRotationEncoder.isConnected()) { 
-      wristRotation.setVoltage(0); 
+     if(!wristRotationEncoder.isConnected()) {
+      wristRotation.setVoltage(0);
     }
 
     // This method will be called once per scheduler run
@@ -197,7 +202,7 @@ public class Wrist extends SubsystemABC {
   public void setTowardIntake(boolean state) {
     towardShooter.set(state);
     towardShooterLog.append(state);
-   
+
   }
 }
 

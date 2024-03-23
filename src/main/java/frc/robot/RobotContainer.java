@@ -221,15 +221,18 @@ public class RobotContainer {
                 autonChooser.addOption("Shoot and Scram",
                                 new SequentialCommandGroup(
                                                 new ParallelDeadlineGroup(
-                                                                new WaitCommand(9),
+                                                                new WaitCommand(2),
                                                                 new RotateArmToPosition(arm,
                                                                                 () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                                                                 new SequentialCommandGroup(
-                                                                                new WaitCommand(5),
-                                                                                new ShootNoteAtSpeakerOnly(
-                                                                                                shooterRotation,
-                                                                                                shooterWheels, servos,
-                                                                                                breakBeamSensorShooter))),
+                                                                                new WaitCommand(0.7),
+                                                                                new ShootFromHandoff(wrist,shooterRotation,shooterWheels,servos,breakBeamSensorShooter))),
+//                                                                                new Shoot(
+//                                                                                                shooterRotation,
+//                                                                                                shooterWheels, servos,
+//                                                                                                breakBeamSensorShooter)
+
+
                                                 new ParallelCommandGroup(
                                                                 new RotateShooterBasic(shooterRotation, () -> 0),
                                                                 new DriveForwardForTime(drivetrain, 6))));
