@@ -44,6 +44,23 @@ public class LimelightUtils {
         }
     }
 
+    private static double getTrigAlignAngle(double limelightTagDistanceCenter, double limelightTagDistanceRight) {
+        boolean whichWay = true; //replace with some boolean that you pass in as a parameter that tells us which way the limelight wants the robot to turn to shoot
+        double y = limelightTagDistanceRight; //Reading for the distance to the center AprilTag on speaker
+        double x = limelightTagDistanceCenter; //Reading for the distane to the right AprilTag on speaker
+        double z = 15.75; //Constant: Distance of AprilTag to AprilTag
+        double a = 2; //Aiming Variance
+        double totalAngle = Math.asin( (z * Math.sqrt( 1 - Math.pow( ((Math.pow(y, 2) - Math.pow(x, 2) - Math.pow(z, 2)) / -2 * a * x ), 2) )) / y); //The total angle that the limelight can see between the 2 AprilTags
+        double rotateAngleRight = Math.asin( (Math.sqrt(1 - Math.pow(( (Math.pow(y, 2) - Math.pow(x, 2) - Math.pow(z, 2)) / (-2 * x * z) ), 2))) / (x * Math.sqrt( ((-1 * (Math.pow(y, 2))) + Math.pow(x, 2) + Math.pow(z, 2) / a) ))); //The angle for the robot to correct to the right based on where we set the variance
+        double rotateAngleLeft = totalAngle - rotateAngleRight; //The angle for the robot to correct to the left based on where we set the variance
+
+        if(whichWay) { //if the robot needs to turn right to aim at the variance
+            return rotateAngleRight;
+        } else if (!whichWay) { //if the robot needs to turn left to aim at the variance
+            return rotateAngleLeft;
+        }
+        return -1; //ahhhh shiiiiiii
+    }
 
     private static double getAngle(double limelightDistance) {
         SmartDashboard.putNumber("Supplied Distance to Shooter", limelightDistance);
