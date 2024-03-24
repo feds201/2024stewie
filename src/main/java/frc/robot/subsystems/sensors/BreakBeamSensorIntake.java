@@ -21,7 +21,7 @@ public class BreakBeamSensorIntake extends SubsystemABC {
     // transmitter = new DigitalInput(SensorConstants.breakBeamTransmitterPort);
     receiverIntake = new DigitalInput(SensorConstants.intakeBreakBeamReceiverPort);
 
-    beamBrokenIntake = ntTable.getBooleanTopic("shooter_loaded").getEntry(true);
+    beamBrokenIntake = ntTable.getBooleanTopic("intake_loaded").getEntry(true);
 
     setupShuffleboard();
     seedNetworkTables();

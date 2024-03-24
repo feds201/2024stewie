@@ -3,7 +3,6 @@ package frc.robot.constants;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -11,18 +10,19 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class ArmConstants {
    public static class ArmPIDForExternalEncoder {
-      public static final double kP = 0.15;
-      public static final double kI = 0.01;
+      public static final double kP = 0.175;
+      public static final double kI = 0.015;
       public static final double kD = 0;
       public static final double kF = 0;
 
-      public static final double kRotationTolerance = 0.5;
+      public static final double kRotationTolerance = 1;
       public static final double kIZone = Double.POSITIVE_INFINITY;
       public static final double kIMin = -0.05;
       public static final double kIMax = 0.05;
 
       public static final double kArmRotationFeederSetpoint = 2;
       public static final double kArmInnerWingSetpoint = 30;
+      public static  final double kAmpPosition = 29;
 
       public static PIDController GetArmPID() {
          PIDController pid = new PIDController(kP, kI, kD);
@@ -60,12 +60,6 @@ public class ArmConstants {
       motionMagicConfigs.MotionMagicCruiseVelocity = 10; // TODO: FOR SURE TUNE THESE DAWG!!!
       motionMagicConfigs.MotionMagicAcceleration = 10;
       motionMagicConfigs.MotionMagicJerk = 10;
-
-      // SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = configs.SoftwareLimitSwitch;
-      // softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
-      // softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
-      // softwareLimitSwitchConfigs.ForwardSoftLimitThreshold = 40 * kArmGearReduction;
-      // softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = 1 * kArmGearReduction;
 
       return configs;
    }

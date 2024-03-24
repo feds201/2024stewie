@@ -23,11 +23,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.constants.CameraConstants;
 
 public class VisionObject {
-    NetworkTable table = NetworkTableInstance.getDefault().getTable(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
+    static NetworkTable table = NetworkTableInstance.getDefault().getTable(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
     private double x;
     private double y;
     private double area;
     private ObjectType type;
+
 
     public VisionObject(double x, double y, double area, ObjectType type) {
         this.x = x;
@@ -38,6 +39,10 @@ public class VisionObject {
 
     public double getX() {
         return x;
+    }
+
+    public static boolean isPresent(){
+		return table.getEntry("tv").getDouble(0) == 1.0;
     }
 
     public void setX(double x) {

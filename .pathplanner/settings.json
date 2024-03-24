@@ -1,13 +1,25 @@
 {
-  "robotWidth": 0.9,
-  "robotLength": 0.9,
+  "robotWidth": 0.66,
+  "robotLength": 0.66,
   "holonomicMode": true,
   "pathFolders": [
-    "New Folder"
+    "BLUE ALLIANCE",
+    "FarBottome, FarCenter, FarTopMiddle",
+    "MiddleStart 3 CloseNotes",
+    "Blue-2Note-CenterStart",
+    "New New Folder",
+    "RED ALLIANCE",
+    "Red-2Note-CenterStart",
+    "Simple",
+    "Source Start 3 Note BLUE",
+    "SourceStart RED"
   ],
-  "autoFolders": [],
-  "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 3.0,
+  "autoFolders": [
+    "Archive",
+    "Troy"
+  ],
+  "defaultMaxVel": 2.0,
+  "defaultMaxAccel": 2.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.5

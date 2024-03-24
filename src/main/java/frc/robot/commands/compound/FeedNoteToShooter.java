@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.Intake.IntakeIn;
-import frc.robot.commands.Intake.RotateWristPIDInfinite;
-import frc.robot.commands.arm.RotateArm;
-import frc.robot.commands.shooter.RotateShooter;
+import frc.robot.commands.Intake.RotateWristToPositionInfinite;
+import frc.robot.commands.Intake.RunIntakeWheels;
+import frc.robot.commands.arm.RotateArmToPosition;
+import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.ShooterConstants;
@@ -29,16 +29,16 @@ public class FeedNoteToShooter extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new RotateArm(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint), //Rotate arm 2.0 degrees
+        new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint), //Rotate arm 2.0 degrees
         new SequentialCommandGroup( 
             new WaitCommand(ArmConstants.kArmRotationDelay), //Wait 3 seconds
             new ParallelCommandGroup(
-                new RotateWristPIDInfinite(wrist, IntakeConstants.kWristShooterFeederSetpoint), //Rotate Intake to the setpoint (7) (90 degrees)
-                new RotateShooter(shooterRotation,
+                new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint), //Rotate Intake to the setpoint (7) (90 degrees)
+                new RotateShooterToPosition(shooterRotation,
                     () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint), //PROBLEM (NOT ROTATING)
                 new SequentialCommandGroup(
                     new WaitCommand(ShooterConstants.kRotateShooterDelay),
                     new ParallelDeadlineGroup(
-                        new IntakeIn(wheels, () -> IntakeConstants.kWheelSpeed))))));
+                        new RunIntakeWheels(wheels, () -> IntakeConstants.kIntakeNoteWheelSpeed))))));
   }
 }

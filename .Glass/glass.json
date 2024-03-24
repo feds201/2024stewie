@@ -1,11 +1,10 @@
 {
   "NetworkTables": {
-    "Retained Values": {
-      "open": false
-    },
     "transitory": {
+      "Intake": {
+        "open": true
+      },
       "Shuffleboard": {
-        "open": true,
         "shooterRotation": {
           "open": true,
           "rotation pid controller": {
@@ -20,9 +19,9 @@
         "Wrist Angle Position W": {
           "open": true
         },
-        "open": true
-      },
-      "arm": {
+        "alignment": {
+          "open": true
+        },
         "open": true
       },
       "distance_sensor": {
@@ -32,6 +31,15 @@
         "open": true
       },
       "irsensor": {
+        "open": true
+      },
+      "limelight-april": {
+        "open": true
+      },
+      "limelight-notes": {
+        "open": true
+      },
+      "shooter": {
         "open": true
       },
       "shooterRotation": {
@@ -44,6 +52,15 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
+      "/Shuffleboard/Intake/PID Controller": "PIDController",
+      "/Shuffleboard/Intake/Rotate Idle Position": "Command",
+      "/Shuffleboard/Intake/Rotate Note Position": "Command",
+      "/Shuffleboard/Intake/Rotate Shooter Position": "Command",
+      "/Shuffleboard/Intake/Rotate until note in Intake": "Command",
+      "/Shuffleboard/Intake/Run Intake Wheels": "Command",
+      "/Shuffleboard/Intake/Run Intake Wheels Backwards": "Command",
+      "/Shuffleboard/Intake/wheels": "Subsystem",
+      "/Shuffleboard/Intake/wrist": "Subsystem",
       "/Shuffleboard/arm/Rotate Arm": "Command",
       "/Shuffleboard/arm/arm": "Subsystem",
       "/Shuffleboard/arm/armRotation talon": "Motor Controller",
@@ -94,6 +111,7 @@
       "/Shuffleboard/shooterWheels/shooter top main": "Motor Controller",
       "/Shuffleboard/shooterWheels/shooter wheels": "Subsystem",
       "/Shuffleboard/swerve/Swerve PID": "PIDController",
+      "/Shuffleboard/swerve/april tag pid": "PIDController",
       "/Shuffleboard/wrist/PID Controller": "PIDController",
       "/Shuffleboard/wrist/Rotate Intake Backwards Simple": "Command",
       "/Shuffleboard/wrist/Rotate Intake PID": "Command",
@@ -153,48 +171,6 @@
                 1.0
               ],
               "id": "NT:/SmartDashboard/Wrist Encoder Value"
-            }
-          ]
-        }
-      ]
-    },
-    "Plot <1>": {
-      "plots": [
-        {
-          "backgroundColor": [
-            0.0,
-            0.0,
-            0.0,
-            0.8500000238418579
-          ],
-          "height": 373,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Wrist Angle Position"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Wrist Angle Position W/ Offset"
-            },
-            {
-              "color": [
-                0.3333333432674408,
-                0.658823549747467,
-                0.4078431725502014,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Wrist Angle Raw (enc * 360)"
             },
             {
               "color": [
@@ -203,7 +179,101 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Wrist after wrap around check"
+              "id": "NT:/Intake/wrist_voltage"
+            },
+            {
+              "color": [
+                0.5058823823928833,
+                0.44705885648727417,
+                0.7019608020782471,
+                1.0
+              ],
+              "id": "NT:/limelight-april/tx"
+            },
+            {
+              "color": [
+                0.5764706134796143,
+                0.4705882668495178,
+                0.3764706254005432,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/alignment/output"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 349,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/shooter/encoder_angle"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/shooter/rotate_target"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 449,
+          "series": [
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/limelight-april/tx"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Distance"
             }
           ]
         }
