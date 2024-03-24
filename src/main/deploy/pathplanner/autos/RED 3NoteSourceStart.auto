@@ -12,9 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "RED 3NoteSourceStart 1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RED 3NoteSourceStart 1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmDown"
+                }
+              }
+            ]
           }
         },
         {

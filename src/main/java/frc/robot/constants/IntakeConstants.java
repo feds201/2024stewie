@@ -13,7 +13,7 @@ public class IntakeConstants {
     public final static double kWristNotePosition = 302;
     public final static double kWristIdlePosition = 170;
     public  final static  double kAmpPosition = 223;
-    public final static double kWristShooterFeederSetpoint = 92; // TODO: Ideally all of the above positions should be based on this "home" position so we only have to change this
+    public final static double kWristShooterFeederSetpoint = 94; // TODO: Ideally all of the above positions should be based on this "home" position so we only have to change this
 
     
 

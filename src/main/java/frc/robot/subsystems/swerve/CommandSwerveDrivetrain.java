@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -21,8 +22,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import com.ctre.phoenix6.hardware.Pigeon2;
 // import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 
@@ -33,6 +36,7 @@ import frc.robot.subsystems.swerve.generated.TunerConstants;
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
+    private static Pigeon2 pigeon = new Pigeon2(0);
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 //    public static final PIDController pid = new PIDController(0.04, .01, .009);

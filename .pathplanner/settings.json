@@ -3,14 +3,19 @@
   "robotLength": 0.66,
   "holonomicMode": true,
   "pathFolders": [
+    "BLUE ALLIANCE",
     "FarBottome, FarCenter, FarTopMiddle",
     "MiddleStart 3 CloseNotes",
+    "Blue-2Note-CenterStart",
+    "New New Folder",
+    "RED ALLIANCE",
     "Red-2Note-CenterStart",
     "Simple",
     "Source Start 3 Note BLUE",
     "SourceStart RED"
   ],
   "autoFolders": [
+    "Archive",
     "Troy"
   ],
   "defaultMaxVel": 2.0,

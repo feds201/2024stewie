@@ -52,6 +52,7 @@ import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
+import frc.robot.commands.swerve.SetFieldRelative;
 import frc.robot.constants.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
@@ -163,10 +164,13 @@ public class RobotContainer {
                                 new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
                 NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
                                 driverController::getLeftY, () -> ExportedVariables.Distance));
+                NamedCommands.registerCommand("ArmDown",  new RotateArmToPosition(arm,() -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
                 // NamedCommands.registerCommand("FeedNoteToShooter", new
                 // AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                 // servos, breakBeamSensorShooter, leds));
                 NamedCommands.registerCommand("DropIntake", new DropIntake(wrist, arm));
+                NamedCommands.registerCommand("SetFieldRelative", new SetFieldRelative(drivetrain));
+                NamedCommands.registerCommand("AlignWithNote", new DriveForwardForTime(drivetrain, 2));
         }
 
         private void setupAutonCommands() {
@@ -347,6 +351,14 @@ public class RobotContainer {
                                                 new RotateArmToPosition(arm, () -> 0),
                                                 new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                                                                 servos, breakBeamSensorShooter, leds)));
+//                operatorController.rightBumper()
+//                                .onTrue(new ParallelCommandGroup(
+//                                                new ShootAcrossField(shooterRotation, shooterWheels, servos, breakBeamSensorShooter)
+//                                ))
+//                                .onFalse(new ParallelCommandGroup(
+//                                        new RotateShooterBasic(shooterRotation, () -> 0),
+//                                        new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
+//                                        new ResetIntake(wrist, intakeWheels)));
                 // .onFalse(new ParallelCommandGroup(
                 // // new RotateShooter(shooterRotation, () -> -5),
                 // new ResetIntake(wrist, intakeWheels)));
@@ -411,8 +423,8 @@ public class RobotContainer {
                                                                 IntakeConstants.WristPID.kWristIdlePosition),
                                                 new RotateArmToPosition(arm, () -> 0),
                                                 new RunIntakeWheels(intakeWheels, () -> 0)));
-//                operatorController.x()
-////                                .whileTrue(new Wr)
+                operatorController.x()
+                        .onTrue(new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint));
                 // new Trigger(breakBeamSensorShooter::getBeamBroken).onTrue(new
                 // SetLEDColor(leds, Leds.LedColors.ORANGE));
 

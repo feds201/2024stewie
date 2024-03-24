@@ -19,12 +19,24 @@ import frc.robot.subsystems.leds.Leds;
 public class PlaceInAmp extends ParallelCommandGroup {
   public PlaceInAmp(Wrist wrist, IntakeWheels wheels, Arm arm, Leds leds) {
     addCommands(
-        new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition),
-        new SequentialCommandGroup(
-            new WaitCommand(1),
-            new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kAmpPosition)),
-        new SequentialCommandGroup(
-            new WaitCommand(3.5),
-            new RunIntakeWheels(wheels, () -> IntakeConstants.kAmpInWheelSpeed)));
+            new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition),
+            new SequentialCommandGroup(
+                    new WaitCommand(0.25),
+                    new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kAmpPosition)
+            ),
+            new SequentialCommandGroup(
+                    new WaitCommand(3.2),
+                    new RunIntakeWheels(wheels, () -> IntakeConstants.kAmpInWheelSpeed)
+            ));
   }
 }
+
+//        new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition),
+//        new SequentialCommandGroup(
+//            new WaitCommand(1),
+//            new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kAmpPosition)),
+//        new SequentialCommandGroup(
+//            new WaitCommand(3.5),
+//            new RunIntakeWheels(wheels, () -> IntakeConstants.kAmpInWheelSpeed)));
+//  }
+//}

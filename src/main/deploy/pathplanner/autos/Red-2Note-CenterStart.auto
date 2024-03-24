@@ -12,9 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Red-2Note-CenterStart-1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Red-2Note-CenterStart-1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmDown"
+                }
+              }
+            ]
           }
         },
         {
@@ -46,7 +59,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.5
+                        "waitTime": 1.2
                       }
                     },
                     {

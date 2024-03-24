@@ -24,7 +24,7 @@ public class SpitOutNote extends SequentialCommandGroup {
     addCommands(
       new RotateWristToPosition(wrist, IntakeConstants.WristPID.kSpitOutPosition),
       new ParallelDeadlineGroup(
-        new WaitCommand(2), 
+        new WaitCommand(0.5),
         new RunIntakeWheels(wheels, () -> IntakeConstants.kSpitOutNoteWheelSpeed))
     );
   }

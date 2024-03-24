@@ -16,18 +16,18 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "ArmDown"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "Start To Middle"
+                  "pathName": "Blue-2Note-CenterStart 1"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
           }
         },
         {
@@ -40,12 +40,6 @@
           "type": "named",
           "data": {
             "name": "StopShooterWheelsPls"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
           }
         },
         {
@@ -65,25 +59,19 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.5
+                        "waitTime": 1.2
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Middle To Note"
+                        "pathName": "Blue-2Note-CenterStart2"
                       }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.4
           }
         },
         {

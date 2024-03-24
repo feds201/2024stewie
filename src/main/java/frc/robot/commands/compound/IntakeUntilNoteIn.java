@@ -24,7 +24,7 @@ public class IntakeUntilNoteIn extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)
-            .until(() -> irSensor.getBeamBroken()),
+            .until(irSensor::getBeamBroken),
         new SetLEDColor(leds, Leds.LedColors.YELLOW),
         new ParallelDeadlineGroup(
             new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay), // This should not be necessary
