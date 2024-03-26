@@ -15,8 +15,9 @@ public class VisionVariables {
         public static VisionObject target;
         public static Number CameraMode;
         public static double distance;
+		    public static int LEDMode;
 
-        public static class RobotTransformation {
+		    public static class RobotTransformation {
             public static double x;
             public static double y;
             public static double rotation;

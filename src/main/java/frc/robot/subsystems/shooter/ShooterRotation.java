@@ -107,7 +107,7 @@ public class ShooterRotation extends SubsystemABC {
       SmartDashboard.putNumber("current kI", rotatePID.getI());
       SmartDashboard.putNumber("current kD", rotatePID.getD());
 
-      setRotateVoltage(output); // positive direction is towards Intake, when it should be away from Intake
+      setRotateVoltage(output); // positive direction is towards intake, when it should be away from intake
     }
   }
 

@@ -55,6 +55,9 @@ import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.commands.swerve.SetFieldRelative;
 import frc.robot.commands.swerve.TrigAlign;
 import frc.robot.constants.*;
+import frc.robot.subsystems.Vision.camera.Back_Camera;
+import frc.robot.subsystems.Vision.camera.Front_Camera;
+import frc.robot.subsystems.Vision.utils.DashBoardManager;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.leds.Leds;
@@ -67,9 +70,10 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
-import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
-import frc.robot.subsystems.vision_sys.camera.BackCamera;
-import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
+//import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
+//import frc.robot.subsystems.vision_sys.camera.BackCamera;
+//import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
+import frc.robot.subsystems.vision_sys.VisionVariables;
 import frc.robot.utils.Telemetry;
 
 public class RobotContainer {
@@ -94,9 +98,8 @@ public class RobotContainer {
         private final Climber climber;
         public final Leds leds;
 
-        // private final FrontCamera frontCamera;
-        private final BackCamera backCamera;
-        private final DashBoardManager visionManager;
+         private final Front_Camera frontCamera;
+        private final Back_Camera backCamera;
         private final BreakBeamSensorShooter breakBeamSensorShooter;
         private final BreakBeamSensorIntake breakBeamSensorIntake;
 
@@ -114,9 +117,8 @@ public class RobotContainer {
                 climber = new Climber();
                 wrist = new Wrist();
                 intakeWheels = new IntakeWheels();
-                // frontCamera = new FrontCamera();
-                backCamera = new BackCamera();
-                visionManager = new DashBoardManager();
+                frontCamera = new Front_Camera();
+                backCamera = new Back_Camera(drivetrain);
                 servos = new ShooterServos();
                 breakBeamSensorShooter = new BreakBeamSensorShooter();
                 breakBeamSensorIntake = new BreakBeamSensorIntake();
@@ -145,7 +147,7 @@ public class RobotContainer {
                 setupIntakeCommands();
                 setupShooterCommands();
                 setupErrorTriggers();
-                setupAutonCommands();
+//                setupAutonCommands();
 
         }
 
@@ -164,7 +166,7 @@ public class RobotContainer {
                 NamedCommands.registerCommand("StopShooterWheelsPls",
                                 new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
                 NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
-                                driverController::getLeftY, () -> ExportedVariables.Distance));
+                                driverController::getLeftY, () -> VisionVariables.ExportedVariables.Distance));
                 NamedCommands.registerCommand("ArmDown",  new RotateArmToPosition(arm,() -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
                 // NamedCommands.registerCommand("FeedNoteToShooter", new
                 // AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
@@ -174,112 +176,112 @@ public class RobotContainer {
                 NamedCommands.registerCommand("AlignWithNote", new DriveForwardForTime(drivetrain, 2));
         }
 
-        private void setupAutonCommands() {
-
-                autonChooser.setDefaultOption("Rotate Arm To Zero Pos",
-                                new RotateArmToPosition(arm,
-                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
-
-                autonChooser.addOption("Shoot In Front of Speaker",
-                                new ParallelCommandGroup(
-                                                new RotateArmToPosition(arm,
-                                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-                                                new SequentialCommandGroup(
-                                                                new WaitCommand(0.5),
-                                                                new ShootNoteAtSpeakerOnly(shooterRotation,
-                                                                                shooterWheels, servos,
-                                                                                breakBeamSensorShooter))));
-
-                autonChooser.addOption("Step Back Fade Away",
-                                new ParallelCommandGroup(
-                                                new DriveForwardForTime(drivetrain, 2),
-                                                new RotateArmToPosition(arm,
-                                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-                                                new SequentialCommandGroup(
-                                                                new WaitCommand(6),
-                                                                new ShootNoteAtSpeakerOnly(shooterRotation,
-                                                                                shooterWheels, servos,
-                                                                                breakBeamSensorShooter),
-                                                                new WaitCommand(2),
-                                                                new ParallelCommandGroup(
-                                                                                new ShootNoteMotionMagicVelocity(
-                                                                                                shooterWheels,
-                                                                                                () -> 0)))));
-
-                autonChooser.addOption("TestCode",
-                                drivetrain.getAutoPath("test"));
-
-                autonChooser.addOption("Step Back Fade Away and Run",
-                                new SequentialCommandGroup(
-                                                new ParallelCommandGroup(
-                                                                new DriveForwardForTime(drivetrain, 2),
-                                                                new RotateArmToPosition(arm,
-                                                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-                                                                new SequentialCommandGroup(
-                                                                                new WaitCommand(3),
-                                                                                new ShootNoteAtSpeakerOnly(
-                                                                                                shooterRotation,
-                                                                                                shooterWheels, servos,
-                                                                                                breakBeamSensorShooter))),
-                                                new DriveForwardForTime(drivetrain, 5)));
-
-                autonChooser.addOption("Shoot and Scram",
-                                new SequentialCommandGroup(
-                                                new ParallelDeadlineGroup(
-                                                                new WaitCommand(2),
-                                                                new RotateArmToPosition(arm,
-                                                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-                                                                new SequentialCommandGroup(
-                                                                                new WaitCommand(0.7),
-                                                                                new ShootFromHandoff(wrist,shooterRotation,shooterWheels,servos,breakBeamSensorShooter))),
-//                                                                                new Shoot(
+//        private void setupAutonCommands() {
+//
+//                autonChooser.setDefaultOption("Rotate Arm To Zero Pos",
+//                                new RotateArmToPosition(arm,
+//                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
+//
+//                autonChooser.addOption("Shoot In Front of Speaker",
+//                                new ParallelCommandGroup(
+//                                                new RotateArmToPosition(arm,
+//                                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+//                                                new SequentialCommandGroup(
+//                                                                new WaitCommand(0.5),
+//                                                                new ShootNoteAtSpeakerOnly(shooterRotation,
+//                                                                                shooterWheels, servos,
+//                                                                                breakBeamSensorShooter))));
+//
+//                autonChooser.addOption("Step Back Fade Away",
+//                                new ParallelCommandGroup(
+//                                                new DriveForwardForTime(drivetrain, 2),
+//                                                new RotateArmToPosition(arm,
+//                                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+//                                                new SequentialCommandGroup(
+//                                                                new WaitCommand(6),
+//                                                                new ShootNoteAtSpeakerOnly(shooterRotation,
+//                                                                                shooterWheels, servos,
+//                                                                                breakBeamSensorShooter),
+//                                                                new WaitCommand(2),
+//                                                                new ParallelCommandGroup(
+//                                                                                new ShootNoteMotionMagicVelocity(
+//                                                                                                shooterWheels,
+//                                                                                                () -> 0)))));
+//
+//                autonChooser.addOption("TestCode",
+//                                drivetrain.getAutoPath("test"));
+//
+//                autonChooser.addOption("Step Back Fade Away and Run",
+//                                new SequentialCommandGroup(
+//                                                new ParallelCommandGroup(
+//                                                                new DriveForwardForTime(drivetrain, 2),
+//                                                                new RotateArmToPosition(arm,
+//                                                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+//                                                                new SequentialCommandGroup(
+//                                                                                new WaitCommand(3),
+//                                                                                new ShootNoteAtSpeakerOnly(
 //                                                                                                shooterRotation,
 //                                                                                                shooterWheels, servos,
-//                                                                                                breakBeamSensorShooter)
-
-
-                                                new ParallelCommandGroup(
-                                                                new RotateShooterBasic(shooterRotation, () -> 0),
-                                                                new DriveForwardForTime(drivetrain, 6))));
-
-                autonChooser.addOption("Red-2Note-CenterStart",
-                        drivetrain.getAutoPath("Red-2Note-CenterStart"));
-                    ;
-                autonChooser.addOption("Blue-2Note-CenterStart",
-                                drivetrain.getAutoPath("Blue-2Note-CenterStart"));
-
-                autonChooser.addOption("Place Arm Down and 2 note move then shoot", new ParallelCommandGroup(
-                                new RotateArmToPosition(arm,
-                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-                                new SequentialCommandGroup(
-                                                new WaitCommand(0.8),
-                                                drivetrain.getAutoPath("2 Note Move Then Shoot"))));
-
-                autonChooser.addOption("Place Arm Down and 2 note", new ParallelCommandGroup(
-                                new RotateArmToPosition(arm,
-                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-                                new SequentialCommandGroup(
-                                                new WaitCommand(0.8),
-                                                drivetrain.getAutoPath("2 Note Shoot Then Move"))));
-
-                autonChooser.addOption("Place Arm Down and 2 note source side", new ParallelCommandGroup(
-                                new RotateArmToPosition(arm,
-                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-                                new SequentialCommandGroup(
-                                                new WaitCommand(0.8),
-                                                drivetrain.getAutoPath("2 Note Move Then Shoot Source Side"))));
-
-                // autonChooser.addOption("Aim and Shoot Auton", new ParallelCommandGroup(
-                // new RotateArm(arm, () ->
-                // ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-                // new SequentialCommandGroup(
-                // new WaitCommand(6),
-                // new AimToAprilTag(drivetrain, driverController::getLeftX,
-                // driverController::getLeftY),
-                // new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))));
-
-                Shuffleboard.getTab("autons").add(autonChooser);
-        }
+//                                                                                                breakBeamSensorShooter))),
+//                                                new DriveForwardForTime(drivetrain, 5)));
+//
+//                autonChooser.addOption("Shoot and Scram",
+//                                new SequentialCommandGroup(
+//                                                new ParallelDeadlineGroup(
+//                                                                new WaitCommand(2),
+//                                                                new RotateArmToPosition(arm,
+//                                                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+//                                                                new SequentialCommandGroup(
+//                                                                                new WaitCommand(0.7),
+//                                                                                new ShootFromHandoff(wrist,shooterRotation,shooterWheels,servos,breakBeamSensorShooter))),
+////                                                                                new Shoot(
+////                                                                                                shooterRotation,
+////                                                                                                shooterWheels, servos,
+////                                                                                                breakBeamSensorShooter)
+//
+//
+//                                                new ParallelCommandGroup(
+//                                                                new RotateShooterBasic(shooterRotation, () -> 0),
+//                                                                new DriveForwardForTime(drivetrain, 6))));
+//
+//                autonChooser.addOption("Red-2Note-CenterStart",
+//                        drivetrain.getAutoPath("Red-2Note-CenterStart"));
+//                    ;
+//                autonChooser.addOption("Blue-2Note-CenterStart",
+//                                drivetrain.getAutoPath("Blue-2Note-CenterStart"));
+//
+//                autonChooser.addOption("Place Arm Down and 2 note move then shoot", new ParallelCommandGroup(
+//                                new RotateArmToPosition(arm,
+//                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+//                                new SequentialCommandGroup(
+//                                                new WaitCommand(0.8),
+//                                                drivetrain.getAutoPath("2 Note Move Then Shoot"))));
+//
+//                autonChooser.addOption("Place Arm Down and 2 note", new ParallelCommandGroup(
+//                                new RotateArmToPosition(arm,
+//                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+//                                new SequentialCommandGroup(
+//                                                new WaitCommand(0.8),
+//                                                drivetrain.getAutoPath("2 Note Shoot Then Move"))));
+//
+//                autonChooser.addOption("Place Arm Down and 2 note source side", new ParallelCommandGroup(
+//                                new RotateArmToPosition(arm,
+//                                                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+//                                new SequentialCommandGroup(
+//                                                new WaitCommand(0.8),
+//                                                drivetrain.getAutoPath("2 Note Move Then Shoot Source Side"))));
+//
+//                // autonChooser.addOption("Aim and Shoot Auton", new ParallelCommandGroup(
+//                // new RotateArm(arm, () ->
+//                // ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
+//                // new SequentialCommandGroup(
+//                // new WaitCommand(6),
+//                // new AimToAprilTag(drivetrain, driverController::getLeftX,
+//                // driverController::getLeftY),
+//                // new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))));
+//
+//                Shuffleboard.getTab("autons").add(autonChooser);
+//        }
 
         private void configureDefaultCommands() {
                 drivetrain.setDefaultCommand(new ParallelCommandGroup(
@@ -357,7 +359,7 @@ public class RobotContainer {
 
                 operatorController.rightTrigger()
                                 .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX,
-                                                driverController::getLeftY, () -> ExportedVariables.Distance)
+                                                driverController::getLeftY, () -> VisionVariables.ExportedVariables.Distance)
                                                 .andThen(
                                                                 new ParallelCommandGroup(
                                                                                 new SetLEDColor(leds,
@@ -432,12 +434,12 @@ public class RobotContainer {
         }
 
         private void setupIntakeCommands() {
-                // Intake = Wrist + IntakeWheels
+                // intake = Wrist + IntakeWheels
                 // INTAKE
-                intakeWheels.getShuffleboardTab().add("Run Intake Wheels",
+                intakeWheels.getShuffleboardTab().add("Run intake Wheels",
                                 new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed));
 
-                intakeWheels.getShuffleboardTab().add("Run Intake Wheels Backwards",
+                intakeWheels.getShuffleboardTab().add("Run intake Wheels Backwards",
                                 new RunIntakeWheels(intakeWheels, () -> -IntakeConstants.kIntakeNoteWheelSpeed));
 
                 // GenericEntry wristSpeed = wrist.getShuffleboardTab()
@@ -446,11 +448,11 @@ public class RobotContainer {
                 // .withProperties(Map.of("min", 0, "max", 0.8, "blockIncrement", 0.005))
                 // .getEntry();
 
-                // wrist.getShuffleboardTab().add("Rotate Intake Simple",
+                // wrist.getShuffleboardTab().add("Rotate intake Simple",
                 // new RotateWristBasic(wrist,
                 // () -> wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
 
-                // wrist.getShuffleboardTab().add("Rotate Intake Backwards Simple",
+                // wrist.getShuffleboardTab().add("Rotate intake Backwards Simple",
                 // new RotateWristBasic(wrist,
                 // () -> -wristSpeed.getDouble(IntakeConstants.kRotateSpeed)));
 
@@ -466,7 +468,7 @@ public class RobotContainer {
                                 new RotateWristToPosition(wrist,
                                                 IntakeConstants.WristPID.kWristShooterFeederSetpoint));
 
-                wrist.getShuffleboardTab().add("Rotate until note in Intake",
+                wrist.getShuffleboardTab().add("Rotate until note in intake",
                                 new SequentialCommandGroup(
                                                 new RotateWristToPosition(wrist,
                                                                 IntakeConstants.WristPID.kWristNotePosition),
