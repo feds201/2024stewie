@@ -1,4 +1,7 @@
 package frc.robot.utils;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class KalmanFilter1D {
     private double Q; // Process noise covariance
     private double R; // Measurement noise covariance
@@ -22,6 +25,8 @@ public class KalmanFilter1D {
         x = x_pred + K * (measurement - x_pred);
         P = (1 - K) * P_pred;
 
+        SmartDashboard.putNumber("TRIG: Original Distance Reading", measurement);
+        SmartDashboard.putNumber("TRIG: Filtered Distance Reading", x);
         return x;
     }
 

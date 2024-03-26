@@ -20,12 +20,18 @@ public class TrigAlign extends Command {
 
     private final DoubleSupplier c_leftX, c_leftY;
 
-    private final double initialEstimate = 0;
-    private final double initialError = 1;
-    private final double processNoise = 0.001;
-    private final double measurementNoise = 0.1;
+    private final double initialEstimateC = 0;
+    private final double initialErrorC = 1;
+    private final double processNoiseC = 0.001;
+    private final double measurementNoiseC = 0.1;
 
-    KalmanFilter1D filter1D = new KalmanFilter1D(processNoise, measurementNoise, initialEstimate, initialError);
+    private final double initialEstimateR = 0;
+    private final double initialErrorR = 1;
+    private final double processNoiseR = 0.001;
+    private final double measurementNoiseR = 0.1;
+
+    KalmanFilter1D filter1DCenter = new KalmanFilter1D(processNoiseC, measurementNoiseC, initialEstimateC, initialErrorC);
+    KalmanFilter1D filter1DRight = new KalmanFilter1D(processNoiseR, measurementNoiseR, initialEstimateR, initialErrorR);
 
     public TrigAlign(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY) {
         c_swerve = swerve;
@@ -38,7 +44,7 @@ public class TrigAlign extends Command {
     public void initialize() {
         SmartDashboard.putBoolean("AimToAPrilTagCommand", true);
         c_swerve.resetPID();
-        c_swerve.setTarget(LimelightUtils.getTrigAlignAngle(filter1D.filter(VisionVariables.BackCam.target.getDistance()), filter1D.filter(VisionVariables.BackCam.target.getDistance())));
+        c_swerve.setTarget(LimelightUtils.getTrigAlignAngle(filter1DCenter.filter(VisionVariables.BackCam.target.getDistance()), filter1DRight.filter(VisionVariables.BackCam.target.getDistance())));
     }
 
     public boolean isFinished() {
