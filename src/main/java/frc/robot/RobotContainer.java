@@ -37,8 +37,8 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Intake.RotateWristToPosition;
-import frc.robot.commands.Intake.RunIntakeWheels;
+import frc.robot.commands.intake.RotateWristToPosition;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
 import frc.robot.commands.arm.RotateArmManual;
 import frc.robot.commands.autons.DriveForwardForTime;
@@ -53,12 +53,13 @@ import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.commands.swerve.SetFieldRelative;
+import frc.robot.commands.swerve.TrigAlign;
 import frc.robot.constants.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.subsystems.Intake.IntakeWheels;
-import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterServos;
@@ -351,19 +352,9 @@ public class RobotContainer {
                                                 new RotateArmToPosition(arm, () -> 0),
                                                 new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                                                                 servos, breakBeamSensorShooter, leds)));
-//                operatorController.rightBumper()
-//                                .onTrue(new ParallelCommandGroup(
-//                                                new ShootAcrossField(shooterRotation, shooterWheels, servos, breakBeamSensorShooter)
-//                                ))
-//                                .onFalse(new ParallelCommandGroup(
-//                                        new RotateShooterBasic(shooterRotation, () -> 0),
-//                                        new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
-//                                        new ResetIntake(wrist, intakeWheels)));
-                // .onFalse(new ParallelCommandGroup(
-                // // new RotateShooter(shooterRotation, () -> -5),
-                // new ResetIntake(wrist, intakeWheels)));
+                operatorController.rightBumper()
+                                .onTrue(new TrigAlign(drivetrain, driverController::getLeftX, driverController::getLeftY));
 
-                // AUTO AIM
                 operatorController.rightTrigger()
                                 .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX,
                                                 driverController::getLeftY, () -> ExportedVariables.Distance)

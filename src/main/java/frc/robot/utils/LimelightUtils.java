@@ -44,7 +44,7 @@ public class LimelightUtils {
         }
     }
 
-    private static double getTrigAlignAngle(double limelightTagDistanceCenter, double limelightTagDistanceRight) {
+    public static double getTrigAlignAngle(double limelightTagDistanceCenter, double limelightTagDistanceRight) {
         boolean whichWay = true; //replace with some boolean that you pass in as a parameter that tells us which way the limelight wants the robot to turn to shoot
         double y = limelightTagDistanceRight; //Reading for the distance to the center AprilTag on speaker
         double x = limelightTagDistanceCenter; //Reading for the distane to the right AprilTag on speaker
