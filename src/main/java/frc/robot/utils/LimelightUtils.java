@@ -71,7 +71,7 @@ public class LimelightUtils {
     public static double getArcCoordinatesY(double xCoord) {
         //(x-a)^2 + y^2 = b^2
         //y = sqrt(b^2 - (x-a)^2)
-        double y = Math.sqrt(Math.pow(b, 2) - Math.pow(xCoord - a, 2));
+        double y = Math.sqrt(Math.pow(b, 2) - Math.pow(xCoord - (15.75/a), 2));
         SmartDashboard.putNumber("TRIG: Arc calculation X", xCoord);
         SmartDashboard.putNumber("TRIG: Arc calculation Y", y);
         return y;

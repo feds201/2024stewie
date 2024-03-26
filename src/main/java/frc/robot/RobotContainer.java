@@ -355,7 +355,8 @@ public class RobotContainer {
                                                 new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                                                                 servos, breakBeamSensorShooter, leds)));
                 operatorController.rightBumper()
-                                .onTrue(new TrigAlign(drivetrain, driverController::getLeftX, driverController::getLeftY));
+                                .onTrue(new TrigAlign(drivetrain, driverController::getLeftX, driverController::getLeftY)
+);
 
                 operatorController.rightTrigger()
                                 .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX,
@@ -388,16 +389,16 @@ public class RobotContainer {
                                                 new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
                                                 new ResetIntake(wrist, intakeWheels)));
 
-                operatorController.b()
-                                .onTrue(new SpitOutNote(wrist, intakeWheels)
-                                                .andThen(
-                                                                new ParallelCommandGroup(
-                                                                                new SetLEDColor(leds, leds
-                                                                                                .getAllianceColor()),
-                                                                                new ToggleRumble(driverController, 0.3),
-                                                                                new ToggleRumble(operatorController,
-                                                                                                0.3))))
-                                .onFalse(new ResetIntake(wrist, intakeWheels));
+                // operatorController.b()
+                //                 .onTrue(new SpitOutNote(wrist, intakeWheels)
+                //                                 .andThen(
+                //                                                 new ParallelCommandGroup(
+                //                                                                 new SetLEDColor(leds, leds
+                //                                                                                 .getAllianceColor()),
+                //                                                                 new ToggleRumble(driverController, 0.3),
+                //                                                                 new ToggleRumble(operatorController,
+                //                                                                                 0.3))))
+                //                 .onFalse(new ResetIntake(wrist, intakeWheels));
                 operatorController.povUp()
                                 .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition));
                 operatorController.povDown()
