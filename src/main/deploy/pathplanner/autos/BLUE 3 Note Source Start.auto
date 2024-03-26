@@ -12,9 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SourceStart to FirstShoot"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceStart to FirstShoot Blue"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmDown"
+                }
+              }
+            ]
           }
         },
         {
@@ -22,15 +35,9 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              },
-              {
                 "type": "named",
                 "data": {
-                  "name": "ShootNoteAtSpeakerOnly"
+                  "name": "ShootFromHandoff"
                 }
               }
             ]
@@ -40,12 +47,6 @@
           "type": "named",
           "data": {
             "name": "StopShooterWheelsPls"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "G"
           }
         },
         {
@@ -59,9 +60,22 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "H"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SourceShoot to Sourcenote Blue"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -74,7 +88,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "I"
+                  "pathName": "SourcePickup to CenterShoot"
                 }
               },
               {
@@ -89,7 +103,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootNoteAtSpeaker"
+            "name": "ShootFromHandoff"
           }
         },
         {
@@ -109,9 +123,22 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "J"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "CenterShoot to CenterPickup"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -120,7 +147,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootNoteAtSpeaker"
+            "name": "AlignShooterAndIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootFromHandoff"
           }
         },
         {

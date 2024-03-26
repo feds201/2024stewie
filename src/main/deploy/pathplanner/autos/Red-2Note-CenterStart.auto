@@ -2,38 +2,38 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.78,
-      "y": 4.58
+      "x": 15.3,
+      "y": 5.55
     },
-    "rotation": -60.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "To First Note"
-          }
-        },
-        {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 2.0
+                  "pathName": "Red-2Note-CenterStart-1"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootNoteAtSpeakerOnly"
+                  "name": "ArmDown"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootFromHandoff"
           }
         },
         {
@@ -43,7 +43,7 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -59,13 +59,13 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 1.2
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Inch Forward"
+                        "pathName": "Red-2Note-CenterStart-2"
                       }
                     }
                   ]
@@ -75,22 +75,9 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AlignShooterAndIntake"
-                }
-              }
-            ]
+            "name": "AlignShooterAndIntake"
           }
         },
         {
@@ -98,10 +85,16 @@
           "data": {
             "name": "ShootFromHandoff"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooterWheelsPls"
+          }
         }
       ]
     }
   },
-  "folder": "Archive",
+  "folder": "Troy",
   "choreoAuto": false
 }

@@ -75,12 +75,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Blue Path Amp"
+            "pathName": "Blue For Path Amp"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Archive",
   "choreoAuto": false
 }

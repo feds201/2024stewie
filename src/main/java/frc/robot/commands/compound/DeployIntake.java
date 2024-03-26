@@ -6,11 +6,11 @@ package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Intake.RunIntakeWheels;
-import frc.robot.commands.Intake.RotateWristToPosition;
+import frc.robot.commands.intake.RunIntakeWheels;
+import frc.robot.commands.intake.RotateWristToPosition;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.Intake.IntakeWheels;
-import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.shooter.ShooterRotation;

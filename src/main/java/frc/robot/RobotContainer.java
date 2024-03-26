@@ -37,8 +37,8 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Intake.RotateWristToPosition;
-import frc.robot.commands.Intake.RunIntakeWheels;
+import frc.robot.commands.intake.RotateWristToPosition;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
 import frc.robot.commands.arm.RotateArmManual;
 import frc.robot.commands.autons.DriveForwardForTime;
@@ -52,12 +52,14 @@ import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
+import frc.robot.commands.swerve.SetFieldRelative;
+import frc.robot.commands.swerve.TrigAlign;
 import frc.robot.constants.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.subsystems.Intake.IntakeWheels;
-import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterServos;
@@ -138,7 +140,7 @@ public class RobotContainer {
                 configureDriverController();
                 configureOperatorController();
 
-                setupArmCommands();
+                setupArmCommands();;
                 setupClimberCommands();
                 setupIntakeCommands();
                 setupShooterCommands();
@@ -163,10 +165,13 @@ public class RobotContainer {
                                 new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
                 NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
                                 driverController::getLeftY, () -> ExportedVariables.Distance));
+                NamedCommands.registerCommand("ArmDown",  new RotateArmToPosition(arm,() -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
                 // NamedCommands.registerCommand("FeedNoteToShooter", new
                 // AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                 // servos, breakBeamSensorShooter, leds));
                 NamedCommands.registerCommand("DropIntake", new DropIntake(wrist, arm));
+                NamedCommands.registerCommand("SetFieldRelative", new SetFieldRelative(drivetrain));
+                NamedCommands.registerCommand("AlignWithNote", new DriveForwardForTime(drivetrain, 2));
         }
 
         private void setupAutonCommands() {
@@ -180,7 +185,7 @@ public class RobotContainer {
                                                 new RotateArmToPosition(arm,
                                                                 () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                                                 new SequentialCommandGroup(
-                                                                new WaitCommand(6),
+                                                                new WaitCommand(0.5),
                                                                 new ShootNoteAtSpeakerOnly(shooterRotation,
                                                                                 shooterWheels, servos,
                                                                                 breakBeamSensorShooter))));
@@ -211,7 +216,7 @@ public class RobotContainer {
                                                                 new RotateArmToPosition(arm,
                                                                                 () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                                                                 new SequentialCommandGroup(
-                                                                                new WaitCommand(6),
+                                                                                new WaitCommand(3),
                                                                                 new ShootNoteAtSpeakerOnly(
                                                                                                 shooterRotation,
                                                                                                 shooterWheels, servos,
@@ -221,21 +226,27 @@ public class RobotContainer {
                 autonChooser.addOption("Shoot and Scram",
                                 new SequentialCommandGroup(
                                                 new ParallelDeadlineGroup(
-                                                                new WaitCommand(9),
+                                                                new WaitCommand(2),
                                                                 new RotateArmToPosition(arm,
                                                                                 () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                                                                 new SequentialCommandGroup(
-                                                                                new WaitCommand(5),
-                                                                                new ShootNoteAtSpeakerOnly(
-                                                                                                shooterRotation,
-                                                                                                shooterWheels, servos,
-                                                                                                breakBeamSensorShooter))),
+                                                                                new WaitCommand(0.7),
+                                                                                new ShootFromHandoff(wrist,shooterRotation,shooterWheels,servos,breakBeamSensorShooter))),
+//                                                                                new Shoot(
+//                                                                                                shooterRotation,
+//                                                                                                shooterWheels, servos,
+//                                                                                                breakBeamSensorShooter)
+
+
                                                 new ParallelCommandGroup(
                                                                 new RotateShooterBasic(shooterRotation, () -> 0),
                                                                 new DriveForwardForTime(drivetrain, 6))));
 
-                autonChooser.addOption("Shoot while in motion",
-                                drivetrain.getAutoPath("WPathPLSWORK"));
+                autonChooser.addOption("Red-2Note-CenterStart",
+                        drivetrain.getAutoPath("Red-2Note-CenterStart"));
+                    ;
+                autonChooser.addOption("Blue-2Note-CenterStart",
+                                drivetrain.getAutoPath("Blue-2Note-CenterStart"));
 
                 autonChooser.addOption("Place Arm Down and 2 note move then shoot", new ParallelCommandGroup(
                                 new RotateArmToPosition(arm,
@@ -341,11 +352,9 @@ public class RobotContainer {
                                                 new RotateArmToPosition(arm, () -> 0),
                                                 new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                                                                 servos, breakBeamSensorShooter, leds)));
-                // .onFalse(new ParallelCommandGroup(
-                // // new RotateShooter(shooterRotation, () -> -5),
-                // new ResetIntake(wrist, intakeWheels)));
+                operatorController.rightBumper()
+                                .onTrue(new TrigAlign(drivetrain, driverController::getLeftX, driverController::getLeftY));
 
-                // AUTO AIM
                 operatorController.rightTrigger()
                                 .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX,
                                                 driverController::getLeftY, () -> ExportedVariables.Distance)
@@ -405,7 +414,8 @@ public class RobotContainer {
                                                                 IntakeConstants.WristPID.kWristIdlePosition),
                                                 new RotateArmToPosition(arm, () -> 0),
                                                 new RunIntakeWheels(intakeWheels, () -> 0)));
-
+                operatorController.x()
+                        .onTrue(new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint));
                 // new Trigger(breakBeamSensorShooter::getBeamBroken).onTrue(new
                 // SetLEDColor(leds, Leds.LedColors.ORANGE));
 

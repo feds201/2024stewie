@@ -16,30 +16,24 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Start To Middle"
+                  "name": "ArmDown"
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "DropIntake"
+                  "pathName": "Blue-2Note-CenterStart 1"
                 }
               }
             ]
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "ShootNoteAtSpeakerOnly"
+            "name": "ShootFromHandoff"
           }
         },
         {
@@ -49,59 +43,35 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Middle To Note"
-                }
-              },
               {
                 "type": "named",
                 "data": {
                   "name": "DeployIntake"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.4
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "AlignShooterAndIntake"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.2
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Blue-2Note-CenterStart2"
+                      }
+                    }
+                  ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AimToAprilTag"
           }
         },
         {
@@ -109,10 +79,16 @@
           "data": {
             "name": "ShootFromHandoff"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooterWheelsPls"
+          }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Troy",
   "choreoAuto": false
 }

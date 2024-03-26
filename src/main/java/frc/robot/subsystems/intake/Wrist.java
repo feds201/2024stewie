@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Intake;
+package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -57,6 +57,11 @@ public class Wrist extends SubsystemABC {
     seedNetworkTables();
   }
 
+
+  public boolean isSafe() {
+    return false;
+  }
+
   @Override
   public void setupShuffleboard() {
     tab.add("PID Controller", pid);
@@ -65,8 +70,8 @@ public class Wrist extends SubsystemABC {
   @Override
   public void periodic() {
     wristRotationEncoder.setPositionOffset(0);
-     if(!wristRotationEncoder.isConnected()) { 
-      wristRotation.setVoltage(0); 
+     if(!wristRotationEncoder.isConnected()) {
+      wristRotation.setVoltage(0);
     }
 
     // This method will be called once per scheduler run
@@ -197,7 +202,7 @@ public class Wrist extends SubsystemABC {
   public void setTowardIntake(boolean state) {
     towardShooter.set(state);
     towardShooterLog.append(state);
-   
+
   }
 }
 

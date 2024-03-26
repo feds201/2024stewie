@@ -7,10 +7,10 @@ package frc.robot.commands.compound;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.Intake.RunIntakeWheels;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.Intake.IntakeWheels;
+import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 
@@ -24,7 +24,7 @@ public class IntakeUntilNoteIn extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)
-            .until(() -> irSensor.getBeamBroken()),
+            .until(irSensor::getBeamBroken),
         new SetLEDColor(leds, Leds.LedColors.YELLOW),
         new ParallelDeadlineGroup(
             new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay), // This should not be necessary

@@ -1,20 +1,17 @@
-//package frc.robot.commands.vision;
+//package frc.robot.commands.swerve;
 //
 //import edu.wpi.first.wpilibj2.command.Command;
 //import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
-//import frc.robot.subsystems.vision_sys.camera.FrontCamera;
 //
 //
-//public class TurnTOwardsCommand extends Command {
+//public class RotateFieldZeroCommand extends Command {
 //		private final CommandSwerveDrivetrain commandSwerveDrivetrain;
-//		private final FrontCamera frontCamera;
 //
-//		public TurnTOwardsCommand(CommandSwerveDrivetrain commandSwerveDrivetrain, FrontCamera frontCamera) {
+//		public RotateFieldZeroCommand(CommandSwerveDrivetrain commandSwerveDrivetrain) {
 //				this.commandSwerveDrivetrain = commandSwerveDrivetrain;
-//				this.frontCamera = frontCamera;
 //				// each subsystem used by the command must be passed into the
 //				// addRequirements() method (which takes a vararg of Subsystem)
-//				addRequirements(this.commandSwerveDrivetrain, this.frontCamera);
+//				addRequirements(this.commandSwerveDrivetrain);
 //		}
 //
 //		/**
@@ -22,8 +19,7 @@
 //		 */
 //		@Override
 //		public void initialize() {
-//
-//
+//                commandSwerveDrivetrain.rotateFieldZero();
 //		}
 //
 //		/**
