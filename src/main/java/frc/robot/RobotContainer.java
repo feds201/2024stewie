@@ -70,7 +70,7 @@ import frc.robot.subsystems.swerve.generated.TunerConstants;
 //import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
 //import frc.robot.subsystems.vision_sys.camera.BackCamera;
 //import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
-import frc.robot.subsystems.vision_sys.VisionVariables;
+import frc.robot.subsystems.Vision.VisionVariables;
 import frc.robot.utils.Telemetry;
 
 public class RobotContainer {

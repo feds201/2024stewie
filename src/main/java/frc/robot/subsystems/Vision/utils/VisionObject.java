@@ -22,17 +22,18 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.constants.CameraConstants;
-import frc.robot.subsystems.vision_sys.utils.ObjectType;
+import frc.robot.subsystems.Vision.VisionVariables;
+import frc.robot.subsystems.Vision.utils.ObjectType;
 
 public class VisionObject {
     static NetworkTable table = NetworkTableInstance.getDefault().getTable(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
     private double x;
     private double y;
     private double area;
-    private frc.robot.subsystems.vision_sys.utils.ObjectType type;
+    private frc.robot.subsystems.Vision.utils.ObjectType type;
 
 
-    public VisionObject(double x, double y, double area, frc.robot.subsystems.vision_sys.utils.ObjectType type) {
+    public VisionObject(double x, double y, double area, frc.robot.subsystems.Vision.utils.ObjectType type) {
         this.x = x;
         this.y = y;
         this.area = area;
@@ -76,7 +77,7 @@ public class VisionObject {
         this.area = area;
     }
 
-    public frc.robot.subsystems.vision_sys.utils.ObjectType getType() {
+    public frc.robot.subsystems.Vision.utils.ObjectType getType() {
         return type;
     }
 
