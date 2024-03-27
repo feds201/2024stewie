@@ -4,8 +4,8 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class IntakeConstants {
   public static class WristPID {
-    public final static double kP = 0.0055;
-    public final static double kI = 0.0015;
+    public final static double kP = 0.002;
+    public final static double kI = 0.001;
     public final static double kD = 0.0;
     public final static double kIZone = Double.POSITIVE_INFINITY;
     public final static double kRotationTolerance = 5;

@@ -91,9 +91,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
-//    public Command getAutoPath(String pathName) {
-//        return new PathPlannerAuto(pathName);
-//    }
+    public Command getAutoPath(String pathName) {
+        return new PathPlannerAuto(pathName);
+    }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);

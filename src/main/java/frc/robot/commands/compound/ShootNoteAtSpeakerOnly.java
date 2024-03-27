@@ -34,14 +34,13 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ParallelDeadlineGroup(
-            new WaitCommand(1),
             new RotateShooterToPosition(shooterRotation,
                 () -> LimelightUtils.GetSpeedAngle(
                     ExportedVariables.Distance).angle),
             new ShootNoteMotionMagicVelocity(shooterWheels,
                 () -> LimelightUtils.GetSpeedAngle(ExportedVariables.Distance).speed),
             new SequentialCommandGroup(
-                new WaitCommand(0.7),
+                new WaitCommand(0.05),
                 new EjectNote(servos))));
   }
 }
