@@ -10,7 +10,7 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import frc.robot.subsystems.vision_sys.VisionVariables;
+import frc.robot.subsystems.Vision.VisionVariables;
 import frc.robot.utils.LimelightUtils;
 
 public class AimToAprilTag extends Command {
@@ -50,6 +50,7 @@ public class AimToAprilTag extends Command {
         }
 
         public void execute() {
+
 
                 double output = c_swerve.getPIDRotation(VisionVariables.BackCam.target.getX());
 

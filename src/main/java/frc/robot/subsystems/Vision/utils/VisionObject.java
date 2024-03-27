@@ -18,6 +18,7 @@
 
 package frc.robot.subsystems.Vision.utils;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.constants.CameraConstants;
@@ -149,5 +150,8 @@ public class VisionObject {
         }
     }
 
+    public Pose3d getBotPose(){
+        return LimelightHelpers.getBotPose3d(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
+    }
 
 }

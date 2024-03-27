@@ -53,11 +53,8 @@ import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.commands.swerve.SetFieldRelative;
-import frc.robot.commands.swerve.TrigAlign;
 import frc.robot.constants.*;
 import frc.robot.subsystems.Vision.camera.Back_Camera;
-import frc.robot.subsystems.Vision.camera.Front_Camera;
-import frc.robot.subsystems.Vision.utils.DashBoardManager;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.leds.Leds;
@@ -121,7 +118,7 @@ public class RobotContainer {
                 wrist = new Wrist();
                 intakeWheels = new IntakeWheels();
 //                IntakeCamera = new Front_Camera();
-                ShooterCamera = new Back_Camera(drivetrain);
+                ShooterCamera = new Back_Camera();
                 servos = new ShooterServos();
                 breakBeamSensorShooter = new BreakBeamSensorShooter();
                 breakBeamSensorIntake = new BreakBeamSensorIntake();
@@ -357,9 +354,6 @@ public class RobotContainer {
                                                 new RotateArmToPosition(arm, () -> 0),
                                                 new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
                                                                 servos, breakBeamSensorShooter, leds)));
-                operatorController.rightBumper()
-                                .onTrue(new TrigAlign(drivetrain, driverController::getLeftX, driverController::getLeftY)
-);
 
                 operatorController.rightTrigger()
                                 .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX,

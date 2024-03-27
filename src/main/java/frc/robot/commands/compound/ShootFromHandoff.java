@@ -22,7 +22,7 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterServos;
 import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import frc.robot.subsystems.vision_sys.VisionVariables.ExportedVariables;
+import frc.robot.subsystems.Vision.VisionVariables.ExportedVariables;
 import frc.robot.utils.LimelightUtils;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

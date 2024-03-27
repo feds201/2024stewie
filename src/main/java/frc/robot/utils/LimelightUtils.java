@@ -1,7 +1,7 @@
 package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.vision_sys.utils.VisionObject;
+import frc.robot.subsystems.Vision.utils.VisionObject;
 
 public class LimelightUtils {
     private static double a = 2; //aiming variance (this might have to be a table for better accuracy)

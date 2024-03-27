@@ -11,8 +11,8 @@ import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.Vision.VisionABC;
 import frc.robot.subsystems.Vision.VisionVariables;
 import frc.robot.subsystems.Vision.utils.LimelightHelpers;
-import frc.robot.subsystems.vision_sys.utils.ObjectType;
-import frc.robot.subsystems.vision_sys.utils.VisionObject;
+import frc.robot.subsystems.Vision.utils.ObjectType;
+import frc.robot.subsystems.Vision.utils.VisionObject;
 
 import java.util.Random;
 
