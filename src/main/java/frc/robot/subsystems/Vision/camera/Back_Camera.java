@@ -5,11 +5,11 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.Vision.VisionABC;
 import frc.robot.subsystems.Vision.VisionVariables;
@@ -26,14 +26,16 @@ public class Back_Camera extends VisionABC {
 		public static String nt_key;
 		private static final ShuffleboardTab tab = Shuffleboard.getTab("FrontCamera");
 		public static NetworkTable table;
-		public static VisionObject tag;
-		public CommandSwerveDrivetrain drivetrain;
+//		public static CommandSwerveDrivetrain drivetrain;
+		public static VisionObject tagCeneter;
+		public static VisionObject tagSide;
 		public Random random = new Random();
 		public Back_Camera() {
-
+//				Back_Camera.drivetrain = drivetrain;
 				nt_key = CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME;
 				table = NetworkTableInstance.getDefault().getTable(nt_key);
-				tag = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
+				tagCeneter = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
+				tagSide = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
 		}
 
 		private final static Back_Camera INSTANCE = new Back_Camera();
@@ -45,7 +47,12 @@ public class Back_Camera extends VisionABC {
 
 		@Override
 		public void simulationPeriodic() {
-				tag.update(
+				tagCeneter.update(
+						random.nextDouble() * 100,
+						random.nextDouble() * 100,
+						random.nextDouble() * 360
+				);
+				tagSide.update(
 						random.nextDouble() * 100,
 						random.nextDouble() * 100,
 						random.nextDouble() * 360
@@ -54,12 +61,15 @@ public class Back_Camera extends VisionABC {
 		}
 		@Override
 		public void periodic() {
-				tag.update(
-						table.getEntry("tx").getNumber(0).doubleValue(),
-						table.getEntry("ty").getNumber(0).doubleValue(),
-						table.getEntry("ta").getNumber(0).doubleValue()
-				);
+				updateTag(LimelightHelpers.getLatestResults(nt_key));
 				Periodic();
+		}
+
+		private void updateTag(LimelightHelpers.LimelightResults latestResults) {
+//				drivetrain.addVisionMeasurement(latestResults.targetingResults.getBotPose2d() , latestResults.targetingResults.timestamp_LIMELIGHT_publish);
+				LimelightHelpers.LimelightTarget_Fiducial[] tagsresults = latestResults.targetingResults.targets_Fiducials;
+
+//				System.out.print(tagsresults);
 		}
 
 		@Override
@@ -69,7 +79,8 @@ public class Back_Camera extends VisionABC {
 
 		@Override
 		public Translation2d GetTarget(VisionObject object) {
-				return new Translation2d(tag.getX(), tag.getY());
+//				return new Translation2d(tag.getX(), tag.getY());
+				return new Translation2d(0, 0);
 		}
 
 		@Override
@@ -124,20 +135,20 @@ public class Back_Camera extends VisionABC {
 		}
 
 		private void Periodic(){
-				SmartDashboard.putBoolean("Target Found", CheckTarget());
-//                VisionVariables.FrontCam.distance = note.getDistance();
-				VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
-				VisionVariables.ExportedVariables.Distance = tag.getDistance();
-				VisionVariables.BackCam.CameraMode = table.getEntry("camMode").getNumber(0).intValue();
-				VisionVariables.BackCam.LEDMode = table.getEntry("ledMode").getNumber(0).intValue();
-				VisionVariables.BackCam.target = tag;
-				SmartDashboard.putNumber("Distance", tag.getDistance());
-				SmartDashboard.putNumber("X", tag.getX());
-				SmartDashboard.putNumber("Y", tag.getY());
-				SmartDashboard.putNumber("Area", tag.getArea());
-				SmartDashboard.putNumber("Rotation", tag.getYaw());
-//				drivetrain.addVisionMeasurement(LimelightHelpers.getBotPose2d(nt_key), Timer.getFPGATimestamp() - (botpose[6]/1000.0));
-				Pose3d bot = tag.getBotPose();
+//				SmartDashboard.putBoolean("Target Found", CheckTarget());
+//				VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
+//				VisionVariables.ExportedVariables.Distance = tag.getDistance();
+//				VisionVariables.BackCam.CameraMode = table.getEntry("camMode").getNumber(0).intValue();
+//				VisionVariables.BackCam.LEDMode = table.getEntry("ledMode").getNumber(0).intValue();
+//				VisionVariables.BackCam.target = tag;
+//				SmartDashboard.putNumber("Distance", tag.getDistance());
+//				SmartDashboard.putNumber("X", tag.getX());
+//				SmartDashboard.putNumber("Y", tag.getY());
+//				SmartDashboard.putNumber("Area", tag.getArea());
+//				SmartDashboard.putNumber("Rotation", tag.getYaw());
+//				SmartDashboard.putNumber("Yaw", tag.getYaw());
+//				SmartDashboard.putNumber("Pitch", tag.getPitch());
+
 		}
 
 
