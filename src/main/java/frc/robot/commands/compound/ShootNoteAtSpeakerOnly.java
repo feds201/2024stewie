@@ -40,7 +40,7 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
             new ShootNoteMotionMagicVelocity(shooterWheels,
                 () -> LimelightUtils.GetSpeedAngle(VisionVariables.ExportedVariables.Distance).speed),
             new SequentialCommandGroup(
-                new WaitCommand(0.05),
+                new WaitCommand(0.5),
                 new EjectNote(servos))));
   }
 }

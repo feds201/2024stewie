@@ -40,7 +40,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 //    public static final PIDController pid = new PIDController(0.04, .01, .009);
-    public static final PIDController pid =  new PIDController(.01, .0, .00);
+    public static final PIDController pid =  new PIDController(.06135, .00, .00);
 
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -75,7 +75,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public void setupPIDController() {
         pid.setTolerance(1); // allowable angle error
         pid.enableContinuousInput(0, 360); // it is faster to go 1 degree from 359 to 0 instead of 359 degrees
-        pid.setIntegratorRange(-0.2, 0.2);
+        pid.setIntegratorRange(-0.1, 0.1);
         pid.setSetpoint(0); // 0 = apriltag angle
     }
 
@@ -123,6 +123,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public double getPIDRotation(double currentX) {
+        SmartDashboard.putNumber("PID Current", currentX);
         return pid.calculate(currentX);
     }
 
@@ -147,6 +148,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     @Override
     public void periodic() {
+        SmartDashboard.getNumber("PID:Error", pid.getPositionError());
+        SmartDashboard.getBoolean("PID: ISthere", pid.atSetpoint());
+        SmartDashboard.getNumber("PID: P", pid.getP());
+        SmartDashboard.getNumber("PID: I", pid.getI());
+        SmartDashboard.getNumber("PID: D", pid.getD());
         /* Periodically try to apply the operator perspective */
         /*
          * If we haven't applied the operator perspective before, then we should apply
