@@ -30,7 +30,7 @@ public class VisionObject {
     private double x;
     private double y;
     private double area;
-    private frc.robot.subsystems.Vision.utils.ObjectType type;
+    private ObjectType type;
 
 
     public VisionObject(double x, double y, double area, frc.robot.subsystems.Vision.utils.ObjectType type) {
@@ -39,8 +39,6 @@ public class VisionObject {
         this.area = area;
         this.type = type;
     }
-
-
 
 
     public double getX() {

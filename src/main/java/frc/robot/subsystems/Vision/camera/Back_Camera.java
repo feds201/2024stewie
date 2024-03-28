@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,6 +16,7 @@ import frc.robot.subsystems.Vision.VisionVariables;
 import frc.robot.subsystems.Vision.utils.LimelightHelpers;
 import frc.robot.subsystems.Vision.utils.ObjectType;
 import frc.robot.subsystems.Vision.utils.VisionObject;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 import java.util.Random;
 
@@ -25,6 +27,7 @@ public class Back_Camera extends VisionABC {
 		private static final ShuffleboardTab tab = Shuffleboard.getTab("FrontCamera");
 		public static NetworkTable table;
 		public static VisionObject tag;
+		public CommandSwerveDrivetrain drivetrain;
 		public Random random = new Random();
 		public Back_Camera() {
 
@@ -133,7 +136,7 @@ public class Back_Camera extends VisionABC {
 				SmartDashboard.putNumber("Y", tag.getY());
 				SmartDashboard.putNumber("Area", tag.getArea());
 				SmartDashboard.putNumber("Rotation", tag.getYaw());
-
+//				drivetrain.addVisionMeasurement(LimelightHelpers.getBotPose2d(nt_key), Timer.getFPGATimestamp() - (botpose[6]/1000.0));
 				Pose3d bot = tag.getBotPose();
 		}
 
