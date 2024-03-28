@@ -24,6 +24,7 @@ public class Wrist extends SubsystemABC {
   private final DutyCycleEncoder wristRotationEncoder;
 
   private final PIDController pid = IntakeConstants.WristPID.GetWristPID();
+  private final PIDController pidAmp = IntakeConstants.WristPID.GetWristAmpPID();
 
   private DoubleEntry wristVoltage;
   private DoubleEntry rotationEncoderValue;
@@ -92,10 +93,18 @@ public class Wrist extends SubsystemABC {
     double output = pid.calculate(getWristAngle());
     setWristVoltage(output);
   }
+  public void rotateWristPIDAMP() {
+    double output = pidAmp.calculate(getWristAngle());
+    setWristVoltage(output);
+  }
 
   public void setPIDTarget(double target) {
     setTarget(target);
     pid.setSetpoint(target);
+  }
+  public void setPIDTargetAMP(double target) {
+    setTargetAMP(target);
+    pidAmp.setSetpoint(target);
   }
 
   public boolean pidAtSetpoint() {
@@ -188,6 +197,10 @@ public class Wrist extends SubsystemABC {
   }
 
   public void setTarget(double target) {
+    rotationTarget.set(target);
+    rotationTargetLog.append(target);
+  }
+  public void setTargetAMP(double target) {
     rotationTarget.set(target);
     rotationTargetLog.append(target);
   }

@@ -64,7 +64,7 @@ public class AimToAprilTag extends Command {
                         .withRotationalRate(output));
                 lastOutput = output;
 
-				if (Math.abs(output) <= 0.37)  {
+				if (Math.abs(output) <= 2)  {
 						SmartDashboard.putBoolean("AimToAPrilTagCommand", false);
 				}
         }

@@ -9,8 +9,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 
 public class ArmConstants {
+
+   public static boolean DidJuiliaNotPressButton = true;
+
    public static class ArmPIDForExternalEncoder {
-      public static final double kP = 0.175;
+      public static final double kP = 0.195;
       public static final double kI = 0.015;
       public static final double kD = 0;
       public static final double kF = 0;

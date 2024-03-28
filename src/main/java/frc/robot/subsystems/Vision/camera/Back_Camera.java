@@ -27,15 +27,15 @@ public class Back_Camera extends VisionABC {
 		private static final ShuffleboardTab tab = Shuffleboard.getTab("FrontCamera");
 		public static NetworkTable table;
 //		public static CommandSwerveDrivetrain drivetrain;
-		public static VisionObject tagCeneter;
-		public static VisionObject tagSide;
+		public static VisionObject tagCenter;
+//		public static VisionObject tagSide;
 		public Random random = new Random();
 		public Back_Camera() {
 //				Back_Camera.drivetrain = drivetrain;
 				nt_key = CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME;
 				table = NetworkTableInstance.getDefault().getTable(nt_key);
-				tagCeneter = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
-				tagSide = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
+				tagCenter = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
+//				tagSide = new VisionObject(0, 0, 0, ObjectType.APRILTAG);
 		}
 
 		private final static Back_Camera INSTANCE = new Back_Camera();
@@ -47,21 +47,28 @@ public class Back_Camera extends VisionABC {
 
 		@Override
 		public void simulationPeriodic() {
-				tagCeneter.update(
+				tagCenter.update(
 						random.nextDouble() * 100,
 						random.nextDouble() * 100,
 						random.nextDouble() * 360
 				);
-				tagSide.update(
-						random.nextDouble() * 100,
-						random.nextDouble() * 100,
-						random.nextDouble() * 360
-				);
+//				tagSide.update(
+//						random.nextDouble() * 100,
+//						random.nextDouble() * 100,
+//						random.nextDouble() * 360
+//				);
 				Periodic();
 		}
 		@Override
 		public void periodic() {
-				updateTag(LimelightHelpers.getLatestResults(nt_key));
+
+//				updateTag(LimelightHelpers.getLatestResults(nt_key));
+
+				tagCenter.update(
+						table.getEntry("tx").getNumber(0).doubleValue(),
+						table.getEntry("ty").getNumber(0).doubleValue(),
+						table.getEntry("ts").getNumber(0).doubleValue()
+				);
 				Periodic();
 		}
 
@@ -135,19 +142,15 @@ public class Back_Camera extends VisionABC {
 		}
 
 		private void Periodic(){
-//				SmartDashboard.putBoolean("Target Found", CheckTarget());
-//				VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
-//				VisionVariables.ExportedVariables.Distance = tag.getDistance();
-//				VisionVariables.BackCam.CameraMode = table.getEntry("camMode").getNumber(0).intValue();
-//				VisionVariables.BackCam.LEDMode = table.getEntry("ledMode").getNumber(0).intValue();
-//				VisionVariables.BackCam.target = tag;
-//				SmartDashboard.putNumber("Distance", tag.getDistance());
-//				SmartDashboard.putNumber("X", tag.getX());
-//				SmartDashboard.putNumber("Y", tag.getY());
-//				SmartDashboard.putNumber("Area", tag.getArea());
-//				SmartDashboard.putNumber("Rotation", tag.getYaw());
-//				SmartDashboard.putNumber("Yaw", tag.getYaw());
-//				SmartDashboard.putNumber("Pitch", tag.getPitch());
+				SmartDashboard.putBoolean("Target Found", CheckTarget());
+				VisionVariables.BackCam.tv = table.getEntry("tv").getNumber(0).intValue();
+				VisionVariables.ExportedVariables.Distance = tagCenter.getDistance();
+				VisionVariables.BackCam.CameraMode = table.getEntry("camMode").getNumber(0).intValue();
+				VisionVariables.BackCam.LEDMode = table.getEntry("ledMode").getNumber(0).intValue();
+				VisionVariables.BackCam.target = tagCenter;
+				SmartDashboard.putNumber("Distance", tagCenter.getDistance());
+				SmartDashboard.putNumber("X", tagCenter.getX());
+				SmartDashboard.putNumber("Y", tagCenter.getY());
 
 		}
 

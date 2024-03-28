@@ -11,16 +11,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.leds.Leds;
 
 public class RotateArmManual extends Command {
   /** Creates a new RotateArmManual. */
 
   private final Arm c_arm;
   private final DoubleSupplier c_power;
+  private final Leds c_leds;
 
-  public RotateArmManual(Arm arm, DoubleSupplier power) {
+  public RotateArmManual(Arm arm, DoubleSupplier power,Leds leds) {
     c_arm = arm;
     c_power = power;
+    c_leds = leds;
 
     addRequirements(c_arm);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,16 +37,24 @@ public class RotateArmManual extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double powerValue = c_power.getAsDouble();
+    if (ArmConstants.DidJuiliaNotPressButton) {
+      if ( CheckFOR80() ) {
+        c_leds.setLedColor(Leds.LedColors.YELLOW);
+        c_arm.rotateOrHold(ArmConstants.kHoldThreshold);
+        return;
+      }
 
-    // TODO: Copied code from https://github.com/feds201/2023Dora/blob/main/src/main/java/frc/robot/commands/arm2/RotateArm2Manual.java
-    // Would this be beneficial to more smoother moving?
-    // double power = rotatePowerSupplier.getAsDouble();
-    powerValue = MathUtil.applyDeadband(powerValue, OIConstants.kDriverDeadzone);
-    powerValue = Math.copySign(Math.pow(powerValue, 2), powerValue);
-    powerValue /= 2;
+      double powerValue = c_power.getAsDouble();
 
-    c_arm.rotateOrHold(powerValue * ArmConstants.kArmSpeedScaler);
+      // TODO: Copied code from https://github.com/feds201/2023Dora/blob/main/src/main/java/frc/robot/commands/arm2/RotateArm2Manual.java
+      // Would this be beneficial to more smoother moving?
+      // double power = rotatePowerSupplier.getAsDouble();
+      powerValue = MathUtil.applyDeadband(powerValue , OIConstants.kDriverDeadzone);
+      powerValue = Math.copySign(Math.pow(powerValue , 2) , powerValue);
+      powerValue /= 2;
+
+      c_arm.rotateOrHold(powerValue * ArmConstants.kArmSpeedScaler);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -56,4 +67,13 @@ public class RotateArmManual extends Command {
   public boolean isFinished() {
     return false;
   }
+
+
+  public boolean CheckFOR80() {
+    return c_arm.getArmAngle() > 78;
+  }
+
+
 }
+
+

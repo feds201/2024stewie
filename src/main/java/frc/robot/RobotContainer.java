@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.arm.DIdJuliaNotPressbutton;
 import frc.robot.commands.intake.RotateWristToPosition;
 import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
@@ -72,6 +73,8 @@ import frc.robot.subsystems.swerve.generated.TunerConstants;
 //import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.subsystems.Vision.VisionVariables;
 import frc.robot.utils.Telemetry;
+
+import static frc.robot.constants.IntakeConstants.kIntakeNoteWheelSpeed;
 
 public class RobotContainer {
         /* Setting up bindings for necessary control of the swerve drive platform */
@@ -316,7 +319,7 @@ public class RobotContainer {
                                 .registerTelemetry(
                                                 logger::telemeterize);
 
-                arm.setDefaultCommand(new RotateArmManual(arm, () -> -operatorController.getLeftY()));
+                arm.setDefaultCommand(new RotateArmManual(arm, () -> -operatorController.getLeftY(), leds));
 
                 shooterWheels.setDefaultCommand(new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
         }
@@ -345,6 +348,14 @@ public class RobotContainer {
                                 .onTrue(new SpitOutNote(wrist, intakeWheels))
                                 .onFalse(new ResetIntake(wrist, intakeWheels));
 
+                driverController.rightBumper()
+                        .onTrue(new RunIntakeWheels(intakeWheels,()-> kIntakeNoteWheelSpeed))
+                        .onFalse(new RunIntakeWheels(intakeWheels,()-> 0));
+
+                driverController.b()
+                        .onTrue(new DIdJuliaNotPressbutton(false))
+                        .onFalse(new DIdJuliaNotPressbutton(true));
+
         }
 
         public void configureOperatorController() {
@@ -366,8 +377,9 @@ public class RobotContainer {
                                                                                 new ToggleRumble(operatorController,
                                                                                                 0.3))))
                                 .onFalse(new ParallelDeadlineGroup(
-                                                new WaitCommand(0.2),
-                                                drivetrain.applyRequest(() -> brake)));
+                                                new WaitCommand(0.2)
+                                                ,drivetrain.applyRequest(() -> brake)
+                                ));
 
                 operatorController.leftTrigger()
                                 .onTrue(new SequentialCommandGroup(
@@ -396,10 +408,10 @@ public class RobotContainer {
                 //                                                                 new ToggleRumble(operatorController,
                 //                                                                                 0.3))))
                 //                 .onFalse(new ResetIntake(wrist, intakeWheels));
-                operatorController.povUp()
-                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition));
-                operatorController.povDown()
-                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
+//                operatorController.povUp()
+//                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition));
+//                operatorController.povDown()
+//                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
                 operatorController.a()
                                 .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds)
                                                 .andThen(
@@ -435,10 +447,10 @@ public class RobotContainer {
                 // intake = Wrist + IntakeWheels
                 // INTAKE
                 intakeWheels.getShuffleboardTab().add("Run intake Wheels",
-                                new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed));
+                                new RunIntakeWheels(intakeWheels, () -> kIntakeNoteWheelSpeed));
 
                 intakeWheels.getShuffleboardTab().add("Run intake Wheels Backwards",
-                                new RunIntakeWheels(intakeWheels, () -> -IntakeConstants.kIntakeNoteWheelSpeed));
+                                new RunIntakeWheels(intakeWheels, () -> -kIntakeNoteWheelSpeed));
 
                 // GenericEntry wristSpeed = wrist.getShuffleboardTab()
                 // .add("Wrist Speed", IntakeConstants.kRotateSpeed)

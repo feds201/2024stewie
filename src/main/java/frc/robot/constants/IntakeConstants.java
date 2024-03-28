@@ -21,6 +21,12 @@ public class IntakeConstants {
       pid.setTolerance(kRotationTolerance);
       return pid;
     }
+    public static PIDController GetWristAmpPID() {
+      PIDController pid = new PIDController(0.003, 0.00, 0.0008);
+      pid.setIZone(kIZone);
+      pid.setTolerance(kRotationTolerance);
+      return pid;
+    }
   }
 
   public static final double kIntakeNoteWheelSpeed = -0.6;
