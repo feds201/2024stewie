@@ -7,18 +7,17 @@ package frc.robot.commands.compound;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.intake.RotateWristToPosition;
+import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
-import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Vision.VisionVariables;
-import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterServos;
 import frc.robot.subsystems.shooter.ShooterWheels;
 import frc.robot.utils.LimelightUtils;
+import frc.robot.subsystems.leds.Leds;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -31,9 +30,10 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
    * @param shooterWheels
    * @param servos
    */
-  public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, BreakBeamSensorShooter thing) {
+  public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, BreakBeamSensorShooter thing, Leds leds) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    
 
     addCommands(
         new ParallelDeadlineGroup(
@@ -44,6 +44,6 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
                 () -> LimelightUtils.GetSpeedAngle(VisionVariables.ExportedVariables.Distance).speed),
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
-                new EjectNote(servos))));
+                new EjectNote(servos).andThen(new SetLEDColor(leds, Leds.getAllianceColor())))));
   }
 }

@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;

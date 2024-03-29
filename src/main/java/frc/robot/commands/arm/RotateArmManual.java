@@ -10,7 +10,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ArmConstants;
-import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.leds.Leds;
 

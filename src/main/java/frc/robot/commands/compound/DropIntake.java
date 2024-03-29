@@ -5,18 +5,12 @@
 package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.intake.RotateWristToPosition;
-import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.constants.CANConstants.Arm;
-import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
-import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
-import frc.robot.subsystems.shooter.ShooterRotation;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

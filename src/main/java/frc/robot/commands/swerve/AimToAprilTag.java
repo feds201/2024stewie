@@ -1,9 +1,6 @@
 package frc.robot.commands.swerve;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
@@ -21,11 +18,11 @@ public class AimToAprilTag extends Command {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
         private final DoubleSupplier c_leftX, c_leftY;
-        private double startTime;
-        private final double timeout = 2.0; // Time limit in seconds
-        private final double rangeTolerance = 0.3; // Range within which to consider aligned
+        // private double startTime;
+        // private final double timeout = 2.0; // Time limit in seconds
+        // private final double rangeTolerance = 0.3; // Range within which to consider aligned
         private double lastOutput = 1;
-        private double axisofinit;
+        // private double axisofinit;
         private DoubleSupplier c_limelightDistance;
 
         public AimToAprilTag(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY, DoubleSupplier limelightDistance) {
