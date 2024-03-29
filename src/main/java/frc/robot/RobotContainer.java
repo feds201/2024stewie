@@ -72,6 +72,7 @@ import frc.robot.subsystems.swerve.generated.TunerConstants;
 //import frc.robot.subsystems.vision_sys.camera.BackCamera;
 //import frc.robot.subsystems.vision_sys.utils.DashBoardManager;
 import frc.robot.subsystems.Vision.VisionVariables;
+import frc.robot.utils.LimelightUtils;
 import frc.robot.utils.Telemetry;
 
 import static frc.robot.constants.IntakeConstants.kIntakeNoteWheelSpeed;
@@ -355,7 +356,11 @@ public class RobotContainer {
                 driverController.b()
                         .onTrue(new DIdJuliaNotPressbutton(false))
                         .onFalse(new DIdJuliaNotPressbutton(true));
+                driverController.a()
+                        .onTrue(new RotateShooterToPosition(shooterRotation, () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint));
 
+                driverController.x()
+                        .onTrue(new RotateShooterToPosition(shooterRotation, () -> LimelightUtils.GetSpeedAngle(VisionVariables.ExportedVariables.Distance).angle));    
         }
 
         public void configureOperatorController() {

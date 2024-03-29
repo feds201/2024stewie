@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.intake.RotateWristIfDistance;
 import frc.robot.commands.intake.RotateWristToPosition;
 import frc.robot.commands.intake.RotateWristToPositionInfinite;
 import frc.robot.commands.shooter.EjectNote;
@@ -45,7 +46,10 @@ public class ShootFromHandoff extends SequentialCommandGroup {
     addCommands(
         // new RotateWristToPosition(wrist,
         // IntakeConstants.WristPID.kWristIdlePosition),
-        new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, irsensor),
+        new ParallelCommandGroup(
+          new RotateWristIfDistance(wrist, IntakeConstants.WristPID.kWristNotePosition),
+          new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, irsensor)
+        ),
         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition));
 
   }

@@ -7,8 +7,10 @@ package frc.robot.commands.compound;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.intake.RunIntakeWheels;
+import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.intake.RotateWristToPosition;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.leds.Leds;
@@ -31,7 +33,9 @@ public class DeployIntake extends SequentialCommandGroup {
                 new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake, leds),
                 new ParallelDeadlineGroup(
                         new RotateWristToPosition(wrist,
-                                IntakeConstants.WristPID.kWristIdlePosition),
-                        new RunIntakeWheels(intakeWheels, () -> 0)));
+                                IntakeConstants.WristPID.kWristShooterFeederSetpoint),
+                        new RunIntakeWheels(intakeWheels, () -> 0),
+                        new RotateShooterToPosition(shooterRotation, () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint)
+                        ));
     }
 }

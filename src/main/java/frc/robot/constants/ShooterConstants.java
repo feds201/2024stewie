@@ -7,7 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class ShooterConstants {
     public static class RotationPIDForExternalEncoder {
-        public static final double kRotateP = 0.012;
+        public static final double kRotateP = 0.015;
         public static final double kRotateI = 0.001;
         public static final double kRotateD = 0;
 

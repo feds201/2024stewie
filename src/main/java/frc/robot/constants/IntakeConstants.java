@@ -8,7 +8,7 @@ public class IntakeConstants {
     public final static double kI = 0.001;
     public final static double kD = 0.0;
     public final static double kIZone = Double.POSITIVE_INFINITY;
-    public final static double kRotationTolerance = 9;
+    public final static double kRotationTolerance = 10;
     public static final double kSpitOutPosition = 201;
     public final static double kWristNotePosition = 302;
     public final static double kWristIdlePosition = 92;
