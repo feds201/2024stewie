@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.intake.RotateWristToPosition;
 import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.leds.BlinkLEDColor;
+import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.constants.IntakeConstants;
@@ -35,7 +35,7 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
             new ParallelCommandGroup(
                 new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
                 new EjectNote(servos),
-                    new BlinkLEDColor(leds, Leds.LedColors.VIOLET, Leds.LedColors.BLACK, 0.1, 10))
+                    new SetLEDColor(leds, Leds.LedColors.Aqua)
                 .until(breakBeamSensorShooter::getBeamBroken)
         // Since the beambreak is now end of motion for the note, this is not necessary
         // anymore.
@@ -45,6 +45,6 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
         // IntakeConstants.kHandoffNoteWheelSpeed),
         // new EjectNote(servos),
         // new SetLEDColor(leds, Leds.LedColors.ORANGE)))
-        ));
+        )));
   }
 }

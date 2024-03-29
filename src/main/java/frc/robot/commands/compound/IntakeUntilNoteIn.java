@@ -4,11 +4,16 @@
 
 package frc.robot.commands.compound;
 
+import javax.swing.GroupLayout.ParallelGroup;
+
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.leds.BlinkLEDColor;
+import frc.robot.commands.leds.BlinkLeds;
+import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.leds.Leds;
@@ -24,10 +29,11 @@ public class IntakeUntilNoteIn extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)
-            .until(irSensor::getBeamBroken),
-        new BlinkLEDColor(leds, Leds.LedColors.ORANGE, Leds.LedColors.WHITE, 0.1, 10),
+            .until(irSensor::getBeamBroken).andThen(new BlinkLeds(leds, Leds.LedColors.BlueGreen)),
         new ParallelDeadlineGroup(
             new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay), // This should not be necessary
-            new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)));
+            new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)),
+        new WaitCommand(1),
+        new SetLEDColor(leds, Leds.LedColors.RED));
   }
 }
