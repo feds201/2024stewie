@@ -6,9 +6,12 @@ package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.arm.RotateArmToPosition;
 import frc.robot.commands.intake.RotateWristIfDistance;
 import frc.robot.commands.intake.RotateWristToPosition;
+import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
 import frc.robot.subsystems.shooter.ShooterRotation;
@@ -40,7 +43,8 @@ public class ShootFromHandoff extends SequentialCommandGroup {
           new RotateWristIfDistance(wrist, IntakeConstants.WristPID.kWristNotePosition),
           new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, irsensor, leds)
         ),
-        new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition));
+        new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
+            new RotateShooterToPosition(shooterRotation, () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint));
 
   }
 

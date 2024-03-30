@@ -26,37 +26,6 @@ import frc.robot.subsystems.shooter.ShooterServos;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 
 
-//public class AlignShooterAndIntake extends ParallelCommandGroup {
-//  /** Creates a new AlignShooterAndIntake. */
-////  public AlignShooterAndIntake(ShooterRotation shooterRotation, Wrist wrist, IntakeWheels intakeWheels,
-////      ShooterServos servos, BreakBeamSensorShooter breakBeamSensorShooter, Leds leds) {
-////    addCommands(
-////        new RotateShooterToPosition(shooterRotation,
-////            () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
-////        new SequentialCommandGroup(
-////            new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint),
-////            new ParallelCommandGroup(
-////                new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
-////                new EjectNote(servos),
-////                    new SetLEDColor(leds, Leds.LedColors.Aqua)
-////                .until(breakBeamSensorShooter::getBeamBroken)
-////
-////
-////
-////        // Since the beambreak is now end of motion for the note, this is not necessary
-////        // anymore.
-////        // .andThen(new ParallelDeadlineGroup(
-////        // new WaitCommand(ShooterConstants.kHandoffDelay),
-////        // new RunIntakeWheels(intakeWheels, () ->
-////        // IntakeConstants.kHandoffNoteWheelSpeed),
-////        // new EjectNote(servos),
-////        // new SetLEDColor(leds, Leds.LedColors.ORANGE)))
-////        )));
-////  }
-//
-//}
-
-
 public class AlignShooterAndIntake extends ParallelCommandGroup {
   /** Creates a new AlignShooterAndIntake. */
   public AlignShooterAndIntake(ShooterRotation shooterRotation, Wrist wrist, IntakeWheels intakeWheels,
