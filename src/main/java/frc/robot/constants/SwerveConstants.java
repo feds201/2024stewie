@@ -6,4 +6,9 @@ public class SwerveConstants {
     public static final double MaxAngularRate = 0.85 * Math.PI; // 3/4 of a rotation per second max angular velocity
     public static final double kAutonMoveSpeed = 1;
     public static final double kAlignmentOutput = 0.01;
+		public static double kAlignmentTolerance = 1;
+		public static double kStuckTolerance = -10;
+		public static double kRotationP = 0.04;
+		public static double kRotationI = .0001;
+		public static double kRotationD = .00;
 }
