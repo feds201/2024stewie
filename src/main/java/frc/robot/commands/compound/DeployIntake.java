@@ -31,11 +31,14 @@ public class DeployIntake extends SequentialCommandGroup {
                         new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristNotePosition),
                         new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)),
                 new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake, leds),
+                new RotateShooterToPosition(shooterRotation, () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
                 new ParallelDeadlineGroup(
                         new RotateWristToPosition(wrist,
                                 IntakeConstants.WristPID.kWristShooterFeederSetpoint),
-                        new RunIntakeWheels(intakeWheels, () -> 0),
-                        new RotateShooterToPosition(shooterRotation, () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint)
+                        new RunIntakeWheels(intakeWheels, () -> 0)
+                        )
+                        .andThen(
+                                new RotateShooterToPosition(shooterRotation,()-> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint)
                         ));
     }
 }
