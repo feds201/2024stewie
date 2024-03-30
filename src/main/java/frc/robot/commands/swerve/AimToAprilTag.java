@@ -35,7 +35,7 @@ public class AimToAprilTag extends Command {
         }
 
 		public void initialize() {
-                SmartDashboard.putBoolean("AimToAPrilTagCommand", true);
+                SmartDashboard.putBoolean("AimToAPerilTagCommand", true);
                 c_swerve.resetPID();
                 c_swerve.setTarget(LimelightUtils.MapDistanceToOffset(c_limelightDistance.getAsDouble()));
         }
@@ -62,12 +62,12 @@ public class AimToAprilTag extends Command {
                 lastOutput = output;
 
 				if (Math.abs(output) <= 2)  {
-						SmartDashboard.putBoolean("AimToAPrilTagCommand", false);
+						SmartDashboard.putBoolean("AimToAPerilTagCommand", false);
 				}
         }
 
 		public void end(boolean interrupted) {
-		        SmartDashboard.putBoolean("AimToAPrilTagCommand", false);
+		        SmartDashboard.putBoolean("AimToAPerilTagCommand", false);
 		        // Additional logic for timeout or completion here if needed
 		}
 }
