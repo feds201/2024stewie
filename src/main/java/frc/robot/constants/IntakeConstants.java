@@ -29,7 +29,7 @@ public class IntakeConstants {
     }
   }
 
-  public static final double kIntakeNoteWheelSpeed = -0.6;
+  public static final double kIntakeNoteWheelSpeed = -1;//.6
   public static final double kSpitOutNoteWheelSpeed = 1;
   public static final double kAmpInWheelSpeed = 0.4;
 
