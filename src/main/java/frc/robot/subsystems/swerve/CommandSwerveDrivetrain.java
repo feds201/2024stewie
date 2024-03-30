@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import com.ctre.phoenix6.hardware.Pigeon2;
 // import frc.robot.subsystems.swerve.generated.TunerConstants;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 /**
@@ -38,7 +39,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static Pigeon2 pigeon = new Pigeon2(0);
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    public static final PIDController pid = new PIDController(0.04, .0001, .00);
+    public static final PIDController pid = new PIDController(SwerveConstants.kRotationP  , SwerveConstants.kRotationI, SwerveConstants.kRotationD);
 //    public static final PIDController pid = new PIDController(0.04, .0009, .009);
 //    public static final PIDController pid =  new PIDController(.06135, .00, .00);
 
