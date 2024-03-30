@@ -21,8 +21,7 @@ public class BlinkLeds extends SequentialCommandGroup {
             new ParallelDeadlineGroup(
                 new WaitCommand(0.1), 
                 new SetLEDColor(leds, Leds.LedColors.WHITE
-            )),
-            new BlinkLeds(leds, ledColor)
+            ))
         );
     }
 }
