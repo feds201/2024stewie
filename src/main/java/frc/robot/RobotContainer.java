@@ -83,11 +83,11 @@ public class RobotContainer {
         // My drivetrain
 
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-                                                                 .withDeadband(SwerveConstants.MaxSpeed * 0.1)
-                                                                 .withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1)
-                                                                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+                .withDeadband(SwerveConstants.MaxSpeed * 0.1)
+                .withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
         private final SwerveRequest.FieldCentricFacingAngle autoAim = new SwerveRequest.FieldCentricFacingAngle()
-                                                                              .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
         private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
         private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
         private final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
@@ -291,12 +291,12 @@ public class RobotContainer {
                 drivetrain.setDefaultCommand(new ParallelCommandGroup(
                         drivetrain.applyRequest(() -> {
                                 return drive
-                                               .withVelocityX(-driverController.getLeftY()
-                                                                      * SwerveConstants.MaxSpeed)
-                                               .withVelocityY(-driverController.getLeftX()
-                                                                      * SwerveConstants.MaxSpeed)
-                                               .withRotationalRate(-driverController.getRightX() *
-                                                                           SwerveConstants.MaxAngularRate);
+                                        .withVelocityX(-driverController.getLeftY()
+                                                * SwerveConstants.MaxSpeed)
+                                        .withVelocityY(-driverController.getLeftX()
+                                                * SwerveConstants.MaxSpeed)
+                                        .withRotationalRate(-driverController.getRightX() *
+                                                SwerveConstants.MaxAngularRate);
                         }), new RepeatCommand(
                         new InstantCommand(
                                 () -> {
@@ -342,7 +342,7 @@ public class RobotContainer {
                                                 new ToggleRumble(driverController, 0.3),
                                                 new ToggleRumble(operatorController, 0.3)))
 
-		                                )
+                        )
                         .onFalse(new ResetIntake(wrist, intakeWheels));
 
                 driverController.rightTrigger()
@@ -374,13 +374,13 @@ public class RobotContainer {
                 operatorController.rightTrigger()
                         .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX,
                                 driverController::getLeftY, () -> VisionVariables.ExportedVariables.Distance)
-                                        .andThen(
-                                                new ParallelCommandGroup(
-                                                        new SetLEDColor(leds,
-                                                                Leds.LedColors.VIOLET),
-                                                        new ToggleRumble(driverController, 0.3),
-                                                        new ToggleRumble(operatorController,
-                                                                0.3))))
+                                .andThen(
+                                        new ParallelCommandGroup(
+                                                new SetLEDColor(leds,
+                                                        Leds.LedColors.VIOLET),
+                                                new ToggleRumble(driverController, 0.3),
+                                                new ToggleRumble(operatorController,
+                                                        0.3))))
                         .onFalse(new ParallelDeadlineGroup(
                                 new WaitCommand(0.2)
                                 ,drivetrain.applyRequest(() -> brake)
@@ -390,11 +390,11 @@ public class RobotContainer {
                         .onTrue(new SequentialCommandGroup(
                                 new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos,
                                         breakBeamSensorShooter, leds))
-                                        .andThen(
-                                                new ParallelCommandGroup(
-                                                        new ToggleRumble(driverController, 0.3),
-                                                        new ToggleRumble(operatorController,
-                                                                0.3))))
+                                .andThen(
+                                        new ParallelCommandGroup(
+                                                new ToggleRumble(driverController, 0.3),
+                                                new ToggleRumble(operatorController,
+                                                        0.3))))
                         .onFalse(new ParallelCommandGroup(
                                 new RotateShooterBasic(shooterRotation, () -> 0),
                                 new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
@@ -416,13 +416,13 @@ public class RobotContainer {
 //                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
                 operatorController.a()
                         .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds)
-                                        .andThen(
-                                                new ParallelCommandGroup(
-                                                        new SetLEDColor(leds,
-                                                                leds.getLedColor()),
-                                                        new ToggleRumble(driverController, 0.3),
-                                                        new ToggleRumble(operatorController,
-                                                                0.3))))
+                                .andThen(
+                                        new ParallelCommandGroup(
+                                                new SetLEDColor(leds,
+                                                        leds.getLedColor()),
+                                                new ToggleRumble(driverController, 0.3),
+                                                new ToggleRumble(operatorController,
+                                                        0.3))))
                         .onFalse(new ParallelCommandGroup(
                                 new RotateWristToPosition(wrist,
                                         IntakeConstants.WristPID.kWristIdlePosition),
