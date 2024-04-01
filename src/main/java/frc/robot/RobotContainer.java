@@ -54,6 +54,7 @@ import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.RotateShooterBasic;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.commands.swerve.SetFieldRelative;
+import frc.robot.commands.swerve.swerveSlowMode;
 import frc.robot.constants.*;
 import frc.robot.subsystems.Vision.camera.Back_Camera;
 import frc.robot.subsystems.arm.Arm;
@@ -292,11 +293,11 @@ public class RobotContainer {
                         drivetrain.applyRequest(() -> {
                                 return drive
                                                .withVelocityX(-driverController.getLeftY()
-                                                                      * SwerveConstants.MaxSpeed)
+                                                                      * SwerveConstants.MaxSpeed * SwerveConstants.speedpercentage)
                                                .withVelocityY(-driverController.getLeftX()
-                                                                      * SwerveConstants.MaxSpeed)
+                                                                      * SwerveConstants.MaxSpeed * SwerveConstants.speedpercentage)
                                                .withRotationalRate(-driverController.getRightX() *
-                                                                           SwerveConstants.MaxAngularRate);
+                                                                           SwerveConstants.MaxAngularRate * SwerveConstants.speedpercentage);
                         }), new RepeatCommand(
                         new InstantCommand(
                                 () -> {
@@ -361,6 +362,9 @@ public class RobotContainer {
 
                 driverController.x()
                         .onTrue(new RotateShooterToPosition(shooterRotation, () -> LimelightUtils.GetSpeedAngle(VisionVariables.ExportedVariables.Distance).angle));
+                driverController.leftBumper()
+                        .onTrue(new swerveSlowMode(0.5))
+                        .onFalse(new swerveSlowMode(1.0));
         }
 
         public void configureOperatorController() {

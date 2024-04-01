@@ -11,4 +11,5 @@ public class SwerveConstants {
 		public static double kRotationP = 0.04;
 		public static double kRotationI = .0001;
 		public static double kRotationD = .00;
+		public static double speedpercentage = 1.0;
 }
