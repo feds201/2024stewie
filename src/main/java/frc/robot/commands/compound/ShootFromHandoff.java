@@ -43,8 +43,7 @@ public class ShootFromHandoff extends SequentialCommandGroup {
           new RotateWristIfDistance(wrist, IntakeConstants.WristPID.kWristNotePosition),
           new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, irsensor, leds)
         ),
-        new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
-            new RotateShooterToPosition(shooterRotation, () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint));
+        new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition));
 
   }
 

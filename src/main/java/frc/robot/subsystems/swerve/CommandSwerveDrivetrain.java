@@ -181,4 +181,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         // }
 
     }
+
+    public Command SpeedPercentage(Double Speed) {
+        return run(() -> SwerveConstants.speedpercentage = Speed);
+    }
 }

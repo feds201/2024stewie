@@ -29,13 +29,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.arm.DIdJuliaNotPressbutton;
 import frc.robot.commands.intake.RotateWristToPosition;
@@ -47,12 +41,8 @@ import frc.robot.commands.climber.ExtendClimber;
 import frc.robot.commands.compound.*;
 import frc.robot.commands.controller.ToggleRumble;
 import frc.robot.commands.leds.SetLEDColor;
-import frc.robot.commands.shooter.StopServos;
+import frc.robot.commands.shooter.*;
 import frc.robot.commands.swerve.AimToAprilTag;
-import frc.robot.commands.shooter.EjectNote;
-import frc.robot.commands.shooter.RotateShooterToPosition;
-import frc.robot.commands.shooter.RotateShooterBasic;
-import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.commands.swerve.SetFieldRelative;
 import frc.robot.commands.swerve.swerveSlowMode;
 import frc.robot.constants.*;
@@ -94,7 +84,7 @@ public class RobotContainer {
         private final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
 
         private final ShooterWheels shooterWheels;
-        private final ShooterRotation shooterRotation;
+        public final ShooterRotation shooterRotation;
         private final ShooterServos servos;
         private final Wrist wrist;
         private final IntakeWheels intakeWheels;
@@ -152,7 +142,7 @@ public class RobotContainer {
                 setupIntakeCommands();
                 setupShooterCommands();
                 setupErrorTriggers();
-//                setupAutonCommands();
+                setupAutonCommands();
 
         }
 
@@ -329,21 +319,19 @@ public class RobotContainer {
         private void configureDriverController() {
                 // reset the field-centric heading on left bumper press
                 driverController.start()
-                        .onTrue(
-                                drivetrain.runOnce(
-                                        drivetrain::seedFieldRelative));
+                        .onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
                 driverController.leftTrigger()
                         .onTrue(
                                 new SequentialCommandGroup(
-                                        new DeployIntake(wrist, intakeWheels, shooterRotation,
-                                                breakBeamSensorIntake, leds),
+                                        new DeployIntake(wrist, intakeWheels, shooterRotation, breakBeamSensorIntake, leds),
                                         new ParallelCommandGroup(
                                                 new SetLEDColor(leds, Leds.LedColors.YELLOW),
                                                 new ToggleRumble(driverController, 0.3),
                                                 new ToggleRumble(operatorController, 0.3)))
 
-		                                )
+
+                        )
                         .onFalse(new ResetIntake(wrist, intakeWheels));
 
                 driverController.rightTrigger()
@@ -404,20 +392,6 @@ public class RobotContainer {
                                 new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
                                 new ResetIntake(wrist, intakeWheels)));
 
-                // operatorController.b()
-                //                 .onTrue(new SpitOutNote(wrist, intakeWheels)
-                //                                 .andThen(
-                //                                                 new ParallelCommandGroup(
-                //                                                                 new SetLEDColor(leds, leds
-                //                                                                                 .getAllianceColor()),
-                //                                                                 new ToggleRumble(driverController, 0.3),
-                //                                                                 new ToggleRumble(operatorController,
-                //                                                                                 0.3))))
-                //                 .onFalse(new ResetIntake(wrist, intakeWheels));
-//                operatorController.povUp()
-//                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition));
-//                operatorController.povDown()
-//                                .onTrue(new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
                 operatorController.a()
                         .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds)
                                         .andThen(
@@ -425,8 +399,10 @@ public class RobotContainer {
                                                         new SetLEDColor(leds,
                                                                 leds.getLedColor()),
                                                         new ToggleRumble(driverController, 0.3),
-                                                        new ToggleRumble(operatorController,
-                                                                0.3))))
+                                                        new ToggleRumble(operatorController, 0.3)
+                                                )
+                                        )
+                        )
                         .onFalse(new ParallelCommandGroup(
                                 new RotateWristToPosition(wrist,
                                         IntakeConstants.WristPID.kWristIdlePosition),

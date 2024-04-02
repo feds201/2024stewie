@@ -35,10 +35,9 @@ public class DeployIntake extends SequentialCommandGroup {
                 new ParallelDeadlineGroup(
                         new RotateWristToPosition(wrist,
                                 IntakeConstants.WristPID.kWristShooterFeederSetpoint),
-                        new RunIntakeWheels(intakeWheels, () -> 0)
+                        new RunIntakeWheels(intakeWheels, () -> 0),
+                        new RotateShooterToPosition(shooterRotation,()-> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint)
                         )
-                        .andThen(
-                                new RotateShooterToPosition(shooterRotation,()-> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint)
-                        ));
+                  );
     }
 }

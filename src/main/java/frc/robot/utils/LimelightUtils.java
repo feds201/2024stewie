@@ -99,7 +99,7 @@ public class LimelightUtils {
         } else if (limelightDistance < 2.625) { // 2.5
             return -24.5;
         } else if (limelightDistance < 2.875) { // 2.75
-            return -27;
+            return -29;
         } else if (limelightDistance < 3.125) { // 3
             return -27;
         } else if (limelightDistance < 3.375) { // 3.25

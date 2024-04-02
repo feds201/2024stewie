@@ -43,6 +43,7 @@ public class IntakeWheels extends SubsystemABC {
     writePeriodicOutputs();
 
     SmartDashboard.putNumber("intake bus voltage", intakeWheel.getBusVoltage());
+    SmartDashboard.putNumber("intake motor temperature", intakeWheel.getMotorTemperature());
   }
 
   @Override
