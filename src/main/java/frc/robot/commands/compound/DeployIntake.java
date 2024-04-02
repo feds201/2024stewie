@@ -6,13 +6,13 @@ package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Intake.RunIntakeWheels;
-import frc.robot.commands.Intake.RotateWristToPosition;
+import frc.robot.commands.intake.RotateWristToPosition;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.Intake.IntakeWheels;
-import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.subsystems.intake.IntakeIRSensor;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.subsystems.sensors.BreakBeamSensorIntake;
 import frc.robot.subsystems.shooter.ShooterRotation;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -20,7 +20,7 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DeployIntake extends SequentialCommandGroup {
     /** Creates a new DeployIntake. */
-    public DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation, BreakBeamSensorIntake breakBeamSensorIntake, Leds leds) {
+    public DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation, IntakeIRSensor breakBeamSensorIntake, Leds leds) {
 
         // Add your commands in the addCommands() call, e.g.
         // addCommands(new FooCommand(), new BarCommand());

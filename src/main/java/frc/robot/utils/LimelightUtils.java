@@ -44,6 +44,8 @@ public class LimelightUtils {
         }
     }
 
+    // FIXME: Zayn - What is this trying to achieve?
+    // The math is pretty verbose, can you include an image or some work to confirm this?
     private static double getTrigAlignAngle(double limelightTagDistanceCenter, double limelightTagDistanceRight) {
         boolean whichWay = true; //replace with some boolean that you pass in as a parameter that tells us which way the limelight wants the robot to turn to shoot
         double y = limelightTagDistanceRight; //Reading for the distance to the center AprilTag on speaker
@@ -130,7 +132,6 @@ public class LimelightUtils {
     }
 
     private static double getSpeed(double limelightDistance) {
-
         if(limelightDistance < 2) {
             return -80;
         } else {

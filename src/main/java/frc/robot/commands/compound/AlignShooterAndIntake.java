@@ -5,20 +5,18 @@
 package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.Intake.RotateWristToPosition;
-import frc.robot.commands.Intake.RunIntakeWheels;
+import frc.robot.commands.intake.RotateWristToPosition;
+import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.Intake.IntakeWheels;
-import frc.robot.subsystems.Intake.Wrist;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
+import frc.robot.subsystems.shooter.ShooterIRSensor;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterServos;
 
@@ -28,7 +26,7 @@ import frc.robot.subsystems.shooter.ShooterServos;
 public class AlignShooterAndIntake extends ParallelCommandGroup {
   /** Creates a new AlignShooterAndIntake. */
   public AlignShooterAndIntake(ShooterRotation shooterRotation, Wrist wrist, IntakeWheels intakeWheels,
-      ShooterServos servos, BreakBeamSensorShooter breakBeamSensorShooter, Leds leds) {
+      ShooterServos servos, ShooterIRSensor breakBeamSensorShooter, Leds leds) {
     addCommands(
         new RotateShooterToPosition(shooterRotation,
             () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
