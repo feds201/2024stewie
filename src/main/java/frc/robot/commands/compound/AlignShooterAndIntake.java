@@ -38,10 +38,10 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
             new ParallelCommandGroup(
                 new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kHandoffNoteWheelSpeed),
                 new EjectNote(servos),
-                new SetLEDColor(leds, Leds.LedColors.Aqua)
+                new SetLEDColor(leds, -0.07)
             )
             .until(breakBeamSensorShooter::getBeamBroken)
-            .andThen(new StopServos(servos))
+            .andThen(new StopServos(servos).alongWith(new SetLEDColor(leds, Leds.LedColors.Gold)))
         ));
   }
 }

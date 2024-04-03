@@ -33,7 +33,6 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
   public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, ShooterIRSensor thing, Leds leds) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    
 
     addCommands(
         new ParallelDeadlineGroup(

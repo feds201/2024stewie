@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.intake.RotateWristToPosition;
 import frc.robot.commands.intake.RotateWristToPositionInfinite;
+import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Vision.VisionVariables;
 import frc.robot.subsystems.intake.Wrist;
@@ -39,15 +40,13 @@ public class ShootFromHandoff extends SequentialCommandGroup {
         addCommands(
             // new RotateWristToPosition(wrist,
             // IntakeConstants.WristPID.kWristIdlePosition),
+            new SetLEDColor(leds, -0.79),
             new ParallelCommandGroup(
-//                new ConditionalCommand(
-//                    new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristOutOfTheWay),
-//                    new InstantCommand(),
-//                    () -> VisionVariables.ExportedVariables.Distance < 2.25
-//                ),
                 new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, irsensor, leds)
             ),
-            new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition));
+            new ParallelCommandGroup(
+                new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristIdlePosition),
+                new SetLEDColor(leds, Leds.getAllianceColor())));
         
     }
     

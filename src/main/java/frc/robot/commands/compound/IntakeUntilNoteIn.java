@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.leds.BlinkLeds;
 import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeIRSensor;
@@ -25,11 +24,9 @@ public class IntakeUntilNoteIn extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)
-            .until(irSensor::getBeamBroken).andThen(new BlinkLeds(leds, Leds.LedColors.GREEN, Leds.LedColors.WHITE)),
+            .until(irSensor::getBeamBroken).andThen(new SetLEDColor(leds, -0.05).onlyIf(irSensor::getBeamBroken)),
         new ParallelDeadlineGroup(
             new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay), // This should not be necessary
-            new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)),
-        new WaitCommand(1), // FIXME:  Zayn - THIS IS VERY STRANGE!!! WHAT IS THIS FOR???
-        new SetLEDColor(leds, Leds.LedColors.RED));
+            new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)));
   }
 }

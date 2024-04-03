@@ -96,7 +96,7 @@ public class ShooterRotation extends SubsystemABC {
 
   public void rotateShooterPID() {
     double currentAngle = getEncoderAngle();
-    if (currentAngle < -50 || currentAngle > 10) {
+    if (currentAngle < -60 || currentAngle > 10) {
       setFailure(true);
     } else {
       double output = rotatePID.calculate(currentAngle);

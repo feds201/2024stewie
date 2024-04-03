@@ -16,6 +16,7 @@ public class ShooterConstants {
         public static final double kIMax = 0.05;
         public static final double kIMin = -0.05;
 
+        public static final double kShooterHorizontal = -55;
         public static final double kArmSubwooferSetpoint = -10; // 7 feet 10 inches
         public static final double kArm60InchSetpoint = -15; // 5 feet away
         public static final double kShooterRotationFeederSetpoint = -30;

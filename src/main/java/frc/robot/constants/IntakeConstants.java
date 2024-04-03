@@ -4,7 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class IntakeConstants {
   public static class WristPID {
-    public final static double kP = 0.002;//0.002
+    public final static double kP = 0.003;//0.002
     public final static double kI = 0.001;
     public final static double kD = 0.0;
     public final static double kIZone = Double.POSITIVE_INFINITY;
@@ -23,7 +23,7 @@ public class IntakeConstants {
       return pid;
     }
     public static PIDController GetWristAmpPID() {
-      PIDController pid = new PIDController(0.003, 0.00, 0.0008);
+      PIDController pid = new PIDController(0.003, 0.00, 0.0005);
       pid.setIZone(kIZone);
       pid.setTolerance(kRotationTolerance);
       return pid;
@@ -32,7 +32,7 @@ public class IntakeConstants {
 
   public static final double kIntakeNoteWheelSpeed = -1;//.6
   public static final double kSpitOutNoteWheelSpeed = 1;
-  public static final double kAmpInWheelSpeed = 0.4;
+  public static final double kAmpInWheelSpeed = 1;
 
   public static final double kHandoffNoteWheelSpeed = 0.6;
   public static final double kDistanceSensorDetectedDelay = 0.1;
