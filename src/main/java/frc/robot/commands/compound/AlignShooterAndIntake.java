@@ -17,7 +17,7 @@ import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.intake.IntakeWheels;
 import frc.robot.subsystems.intake.Wrist;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
+import frc.robot.subsystems.shooter.ShooterIRSensor;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterServos;
 
@@ -29,7 +29,7 @@ import frc.robot.subsystems.shooter.ShooterServos;
 public class AlignShooterAndIntake extends ParallelCommandGroup {
   /** Creates a new AlignShooterAndIntake. */
   public AlignShooterAndIntake(ShooterRotation shooterRotation, Wrist wrist, IntakeWheels intakeWheels,
-      ShooterServos servos, BreakBeamSensorShooter breakBeamSensorShooter, Leds leds) {
+      ShooterServos servos, ShooterIRSensor breakBeamSensorShooter, Leds leds) {
     addCommands(
         new RotateShooterToPosition(shooterRotation,
             () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
@@ -41,7 +41,7 @@ public class AlignShooterAndIntake extends ParallelCommandGroup {
                 new SetLEDColor(leds, Leds.LedColors.Aqua)
             )
             .until(breakBeamSensorShooter::getBeamBroken)
-            .andThen(new StopServos(servos)) // Add this line to stop the servos
+            .andThen(new StopServos(servos))
         ));
   }
 }

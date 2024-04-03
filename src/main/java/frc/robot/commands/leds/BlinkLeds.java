@@ -13,15 +13,14 @@ import frc.robot.subsystems.leds.Leds;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BlinkLeds extends SequentialCommandGroup {
-    public BlinkLeds(Leds leds, double ledColor) {
+    public BlinkLeds(Leds leds, double firstColor, double secondColor) {
         addCommands(
             new ParallelDeadlineGroup(
                 new WaitCommand(0.1), 
-                new SetLEDColor(leds,Leds.LedColors.DarkGreen)),
+                new SetLEDColor(leds, firstColor)),
             new ParallelDeadlineGroup(
                 new WaitCommand(0.1), 
-                new SetLEDColor(leds, Leds.LedColors.WHITE
-            ))
+                new SetLEDColor(leds, secondColor))
         );
     }
 }

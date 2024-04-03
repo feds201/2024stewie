@@ -12,7 +12,7 @@ import frc.robot.commands.shooter.EjectNote;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.shooter.ShootNoteMotionMagicVelocity;
 import frc.robot.subsystems.Vision.VisionVariables;
-import frc.robot.subsystems.sensors.BreakBeamSensorShooter;
+import frc.robot.subsystems.shooter.ShooterIRSensor;
 import frc.robot.subsystems.shooter.ShooterRotation;
 import frc.robot.subsystems.shooter.ShooterServos;
 import frc.robot.subsystems.shooter.ShooterWheels;
@@ -30,7 +30,7 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
    * @param shooterWheels
    * @param servos
    */
-  public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, BreakBeamSensorShooter thing, Leds leds) {
+  public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, ShooterIRSensor thing, Leds leds) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     

@@ -2,19 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.intake.amp;
+package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Wrist;
 
-public class RotateWristToAmpi extends Command {
+// This class uses a different Amp specific PID as we don't need such a responsive PID for the amp.
+// Copy paste from RotateWristToPosition otherwise...
+// Fixme: ^^^?
+public class RotateWristInfiniteWithAmpPID extends Command {
   /** Creates a new wristIn. */
   private final Wrist c_intake;
   private final double c_target;
   private final boolean c_failure;
 
-  public RotateWristToAmpi(Wrist intake, double target) {
+  public RotateWristInfiniteWithAmpPID(Wrist intake, double target) {
     c_intake = intake;
     c_target = target;
     addRequirements(c_intake);

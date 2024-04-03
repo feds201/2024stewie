@@ -93,55 +93,55 @@ public class LimelightUtils {
         } else if (limelightDistance < 1.875) { // 1.75
             return -17;
         } else if (limelightDistance < 2.125) { // 2
-            return -19.5;
+            return -21;
         } else if (limelightDistance < 2.375) { // 2.25
-            return -20;
+            return -23;
         } else if (limelightDistance < 2.625) { // 2.5
-            return -24.5;
+            return -26;
         } else if (limelightDistance < 2.875) { // 2.75
-            return -29;
+            return -28;
         } else if (limelightDistance < 3.125) { // 3
-            return -27;
+            return -29;
         } else if (limelightDistance < 3.375) { // 3.25
             return -29;
         } else if (limelightDistance < 3.625) { // 3.5
             return -31;
         } else if (limelightDistance < 3.875) { // 3.75
-            return -33;
+            return -34;
         } else if (limelightDistance < 4.125) { // 4
-            return -33;
-        } else if (limelightDistance < 4.375) { // 4.25
-            return -31;
-        } else if (limelightDistance < 4.625) { // 4.5
-            return -34.5;
-        } else if (limelightDistance < 4.875) { // 4.75
-            return -29;
-        } else if (limelightDistance < 5.125) { // 5
-            return -34;
-        } else if (limelightDistance < 5.375) { // 5.25
-            return -32.5;
-        } else if (limelightDistance < 5.625) { // 5.5
-            return -32;
-        } else if (limelightDistance < 5.875) { // 5.75
-            return -34.2;
-        } else if (limelightDistance < 6.125) { // 6
-            return -34;
-        } else if (limelightDistance < 6.375) { // 6.25
             return -35;
-        } else if (limelightDistance < 6.625) { // 6.5
+        } else if (limelightDistance < 4.375) { // 4.25
             return -36;
-        } else if (limelightDistance < 6.875) { // 6.75
+        } else if (limelightDistance < 4.625) { // 4.5
             return -37;
-        } else if (limelightDistance < 7.125) { // 7
-            return -37.5;
-        } else if (limelightDistance < 7.375) { // 7.25
+        } else if (limelightDistance < 4.875) { // 4.75
             return -38;
+        } else if (limelightDistance < 5.125) { // 5
+            return -39;
+        } else if (limelightDistance < 5.375) { // 5.25
+            return -40;
+        } else if (limelightDistance < 5.625) { // 5.5
+            return -41;
+        } else if (limelightDistance < 5.875) { // 5.75
+            return -42;
+        } else if (limelightDistance < 6.125) { // 6
+            return -43;
+        } else if (limelightDistance < 6.375) { // 6.25
+            return -44;
+        } else if (limelightDistance < 6.625) { // 6.5
+            return -45;
+        } else if (limelightDistance < 6.875) { // 6.75
+            return -46;
+        } else if (limelightDistance < 7.125) { // 7
+            return -47;
+        } else if (limelightDistance < 7.375) { // 7.25
+            return -48;
         } else if (limelightDistance < 7.625) { // 7.5
-            return -39;
+            return -49;
         } else if (limelightDistance < 7.875) { // 7.75
-            return -39;
+            return -49;
         } else { // 8
-            return -39.5;
+            return -49.5;
         }
     }
 

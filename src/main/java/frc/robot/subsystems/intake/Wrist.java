@@ -63,7 +63,9 @@ public class Wrist extends SubsystemABC {
 
   @Override
   public void setupShuffleboard() {
+    
     tab.add("PID Controller", pid);
+    tab.add("AMP Pid Controller", pidAmp);
   }
 
   @Override

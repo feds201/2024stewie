@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
-import frc.robot.commands.intake.amp.RotateWristToAmpi;
+import frc.robot.commands.intake.RotateWristInfiniteWithAmpPID;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeWheels;
@@ -19,7 +19,7 @@ public class PlaceInAmp extends ParallelCommandGroup {
             new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kAmpPosition),
             new SequentialCommandGroup(
                     new WaitCommand(0.25),
-                    new RotateWristToAmpi(wrist, IntakeConstants.WristPID.kAmpPosition)
+                    new RotateWristInfiniteWithAmpPID(wrist, IntakeConstants.WristPID.kAmpPosition)
             ),
             new SequentialCommandGroup(
                     new WaitCommand(2),

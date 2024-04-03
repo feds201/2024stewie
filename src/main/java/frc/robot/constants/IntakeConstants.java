@@ -14,8 +14,9 @@ public class IntakeConstants {
     public final static double kWristIdlePosition = 88;
     public  final static  double kAmpPosition = 223;
     public final static double kWristShooterFeederSetpoint = 94; // TODO: Ideally all of the above positions should be based on this "home" position so we only have to change this
-
-    public static PIDController GetWristPID() {
+    public static double kWristOutOfTheWay = 150;
+      
+      public static PIDController GetWristPID() {
       PIDController pid = new PIDController(kP, kI, kD);
       pid.setIZone(kIZone);
       pid.setTolerance(kRotationTolerance);
