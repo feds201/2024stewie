@@ -1,6 +1,8 @@
 package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.constants.CANConstants;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.Vision.utils.VisionObject;
 
 public class LimelightUtils {
@@ -30,21 +32,21 @@ public class LimelightUtils {
     }
 
     public static double MapDistanceToOffset(double limelightDistance){
-        if(limelightDistance < 1) {
+//        if(limelightDistance < 1) {
             return 0;
-        } else if (limelightDistance < 2) {
-            return -3;
-        } else if (limelightDistance < 3) {
-            return -6;
-        } else if(limelightDistance < 4){
-            return -7;
-        }else if(limelightDistance < 5) {    
-            return -7;
-        } else if (limelightDistance < 6) {
-            return -8;
-        } else {
-            return -10;
-        }
+//        } else if (limelightDistance < 2) {
+//            return -3;
+//        } else if (limelightDistance < 3) {
+//            return -6;
+//        } else if(limelightDistance < 4){
+//            return -7;
+//        }else if(limelightDistance < 5) {
+//            return -7;
+//        } else if (limelightDistance < 6) {
+//            return -8;
+//        } else {
+//            return -10;
+//        }
     }
 
 //    public static double getTrigAlignAngle(double limelightTagDistanceCenter, double limelightTagDistanceRight) {
@@ -80,47 +82,52 @@ public class LimelightUtils {
 
     private static double getAngle(double limelightDistance) {
         SmartDashboard.putNumber("Supplied Distance to Shooter", limelightDistance);
-        if (!VisionObject.isPresent()){
-            return -33;
+        if (!VisionObject.isPresent()) {
+            return -34;
         } else if (limelightDistance < 0.5) {
             return -1;
         } else if (limelightDistance < 1.125) { // 1
             return -6;
         } else if (limelightDistance < 1.375) { // 1.25
-            return -15;
+            return -12;
         } else if (limelightDistance < 1.625) { // 1.5
-            return -16;
-        } else if (limelightDistance < 1.875) { // 1.75
             return -17;
-        } else if (limelightDistance < 2.125) { // 2
-            return -21;
-        } else if (limelightDistance < 2.375) { // 2.25
-            return -23;
-        } else if (limelightDistance < 2.625) { // 2.5
-            return -26;
-        } else if (limelightDistance < 2.875) { // 2.75
-            return -28;
-        } else if (limelightDistance < 3.125) { // 3
-            return -29;
-        } else if (limelightDistance < 3.375) { // 3.25
-            return -29;
-        } else if (limelightDistance < 3.625) { // 3.5
-            return -31;
-        } else if (limelightDistance < 3.875) { // 3.75
+        } else if (limelightDistance < 1.875) { // 1.75
+            return -20;
+        } else if(limelightDistance<5){
+            return -1 * (ShooterConstants.A * (limelightDistance * limelightDistance) + ShooterConstants.B * limelightDistance + ShooterConstants.C);
+        } else{
             return -34;
-        } else if (limelightDistance < 4.125) { // 4
-            return -35;
-        } else if (limelightDistance < 4.375) { // 4.25
-            return -36;
-        } else if (limelightDistance < 4.625) { // 4.5
-            return -37;
-        } else if (limelightDistance < 4.875) { // 4.75
-            return -38;
-        } else if (limelightDistance < 5.125) { // 5
-            return -39;
-        } else if (limelightDistance < 5.375) { // 5.25
-            return -40;
-        } else if (limelightDistance < 5.625) { // 5.5
+        }
+        //Values measures until 3.75 limelight distance
+//        else if (limelightDistance < 2.375) { // 2.25
+//            return -25.5;
+//        } else if (limelightDistance < 2.625) { // 2.5
+//            return -27.5;
+//        } else if (limelightDistance < 2.875) { // 2.75
+//            return -30;
+//        } else if (limelightDistance < 3.125) { // 3
+//            return -31.5;
+//        } else if (limelightDistance < 3.375) { // 3.25
+//            return -32.25;
+//        } else if (limelightDistance < 3.625) { // 3.5
+//            return -33.5;
+//        } else if (limelightDistance < 3.875) { // 3.75
+//            return -34;
+//        } else if (limelightDistance < 4.125) { // 4
+//            return -38;
+//        } else if (limelightDistance < 4.375) { // 4.25
+//            return -39;
+//        } else if (limelightDistance < 4.625) { // 4.5
+//            return -42;
+//        } else if (limelightDistance < 4.875) { // 4.75
+//            return -43;
+//        } else if (limelightDistance < 5.125) { // 5
+//            return -45;
+//        } else { // 5.25
+//            return -46;
+//        }
+        /*else if (limelightDistance < 5.625) { // 5.5
             return -41;
         } else if (limelightDistance < 5.875) { // 5.75
             return -42;
@@ -142,7 +149,8 @@ public class LimelightUtils {
             return -49;
         } else { // 8
             return -49.5;
-        }
+        }*/
+        
     }
 
     private static double getSpeed(double limelightDistance) {

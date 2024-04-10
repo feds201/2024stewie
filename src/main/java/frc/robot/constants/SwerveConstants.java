@@ -8,8 +8,12 @@ public class SwerveConstants {
     public static final double kAlignmentOutput = 0.01;
 		public static double kAlignmentTolerance = 1;
 		public static double kStuckTolerance = -10;
-		public static double kRotationP = 0.3;
-		public static double kRotationI = .0001;
+		
+		//this is for the horizontal yaw align to april tag control
+		public static double kRotationP = 0.085;
+		//0.07
+		public static double kRotationI = .000;
+		//.0001
 		public static double kRotationD = .00;
 		public static double speedpercentage = 1.0;
 }

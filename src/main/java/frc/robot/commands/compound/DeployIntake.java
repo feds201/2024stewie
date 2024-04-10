@@ -6,6 +6,7 @@ package frc.robot.commands.compound;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.commands.intake.RotateWristToPosition;
@@ -22,16 +23,17 @@ import frc.robot.subsystems.shooter.ShooterRotation;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DeployIntake extends SequentialCommandGroup {
     public DeployIntake(Wrist wrist, IntakeWheels intakeWheels, ShooterRotation shooterRotation,
-                        IntakeIRSensor breakBeamSensorIntake, Leds leds) {
+                        IntakeIRSensor breakBeamSensorIntake, Leds leds, CommandXboxController driver, CommandXboxController operator) {
         addCommands(
             new ParallelDeadlineGroup(
                 new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristNotePosition),
                 new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed),
                 new RotateShooterToPosition(shooterRotation,
                     () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint)),
-            new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake, leds),
-            new RotateShooterToPosition(shooterRotation,
-                () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
+            new IntakeUntilNoteIn(intakeWheels, breakBeamSensorIntake, leds, driver, operator),
+//            new SetLEDColor(leds, Leds.LedColors.RED),
+//            new RotateShooterToPosition(shooterRotation,
+//                () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
             new ParallelDeadlineGroup(
                 new RotateWristToPosition(wrist,
                     IntakeConstants.WristPID.kWristShooterFeederSetpoint),

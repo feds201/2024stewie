@@ -45,6 +45,11 @@ public class ShooterConstants {
     public static final int kThinWheelServoPort = 2;
     public static final double kHandoffDelay = 0;
 
+    public static final double A = -2.0714;
+    
+    public static final double B = 17.899;
+    
+    public static final double C = -3.8765;
     public static TalonFXConfiguration GetWheelsConfiguration() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -129,3 +134,5 @@ public class ShooterConstants {
  * 
  * shooterTopMain.getConfigurator().apply(configs);
  */
+
+

@@ -4,9 +4,12 @@
 
 package frc.robot.commands.compound;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.controller.ToggleRumble;
 import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.leds.SetLEDColor;
 import frc.robot.constants.IntakeConstants;
@@ -19,12 +22,18 @@ import frc.robot.subsystems.leds.Leds;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeUntilNoteIn extends SequentialCommandGroup {
   /** Creates a new RotateUntilNoteIn. */
-  public IntakeUntilNoteIn(IntakeWheels intakeWheels, IntakeIRSensor irSensor, Leds leds) {
+  public IntakeUntilNoteIn(IntakeWheels intakeWheels, IntakeIRSensor irSensor, Leds leds, CommandXboxController driver, CommandXboxController operator) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)
-            .until(irSensor::getBeamBroken).andThen(new SetLEDColor(leds, -0.05).onlyIf(irSensor::getBeamBroken)),
+            .until(irSensor::getBeamBroken).andThen(
+                new ParallelCommandGroup(
+                    new SetLEDColor(leds, -0.05),
+                    new ToggleRumble(driver, 0.3),
+                    new ToggleRumble(operator, 0.3)
+                )
+            ),
         new ParallelDeadlineGroup(
             new WaitCommand(IntakeConstants.kDistanceSensorDetectedDelay), // This should not be necessary
             new RunIntakeWheels(intakeWheels, () -> IntakeConstants.kIntakeNoteWheelSpeed)));
