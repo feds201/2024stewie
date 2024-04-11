@@ -23,7 +23,9 @@ public class ShooterWheels extends SubsystemABC {
 
   private final DoubleEntry shootVelocity;
   private final DoubleEntry shootVoltage;
-  private final DoubleEntry shootVoltageMotionMagic;
+  private final DoubleEntry shootVelocityMotionMagicTop;
+  
+  private final DoubleEntry shootVelocityMotionMagicBottom;
 
   private final MotionMagicVelocityVoltage motionMagic = new MotionMagicVelocityVoltage(0);
 
@@ -40,8 +42,10 @@ public class ShooterWheels extends SubsystemABC {
 
     setupNetworkTables("shooter");
     shootVelocity = ntTable.getDoubleTopic("shoot_velocity").getEntry(0);
+    
     shootVoltage = ntTable.getDoubleTopic("shoot_voltage").getEntry(0);
-    shootVoltageMotionMagic = ntTable.getDoubleTopic("shoot_voltage_motion_magic").getEntry(0);
+    shootVelocityMotionMagicTop     = ntTable.getDoubleTopic("shoot_velocity_motion_magic_top").getEntry(0);
+    shootVelocityMotionMagicBottom  = ntTable.getDoubleTopic("shoot_velocity_motion_magic_bottom").getEntry(0);
  
     setupShuffleboard();
     seedNetworkTables();
@@ -62,10 +66,11 @@ public class ShooterWheels extends SubsystemABC {
   public void seedNetworkTables() {
     setShootVelocity(0);
     setShootVoltage(0);
-    setShootVelocityMotionMagic(0);
+    setShootVelocityMotionMagic(0, 0);
     getShootVelocity();
     getShootVoltage();
-    getShootVelocityMotionMagic();
+    getShootVelocityMotionMagicTop();
+    getShootVelocityMotionMagicBottom();
   }
 
 
@@ -84,13 +89,16 @@ public class ShooterWheels extends SubsystemABC {
     return shootVoltage.get();
   }
 
-  public double getShootVelocityMotionMagic() {
-    return shootVoltageMotionMagic.get();
+  public double getShootVelocityMotionMagicTop() {
+    return shootVelocityMotionMagicTop.get();
   }
+  
+  public double getShootVelocityMotionMagicBottom() { return shootVelocityMotionMagicBottom.get(); }
 
   private final DoubleLogEntry shootVelocityLog = new DoubleLogEntry(log, "/shooter/velocity");
   private final DoubleLogEntry shootVoltageLog = new DoubleLogEntry(log, "/shooter/voltage");
-  private final DoubleLogEntry shootVelocityMotionMagicLog = new DoubleLogEntry(log, "/shooter/velocityMotionMagic");
+  private final DoubleLogEntry shootVelocityMotionMagicTopLog = new DoubleLogEntry(log, "/shooter/velocityMotionMagicTop");
+  private final DoubleLogEntry shootVelocityMotionMagicBottomLog = new DoubleLogEntry(log, "/shooter/velocityMotionMagicBottom");
 
   // SETTERS
   public void setShootVelocity(double velocity) {
@@ -103,13 +111,16 @@ public class ShooterWheels extends SubsystemABC {
     shooterBottomFollower.setControl(velocityOut.withVelocity(velocity));
   }
 
-  public void setShootVelocityMotionMagic(double velocity) {
-    shootVoltageMotionMagic.set(velocity);
-    shootVelocityMotionMagicLog.append(velocity);
+  public void setShootVelocityMotionMagic(double velocityTop, double velocityBottom) {
+    shootVelocityMotionMagicTop.set(velocityTop);
+    shootVelocityMotionMagicTopLog.append(velocityTop);
+    
+    shootVelocityMotionMagicBottom.set(velocityBottom);
+    shootVelocityMotionMagicBottomLog.append(velocityBottom);
 
     motionMagic.Slot = 0;
-    shooterTopMain.setControl(motionMagic.withVelocity(velocity));
-    shooterBottomFollower.setControl(motionMagic.withVelocity(velocity));
+    shooterTopMain.setControl(motionMagic.withVelocity(velocityTop));
+    shooterBottomFollower.setControl(motionMagic.withVelocity(velocityBottom));
   }
 
   public void setShootVoltage(double voltage) {
