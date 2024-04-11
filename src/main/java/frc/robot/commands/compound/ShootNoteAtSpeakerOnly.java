@@ -35,21 +35,22 @@ public class ShootNoteAtSpeakerOnly extends SequentialCommandGroup {
   public ShootNoteAtSpeakerOnly(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, Leds leds, DoubleSupplier distanceSupplier, ShooterIRSensor shooterIRSensor) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-
+    
     addCommands(
         new ParallelDeadlineGroup(
             // This command vvvv never ends.
             new RotateShooterToPosition(
                 shooterRotation,
-                () -> LimelightUtils.GetAngle(distanceSupplier.getAsDouble())),
+                () -> LimelightUtils.GetAngle(distanceSupplier.getAsDouble()))
+                .until(() -> !shooterIRSensor.getBeamBroken()),
             new ShootNoteMotionMagicVelocity(
                 shooterWheels,
                 () -> LimelightUtils.GetSpeedTop(distanceSupplier.getAsDouble()),
                 () -> LimelightUtils.GetSpeedBottom(distanceSupplier.getAsDouble())),
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
-                new EjectNote(servos).andThen(new SetLEDColor(leds, Leds.getAllianceColor()))))
-//            .until(shooterIRSensor::getBeamBroken)
+                new EjectNote(servos),
+                new SetLEDColor(leds, Leds.getAllianceColor())))
     );
   }
 }
