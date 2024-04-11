@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.intake.RotateWristToPosition;
+import frc.robot.commands.intake.RotateWristToPositionInfinite;
 import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
 import frc.robot.commands.arm.RotateArmManual;
@@ -170,18 +171,16 @@ public class RobotContainer {
     
     private void registerAllAutoCommands() {
         NamedCommands.registerCommand("ShootNoteAtSpeakerOnly",
-            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos,
-                shooterIRSensor, leds));
+            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor));
         NamedCommands.registerCommand("DeployIntake",
             new DeployIntake(wrist, intakeWheels, shooterRotation, intakeIRSensor, leds, driverController, operatorController));
         NamedCommands.registerCommand("AlignShooterAndIntake",
             new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels, servos,
                 shooterIRSensor, leds));
         NamedCommands.registerCommand("ShootFromHandoff", //
-            new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos,
-                shooterIRSensor, leds));
+            new ShootFromHandoff(shooterRotation, shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance,shooterIRSensor).until(shooterIRSensor::getBeamBroken));
         NamedCommands.registerCommand("StopShooterWheelsPls",
-            new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0));
+            new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0));
         NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
             driverController::getLeftY, () -> VisionVariables.ExportedVariables.Distance));
         NamedCommands.registerCommand("ArmDown",
@@ -207,10 +206,9 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                     new WaitCommand(0.5),
                     new ShootNoteAtSpeakerOnly(shooterRotation,
-                        shooterWheels, servos,
-                        shooterIRSensor, leds))).until(shooterIRSensor::getBeamBroken)
+                        shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor))).until(shooterIRSensor::getBeamBroken)
                 .andThen(
-                    new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0)
+                    new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0)
                 ));
         
         autonChooser.addOption("Step Back Fade Away",
@@ -221,13 +219,10 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                     new WaitCommand(6),
                     new ShootNoteAtSpeakerOnly(shooterRotation,
-                        shooterWheels, servos,
-                        shooterIRSensor, leds),
+                        shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor).until(shooterIRSensor::getBeamBroken),
                     new WaitCommand(2),
                     new ParallelCommandGroup(
-                        new ShootNoteMotionMagicVelocity(
-                            shooterWheels,
-                            () -> 0)))));
+                        new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0)))));
         
         autonChooser.addOption("TestCode",
             drivetrain.getAutoPath("test"));
@@ -242,8 +237,7 @@ public class RobotContainer {
                         new WaitCommand(3),
                         new ShootNoteAtSpeakerOnly(
                             shooterRotation,
-                            shooterWheels, servos,
-                            shooterIRSensor, leds))),
+                            shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor))),
                 new DriveForwardForTime(drivetrain, 5)));
         
         autonChooser.addOption("Shoot and Scram",
@@ -254,13 +248,9 @@ public class RobotContainer {
                         () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
                     new SequentialCommandGroup(
                         new WaitCommand(0.7),
-                        new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos,
-                            shooterIRSensor, leds))),
-                // new Shoot(
-                // shooterRotation,
-                // shooterWheels, servos,
-                // breakBeamSensorShooter)
-                
+                        new ShootNoteAtSpeakerOnly(
+                            shooterRotation,
+                            shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor))),
                 new ParallelCommandGroup(
                     new RotateShooterBasic(shooterRotation, () -> 0),
                     new DriveForwardForTime(drivetrain, 6))));
@@ -291,15 +281,6 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new WaitCommand(0.8),
                 drivetrain.getAutoPath("2 Note Move Then Shoot Source Side"))));
-        
-        // autonChooser.addOption("Aim and Shoot Auton", new ParallelCommandGroup(
-        // new RotateArm(arm, () ->
-        // ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-        // new SequentialCommandGroup(
-        // new WaitCommand(6),
-        // new AimToAprilTag(drivetrain, driverController::getLeftX,
-        // driverController::getLeftY),
-        // new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos))));
         
         Shuffleboard.getTab("autons").add(autonChooser);
     }
@@ -334,10 +315,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> leds.setLedColor(Leds.LedColors.YELLOW)))
             .onFalse(new InstantCommand(() -> leds.setLedColor(Leds.getAllianceColor())));
         
-//        shooterWheels.setDefaultCommand(
-//            new ShootNoteMotionMagicVelocity(
-//                shooterWheels,
-//                () -> 0));
+        shooterWheels.setDefaultCommand(new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0));
     }
     
     private void configureDriverController() {
@@ -346,10 +324,15 @@ public class RobotContainer {
             .onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
         
         driverController.leftTrigger()
-            .onTrue(new DeployIntake(wrist, intakeWheels, shooterRotation, intakeIRSensor, leds, driverController, operatorController))
-            .onFalse(new ParallelCommandGroup(new ResetIntake(wrist, intakeWheels),
-                new SequentialCommandGroup(new WaitCommand(1.5), new SetLEDColor(leds, Leds.LedColors.WHITE))
-                    .onlyIf(intakeIRSensor::getBeamBroken)));
+            .onTrue(
+                new DeployIntake(wrist, intakeWheels, shooterRotation, intakeIRSensor, leds, driverController, operatorController)
+            )
+            .onFalse(
+                new ParallelCommandGroup(new ResetIntake(wrist, intakeWheels),
+                    new ToggleRumble(driverController, 0),
+                    new ToggleRumble(operatorController, 0),
+                    new SequentialCommandGroup(new WaitCommand(1.5), new SetLEDColor(leds, Leds.LedColors.WHITE))
+                        .onlyIf(intakeIRSensor::getBeamBroken)));
         
         driverController.rightTrigger()
             .onTrue(new SpitOutNote(wrist, intakeWheels))
@@ -371,24 +354,23 @@ public class RobotContainer {
                             new WaitCommand(2),
                             new RotateShooterToPosition(shooterRotation,
                                 () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterHorizontal)),
-                        new ShootNoteMotionMagicVelocity(shooterWheels,
-                            () -> LimelightUtils
-                                .GetSpeedAngle(
-                                    VisionVariables.ExportedVariables.Distance).speed),
+                        new ShootNoteMotionMagicVelocity(
+                            shooterWheels,
+                            () -> LimelightUtils.GetSpeedTop(VisionVariables.ExportedVariables.Distance),
+                            () -> LimelightUtils.GetSpeedBottom(VisionVariables.ExportedVariables.Distance)
+                        ),
                         new SequentialCommandGroup(
                             new WaitCommand(0.7),
                             new EjectNote(servos),
                             new SetLEDColor(leds, Leds.getAllianceColor()))),
-                    new ShootNoteMotionMagicVelocity(shooterWheels,
-                        () -> 0),
+                    new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0),
                     new RotateShooterToPosition(shooterRotation,
                         () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint)))
             .onFalse(
                 new ParallelCommandGroup(
                     new RotateShooterToPosition(shooterRotation,
                         () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
-                    new ShootNoteMotionMagicVelocity(shooterWheels,
-                        () -> 0)));
+                    new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0)));
         
         driverController.leftBumper()
             .onTrue(new InstantCommand(() -> swerveSpeedMultiplier = 0.2))
@@ -404,33 +386,51 @@ public class RobotContainer {
                     servos, shooterIRSensor, leds)));
         
         operatorController.rightTrigger()
-            .onTrue(new AimToAprilTag(drivetrain, driverController::getLeftX,
-                driverController::getLeftY, () -> VisionVariables.ExportedVariables.Distance)
-                .andThen(
-                    new ParallelCommandGroup(
-                        new SetLEDColor(leds,
-                            Leds.LedColors.VIOLET),
-                        new ToggleRumble(driverController, 0.3),
-                        new ToggleRumble(operatorController,
-                            0.3))))
-            .onFalse(new ParallelDeadlineGroup(
-                new WaitCommand(0.2), drivetrain.applyRequest(() -> brake)));
+            .onTrue(new SequentialCommandGroup(
+                new ParallelCommandGroup(
+                    new AimToAprilTag(drivetrain,
+                        () -> -driverController.getLeftX(),
+                        () -> -driverController.getLeftY(),
+                        () -> VisionVariables.ExportedVariables.Distance)
+                        .andThen(
+                            new ParallelCommandGroup(
+                                new SetLEDColor(leds, Leds.LedColors.VIOLET),
+                                new ToggleRumble(driverController, 0.3),
+                                new ToggleRumble(operatorController, 0.3))
+                        ),
+                    new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristOutOfTheWay)
+                ))
+            )
+            .onFalse(
+                new ParallelDeadlineGroup(
+                    new WaitCommand(0.2),
+                    drivetrain.applyRequest(() -> brake),
+                    new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint)
+                )
+            );
+        
         
         operatorController.leftTrigger()
-            .onTrue(new SequentialCommandGroup(
-                new ShootFromHandoff(wrist, shooterRotation, shooterWheels, servos,
-                    shooterIRSensor, leds))
-                .andThen(
-                    new ParallelCommandGroup(
-                        new ToggleRumble(driverController, 0.3),
-                        new ToggleRumble(operatorController,
-                            0.3))))
+            .onTrue(
+                new ParallelCommandGroup(
+                    new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristOutOfTheWay),
+                    new ShootFromHandoff(shooterRotation, shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor))
+                    .andThen(
+                        new ParallelCommandGroup(
+                            new ToggleRumble(driverController, 0.3),
+                            new ToggleRumble(operatorController,
+                                0.3)))
+            
+            )
             .onFalse(new ParallelCommandGroup(
                 new SetLEDColor(leds, Leds.getAllianceColor()),
                 new RotateShooterToPosition(shooterRotation,
                     () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
-                new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0),
-                new ResetIntake(wrist, intakeWheels)));
+                new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0),
+                new ResetIntake(wrist, intakeWheels),
+                new ToggleRumble(driverController, 0),
+                new ToggleRumble(operatorController, 0)
+            ));
         
         operatorController.a()
             .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds, shooterRotation)
@@ -449,7 +449,9 @@ public class RobotContainer {
             .onTrue(new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint));
         // new Trigger(breakBeamSensorShooter::getBeamBroken).onTrue(new
         // SetLEDColor(leds, Leds.LedColors.ORANGE));
-        
+//        operatorController.povUp()
+//            .onTrue()
+    
     }
     
     private void setupErrorTriggers() {
@@ -488,7 +490,6 @@ public class RobotContainer {
                 new IntakeUntilNoteIn(intakeWheels, intakeIRSensor, leds, driverController, operatorController),
                 new RotateWristToPosition(wrist,
                     IntakeConstants.WristPID.kWristShooterFeederSetpoint)
-            
             ));
     }
     
@@ -503,11 +504,11 @@ public class RobotContainer {
         
         shooterTab.add("100 RPS Shoot",
             new ShootNoteMotionMagicVelocity(shooterWheels,
-                () -> ShooterConstants.kShootVelocity));
+                () -> ShooterConstants.kShootVelocity,() -> ShooterConstants.kShootVelocity));
         
         shooterTab.add("0 RPS Shoot",
             new ShootNoteMotionMagicVelocity(shooterWheels,
-                () -> 0));
+                () -> 0,() -> 0));
         
         shooterTab.add("-15 Deg Rotate", new RotateShooterToPosition(shooterRotation,
             () -> ShooterConstants.RotationPIDForExternalEncoder.kArm60InchSetpoint));
@@ -520,8 +521,7 @@ public class RobotContainer {
         shooterTab.add("Stop Servos", new StopServos(servos));
         
         shooterTab.add("Shoot Note Full Command",
-            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos,
-                shooterIRSensor, leds));
+            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor));
     }
     
     private void setupClimberCommands() {

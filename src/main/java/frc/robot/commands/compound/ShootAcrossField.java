@@ -15,7 +15,7 @@ public class ShootAcrossField extends SequentialCommandGroup {
 		public ShootAcrossField(ShooterRotation shooterRotation, ShooterWheels shooterWheels, ShooterServos servos, ShooterIRSensor breaker) {
 			addCommands(
 					new RotateShooterToPosition(shooterRotation, () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
-					new ShootNoteMotionMagicVelocity(shooterWheels, () -> 100.00),
+					new ShootNoteMotionMagicVelocity(shooterWheels, () -> 100.00,() -> 100.00),
 					new WaitCommand(0.7),
 					new EjectNote(servos).until(breaker::getBeamBroken)
 			);

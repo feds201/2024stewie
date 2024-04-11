@@ -8,11 +8,13 @@ import frc.robot.subsystems.shooter.ShooterWheels;
 public class ShootNoteMotionMagicVelocity extends Command {
 
     private final ShooterWheels c_shooterWheels;
-    private final DoubleSupplier c_velocity;
+    private final DoubleSupplier c_velocityTop;
+    private final DoubleSupplier c_velocityBottom;
 
-    public ShootNoteMotionMagicVelocity(ShooterWheels wheels, DoubleSupplier velocity) {
+    public ShootNoteMotionMagicVelocity(ShooterWheels wheels, DoubleSupplier velocityTop, DoubleSupplier velocityBottom) {
         c_shooterWheels = wheels;
-        c_velocity = velocity;
+        c_velocityTop = velocityTop;
+        c_velocityBottom = velocityBottom;
 
         addRequirements(c_shooterWheels);
     }
@@ -29,7 +31,9 @@ public class ShootNoteMotionMagicVelocity extends Command {
 
     @Override
     public void initialize() {
-        c_shooterWheels.setShootVelocityMotionMagic(c_velocity.getAsDouble());
+        c_shooterWheels.setShootVelocityMotionMagic(
+            c_velocityTop.getAsDouble(),
+            c_velocityBottom.getAsDouble());
     }
 
     @Override
