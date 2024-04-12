@@ -56,8 +56,8 @@ public class AimToAprilTag extends Command {
 
 
                 c_swerve.setControl(drive
-                        .withVelocityX(-c_leftX.getAsDouble() * SwerveConstants.MaxSpeed)
-                        .withVelocityY(-c_leftY.getAsDouble() * SwerveConstants.MaxSpeed)
+                        .withVelocityX(-c_leftY.getAsDouble() * SwerveConstants.MaxSpeed)
+                        .withVelocityY(-c_leftX.getAsDouble() * SwerveConstants.MaxSpeed)
                         .withRotationalRate(output));
                 lastOutput = output;
 

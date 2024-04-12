@@ -178,7 +178,7 @@ public class RobotContainer {
             new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels, servos,
                 shooterIRSensor, leds));
         NamedCommands.registerCommand("ShootFromHandoff", //
-            new ShootFromHandoff(shooterRotation, shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance,shooterIRSensor).until(shooterIRSensor::getBeamBroken));
+            new ShootFromHandoff(shooterRotation, shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor).until(shooterIRSensor::getBeamBroken));
         NamedCommands.registerCommand("StopShooterWheelsPls",
             new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0));
         NamedCommands.registerCommand("AimToAprilTag", new AimToAprilTag(drivetrain, driverController::getLeftX,
@@ -386,7 +386,7 @@ public class RobotContainer {
                     servos, shooterIRSensor, leds)));
         
         operatorController.rightTrigger()
-            .onTrue(new SequentialCommandGroup(
+            .onTrue(
                 new ParallelCommandGroup(
                     new AimToAprilTag(drivetrain,
                         () -> -driverController.getLeftX(),
@@ -399,7 +399,7 @@ public class RobotContainer {
                                 new ToggleRumble(operatorController, 0.3))
                         ),
                     new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristOutOfTheWay)
-                ))
+                )
             )
             .onFalse(
                 new ParallelDeadlineGroup(
@@ -504,11 +504,11 @@ public class RobotContainer {
         
         shooterTab.add("100 RPS Shoot",
             new ShootNoteMotionMagicVelocity(shooterWheels,
-                () -> ShooterConstants.kShootVelocity,() -> ShooterConstants.kShootVelocity));
+                () -> ShooterConstants.kShootVelocity, () -> ShooterConstants.kShootVelocity));
         
         shooterTab.add("0 RPS Shoot",
             new ShootNoteMotionMagicVelocity(shooterWheels,
-                () -> 0,() -> 0));
+                () -> 0, () -> 0));
         
         shooterTab.add("-15 Deg Rotate", new RotateShooterToPosition(shooterRotation,
             () -> ShooterConstants.RotationPIDForExternalEncoder.kArm60InchSetpoint));
