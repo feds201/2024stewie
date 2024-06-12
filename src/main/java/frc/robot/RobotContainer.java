@@ -147,6 +147,248 @@ public class RobotContainer {
                 setupAutonCommands();
 
         }
+<<<<<<< HEAD
+        
+        drivetrain
+            .registerTelemetry(
+                logger::telemeterize);
+        
+        arm.setDefaultCommand(
+            new RotateArmManual(
+                arm,
+                () -> -operatorController.getLeftY()));
+        
+        new Trigger(() -> arm.getArmAngle() > ArmConstants.kArmClimbLimit)
+            .onTrue(new InstantCommand(() -> leds.setLedColor(Leds.LedColors.YELLOW)))
+            .onFalse(new InstantCommand(() -> leds.setLedColor(Leds.getAllianceColor())));
+        
+        shooterWheels.setDefaultCommand(new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0));
+    }
+    
+    private void configureDriverController() {
+        // reset the field-centric heading on left bumper press
+        driverController.start()
+            .onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+        
+        driverController.leftTrigger()
+            .onTrue(
+                new DeployIntake(wrist, intakeWheels, shooterRotation, intakeIRSensor, leds, driverController, operatorController)
+            )
+            .onFalse(
+                new ParallelCommandGroup(new ResetIntake(wrist, intakeWheels),
+                    new ToggleRumble(driverController, 0),
+                    new ToggleRumble(operatorController, 0),
+                    new SequentialCommandGroup(new WaitCommand(1.5), new SetLEDColor(leds, Leds.LedColors.WHITE))
+                        .onlyIf(intakeIRSensor::getBeamBroken)));
+        
+        driverController.rightTrigger()
+            .onTrue(new SpitOutNote(wrist, intakeWheels))
+            .onFalse(new ResetIntake(wrist, intakeWheels));
+        
+        driverController.rightBumper()
+            .onTrue(new RunIntakeWheels(intakeWheels, () -> kIntakeNoteWheelSpeed))
+            .onFalse(new RunIntakeWheels(intakeWheels, () -> 0));
+        
+        driverController.a()
+            .onTrue(new RotateShooterToPosition(shooterRotation,
+                () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint));
+        
+        driverController.x()
+            .onTrue(
+                new SequentialCommandGroup(
+                    new ParallelDeadlineGroup(
+                        new ParallelDeadlineGroup(
+                            new WaitCommand(2),
+                            new RotateShooterToPosition(shooterRotation,
+                                () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterHorizontal)),
+                        new ShootNoteMotionMagicVelocity(
+                            shooterWheels,
+                            () -> LimelightUtils.GetSpeedTop(VisionVariables.ExportedVariables.Distance),
+                            () -> LimelightUtils.GetSpeedBottom(VisionVariables.ExportedVariables.Distance)
+                        ),
+                        new SequentialCommandGroup(
+                            new WaitCommand(0.7),
+                            new EjectNote(servos),
+                            new SetLEDColor(leds, Leds.getAllianceColor()))),
+                    new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0),
+                    new RotateShooterToPosition(shooterRotation,
+                        () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint)))
+            .onFalse(
+                new ParallelCommandGroup(
+                    new RotateShooterToPosition(shooterRotation,
+                        () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
+                    new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0)));
+        
+        driverController.leftBumper()
+            .onTrue(new InstantCommand(() -> swerveSpeedMultiplier = 0.2))
+            .onFalse(new InstantCommand(() -> swerveSpeedMultiplier = 1));
+    }
+    
+    public void configureOperatorController() {
+        // LOAD BUTTON
+        operatorController.leftBumper()
+            .onTrue(new ParallelCommandGroup(
+                new RotateArmToPosition(arm, () -> 0),
+                new AlignShooterAndIntake(shooterRotation, wrist, intakeWheels,
+                    servos, shooterIRSensor, leds)));
+        
+        operatorController.rightTrigger()
+            .onTrue(
+                new ParallelCommandGroup(
+                    new AimToAprilTag(drivetrain,
+                        () -> -driverController.getLeftX(),
+                        () -> -driverController.getLeftY(),
+                        () -> VisionVariables.ExportedVariables.Distance)
+                        .andThen(
+                            new ParallelCommandGroup(
+                                new SetLEDColor(leds, Leds.LedColors.VIOLET),
+                                new ToggleRumble(driverController, 0.3),
+                                new ToggleRumble(operatorController, 0.3))
+                        ),
+                    new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristOutOfTheWay)
+                )
+            )
+            .onFalse(
+                new ParallelDeadlineGroup(
+                    new WaitCommand(0.2),
+                    drivetrain.applyRequest(() -> brake),
+                    new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint)
+                )
+            );
+        
+        
+        operatorController.leftTrigger()
+            .onTrue(
+                new ParallelCommandGroup(
+                    new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristOutOfTheWay),
+                    new ShootFromHandoff(shooterRotation, shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor))
+                    .andThen(
+                        new ParallelCommandGroup(
+                            new ToggleRumble(driverController, 0.3),
+                            new ToggleRumble(operatorController,
+                                0.3)))
+            
+            )
+            .onFalse(new ParallelCommandGroup(
+                new SetLEDColor(leds, Leds.getAllianceColor()),
+                new RotateShooterToPosition(shooterRotation,
+                    () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),
+                new ShootNoteMotionMagicVelocity(shooterWheels, () -> 0, () -> 0),
+                new ResetIntake(wrist, intakeWheels),
+                new ToggleRumble(driverController, 0),
+                new ToggleRumble(operatorController, 0)
+            ));
+        
+        operatorController.a()
+            .onTrue(new PlaceInAmp(wrist, intakeWheels, arm, leds, shooterRotation)
+                .andThen(
+                    new ParallelCommandGroup(
+                        new SetLEDColor(leds,
+                            leds.getLedColor()),
+                        new ToggleRumble(driverController, 0.3),
+                        new ToggleRumble(operatorController, 0.3))))
+            .onFalse(new ParallelCommandGroup(
+                new RotateWristToPosition(wrist,
+                    IntakeConstants.WristPID.kWristIdlePosition),
+                new RotateArmToPosition(arm, () -> 0),
+                new RunIntakeWheels(intakeWheels, () -> 0)));
+        operatorController.x()
+            .onTrue(new RotateWristToPosition(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint));
+        // new Trigger(breakBeamSensorShooter::getBeamBroken).onTrue(new
+        // SetLEDColor(leds, Leds.LedColors.ORANGE));
+//        operatorController.povUp()
+//            .onTrue()
+    
+    }
+    
+    private void setupErrorTriggers() {
+        // There should be some feedback for an "failure mode" but rumbling the
+        // controller continuously was obnoxious lol.
+    }
+    
+    public Command getAutonomousCommand() {
+        return autonChooser.getSelected(); // runAuto;
+        // return null;
+    }
+    
+    private void setupIntakeCommands() {
+        intakeWheels.getShuffleboardTab().add("Intake Wheels",
+            new RunIntakeWheels(intakeWheels, () -> kIntakeNoteWheelSpeed));
+        
+        intakeWheels.getShuffleboardTab().add("Reverse Intake Wheels",
+            new RunIntakeWheels(intakeWheels, () -> -kIntakeNoteWheelSpeed));
+        
+        wrist.getShuffleboardTab().add("Note Position",
+            new RotateWristToPosition(wrist,
+                IntakeConstants.WristPID.kWristNotePosition));
+        
+        wrist.getShuffleboardTab().add("Idle Position",
+            new RotateWristToPosition(wrist,
+                IntakeConstants.WristPID.kWristIdlePosition));
+        
+        wrist.getShuffleboardTab().add("Shooter Position",
+            new RotateWristToPosition(wrist,
+                IntakeConstants.WristPID.kWristShooterFeederSetpoint));
+        
+        wrist.getShuffleboardTab().add("Rotate until note in intake",
+            new SequentialCommandGroup(
+                new RotateWristToPosition(wrist,
+                    IntakeConstants.WristPID.kWristNotePosition),
+                new IntakeUntilNoteIn(intakeWheels, intakeIRSensor, leds, driverController, operatorController),
+                new RotateWristToPosition(wrist,
+                    IntakeConstants.WristPID.kWristShooterFeederSetpoint)
+            ));
+    }
+    
+    private void setupArmCommands() {
+        arm.getShuffleboardTab().add("Rotate Arm",
+            new RotateArmToPosition(arm,
+                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint));
+    }
+    
+    private void setupShooterCommands() {
+        ShuffleboardTab shooterTab = shooterWheels.getShuffleboardTab();
+        
+        shooterTab.add("100 RPS Shoot",
+            new ShootNoteMotionMagicVelocity(shooterWheels,
+                () -> ShooterConstants.kShootVelocity, () -> ShooterConstants.kShootVelocity));
+        
+        shooterTab.add("0 RPS Shoot",
+            new ShootNoteMotionMagicVelocity(shooterWheels,
+                () -> 0, () -> 0));
+        
+        shooterTab.add("-15 Deg Rotate", new RotateShooterToPosition(shooterRotation,
+            () -> ShooterConstants.RotationPIDForExternalEncoder.kArm60InchSetpoint));
+        
+        shooterTab.add("-30 Deg Rotate",
+            new RotateShooterToPosition(shooterRotation, () -> -30));
+        
+        shooterTab.add("Spin Servos", new EjectNote(servos));
+        
+        shooterTab.add("Stop Servos", new StopServos(servos));
+        
+        shooterTab.add("Shoot Note Full Command",
+            new ShootNoteAtSpeakerOnly(shooterRotation, shooterWheels, servos, leds, () -> VisionVariables.ExportedVariables.Distance, shooterIRSensor));
+    }
+    
+    private void setupClimberCommands() {
+        climber.getShuffleboardTab().add("Climb Simple",
+            new ExtendClimber(climber,
+                () -> ClimberConstants.kClimberSpeed));
+    }
+    
+    private void printCurrentStickValues() {
+        SmartDashboard.putNumber("left y",
+            -driverController.getLeftY()
+                * SwerveConstants.MaxSpeed * swerveSpeedMultiplier);
+        SmartDashboard.putNumber("left x",
+            -driverController.getLeftX()
+                * SwerveConstants.MaxSpeed * swerveSpeedMultiplier);
+        SmartDashboard.putNumber("right x",
+            -driverController.getRightX() *
+                SwerveConstants.MaxAngularRate * swerveSpeedMultiplier);
+    }
+=======
 
         private void registerAllAutoCommands() {
                 NamedCommands.registerCommand("ShootNoteAtSpeakerOnly",
@@ -521,4 +763,5 @@ public class RobotContainer {
                                 new ExtendClimber(climber,
                                                 () -> ClimberConstants.kClimberSpeed));
         }
+>>>>>>> parent of ce2b3d1 (Merge pull request #25 from zombieking1555/one-controller-display)
 }
