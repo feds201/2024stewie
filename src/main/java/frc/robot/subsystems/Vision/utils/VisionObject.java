@@ -16,11 +16,14 @@
  *
  */
 
-package frc.robot.subsystems.vision_sys.utils;
+package frc.robot.subsystems.Vision.utils;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.constants.CameraConstants;
+import frc.robot.subsystems.Vision.VisionVariables;
+import frc.robot.subsystems.Vision.utils.ObjectType;
 
 public class VisionObject {
     static NetworkTable table = NetworkTableInstance.getDefault().getTable(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
@@ -30,12 +33,13 @@ public class VisionObject {
     private ObjectType type;
 
 
-    public VisionObject(double x, double y, double area, ObjectType type) {
+    public VisionObject(double x, double y, double area, frc.robot.subsystems.Vision.utils.ObjectType type) {
         this.x = x;
         this.y = y;
         this.area = area;
         this.type = type;
     }
+
 
     public double getX() {
         return x;
@@ -71,7 +75,7 @@ public class VisionObject {
         this.area = area;
     }
 
-    public ObjectType getType() {
+    public frc.robot.subsystems.Vision.utils.ObjectType getType() {
         return type;
     }
 
@@ -145,5 +149,8 @@ public class VisionObject {
         }
     }
 
+    public Pose3d getBotPose(){
+        return LimelightHelpers.getBotPose3d(CameraConstants.BackCam.BACK_CAMERA_NETWORK_TABLES_NAME);
+    }
 
 }

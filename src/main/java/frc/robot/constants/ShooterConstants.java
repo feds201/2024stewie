@@ -7,7 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class ShooterConstants {
     public static class RotationPIDForExternalEncoder {
-        public static final double kRotateP = 0.012;
+        public static final double kRotateP = 0.015;
         public static final double kRotateI = 0.001;
         public static final double kRotateD = 0;
 
@@ -16,6 +16,7 @@ public class ShooterConstants {
         public static final double kIMax = 0.05;
         public static final double kIMin = -0.05;
 
+        public static final double kShooterHorizontal = -55;
         public static final double kArmSubwooferSetpoint = -10; // 7 feet 10 inches
         public static final double kArm60InchSetpoint = -15; // 5 feet away
         public static final double kShooterRotationFeederSetpoint = -30;
@@ -44,6 +45,11 @@ public class ShooterConstants {
     public static final int kThinWheelServoPort = 2;
     public static final double kHandoffDelay = 0;
 
+    public static final double A = -2.0714;
+    
+    public static final double B = 17.899;
+    
+    public static final double C = -3.8765;
     public static TalonFXConfiguration GetWheelsConfiguration() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -128,3 +134,5 @@ public class ShooterConstants {
  * 
  * shooterTopMain.getConfigurator().apply(configs);
  */
+
+

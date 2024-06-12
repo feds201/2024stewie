@@ -22,6 +22,10 @@ public class StopServos extends Command {
   public void initialize() {
     c_servos.stopServos();
   }
+
+  public void execute() {
+    c_servos.stopServos();
+  }
   
   // Returns true when the command should end.
   @Override

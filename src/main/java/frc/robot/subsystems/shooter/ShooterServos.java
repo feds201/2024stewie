@@ -16,7 +16,7 @@ public class ShooterServos extends SubsystemABC {
   /** Creates a new ShooterFeeder. */
   private final Servo servoThickSide;
   private final Servo servoThinSide;
-  // These designations refer to the wheels on the Intake being more on
+  // These designations refer to the wheels on the intake being more on
   // one
   // side (thick) and less on the other (thin)
 
