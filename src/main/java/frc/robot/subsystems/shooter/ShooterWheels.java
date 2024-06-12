@@ -7,6 +7,7 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -23,9 +24,7 @@ public class ShooterWheels extends SubsystemABC {
 
   private final DoubleEntry shootVelocity;
   private final DoubleEntry shootVoltage;
-  private final DoubleEntry shootVelocityMotionMagicTop;
-  
-  private final DoubleEntry shootVelocityMotionMagicBottom;
+  private final DoubleEntry shootVoltageMotionMagic;
 
   private final MotionMagicVelocityVoltage motionMagic = new MotionMagicVelocityVoltage(0);
 
@@ -42,10 +41,8 @@ public class ShooterWheels extends SubsystemABC {
 
     setupNetworkTables("shooter");
     shootVelocity = ntTable.getDoubleTopic("shoot_velocity").getEntry(0);
-    
     shootVoltage = ntTable.getDoubleTopic("shoot_voltage").getEntry(0);
-    shootVelocityMotionMagicTop     = ntTable.getDoubleTopic("shoot_velocity_motion_magic_top").getEntry(0);
-    shootVelocityMotionMagicBottom  = ntTable.getDoubleTopic("shoot_velocity_motion_magic_bottom").getEntry(0);
+    shootVoltageMotionMagic = ntTable.getDoubleTopic("shoot_voltage_motion_magic").getEntry(0);
  
     setupShuffleboard();
     seedNetworkTables();
@@ -66,11 +63,10 @@ public class ShooterWheels extends SubsystemABC {
   public void seedNetworkTables() {
     setShootVelocity(0);
     setShootVoltage(0);
-    setShootVelocityMotionMagic(0, 0);
+    setShootVelocityMotionMagic(0);
     getShootVelocity();
     getShootVoltage();
-    getShootVelocityMotionMagicTop();
-    getShootVelocityMotionMagicBottom();
+    getShootVelocityMotionMagic();
   }
 
 
@@ -89,16 +85,13 @@ public class ShooterWheels extends SubsystemABC {
     return shootVoltage.get();
   }
 
-  public double getShootVelocityMotionMagicTop() {
-    return shootVelocityMotionMagicTop.get();
+  public double getShootVelocityMotionMagic() {
+    return shootVoltageMotionMagic.get();
   }
-  
-  public double getShootVelocityMotionMagicBottom() { return shootVelocityMotionMagicBottom.get(); }
 
   private final DoubleLogEntry shootVelocityLog = new DoubleLogEntry(log, "/shooter/velocity");
   private final DoubleLogEntry shootVoltageLog = new DoubleLogEntry(log, "/shooter/voltage");
-  private final DoubleLogEntry shootVelocityMotionMagicTopLog = new DoubleLogEntry(log, "/shooter/velocityMotionMagicTop");
-  private final DoubleLogEntry shootVelocityMotionMagicBottomLog = new DoubleLogEntry(log, "/shooter/velocityMotionMagicBottom");
+  private final DoubleLogEntry shootVelocityMotionMagicLog = new DoubleLogEntry(log, "/shooter/velocityMotionMagic");
 
   // SETTERS
   public void setShootVelocity(double velocity) {
@@ -111,16 +104,13 @@ public class ShooterWheels extends SubsystemABC {
     shooterBottomFollower.setControl(velocityOut.withVelocity(velocity));
   }
 
-  public void setShootVelocityMotionMagic(double velocityTop, double velocityBottom) {
-    shootVelocityMotionMagicTop.set(velocityTop);
-    shootVelocityMotionMagicTopLog.append(velocityTop);
-    
-    shootVelocityMotionMagicBottom.set(velocityBottom);
-    shootVelocityMotionMagicBottomLog.append(velocityBottom);
+  public void setShootVelocityMotionMagic(double velocity) {
+    shootVoltageMotionMagic.set(velocity);
+    shootVelocityMotionMagicLog.append(velocity);
 
     motionMagic.Slot = 0;
-    shooterTopMain.setControl(motionMagic.withVelocity(velocityTop));
-    shooterBottomFollower.setControl(motionMagic.withVelocity(velocityBottom));
+    shooterTopMain.setControl(motionMagic.withVelocity(velocity));
+    shooterBottomFollower.setControl(motionMagic.withVelocity(velocity));
   }
 
   public void setShootVoltage(double voltage) {

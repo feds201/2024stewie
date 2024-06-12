@@ -8,40 +8,37 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.intake.RotateWristToPosition;
-import frc.robot.commands.intake.RunIntakeWheels;
+import frc.robot.commands.Intake.RotateWristToPositionInfinite;
+import frc.robot.commands.Intake.RunIntakeWheels;
 import frc.robot.commands.arm.RotateArmToPosition;
 import frc.robot.commands.shooter.RotateShooterToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.intake.IntakeWheels;
-import frc.robot.subsystems.intake.Wrist;
+import frc.robot.subsystems.Intake.IntakeWheels;
+import frc.robot.subsystems.Intake.Wrist;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.shooter.ShooterRotation;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class FeedNoteToShooter extends SequentialCommandGroup {
+public class FeedNoteToShooter extends ParallelCommandGroup {
   /** Creates a new FeedNoteToShooter. */
-  // TODO Testing Required
   public FeedNoteToShooter(ShooterRotation shooterRotation, Wrist wrist, Arm arm, IntakeWheels wheels) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        // Rotate arm 2.0 degrees
-        new ParallelCommandGroup(
-            new RotateArmToPosition(arm,
-                () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint),
-            new RotateWristToPosition(wrist,
-                IntakeConstants.WristPID.kWristShooterFeederSetpoint), 
-            new RotateShooterToPosition(shooterRotation,
-                () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint),                                                                               
-            new SequentialCommandGroup(
-                new WaitCommand(ShooterConstants.kRotateShooterDelay),
-                new ParallelDeadlineGroup(
-                    new RunIntakeWheels(wheels,
-                        () -> IntakeConstants.kIntakeNoteWheelSpeed)))));
+        new RotateArmToPosition(arm, () -> ArmConstants.ArmPIDForExternalEncoder.kArmRotationFeederSetpoint), //Rotate arm 2.0 degrees
+        new SequentialCommandGroup( 
+            new WaitCommand(ArmConstants.kArmRotationDelay), //Wait 3 seconds
+            new ParallelCommandGroup(
+                new RotateWristToPositionInfinite(wrist, IntakeConstants.WristPID.kWristShooterFeederSetpoint), //Rotate Intake to the setpoint (7) (90 degrees)
+                new RotateShooterToPosition(shooterRotation,
+                    () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint), //PROBLEM (NOT ROTATING)
+                new SequentialCommandGroup(
+                    new WaitCommand(ShooterConstants.kRotateShooterDelay),
+                    new ParallelDeadlineGroup(
+                        new RunIntakeWheels(wheels, () -> IntakeConstants.kIntakeNoteWheelSpeed))))));
   }
 }

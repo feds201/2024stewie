@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Vision.utils;
+package frc.robot.subsystems.vision_sys.utils;
 
 public enum ObjectType {
     NOTE,

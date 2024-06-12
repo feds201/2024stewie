@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -18,13 +18,13 @@ public class IntakeWheels extends SubsystemABC {
 
   private DoubleEntry intakeVoltage;
 
-  /** Creates a new intake. */
+  /** Creates a new Intake. */
   public IntakeWheels() {
     super();
 
     intakeWheel = new CANSparkMax(CANConstants.Intake.kIntakeWheels, MotorType.kBrushless);
 
-    setupNetworkTables("intake");
+    setupNetworkTables("Intake");
 
     intakeVoltage = ntTable.getDoubleTopic("wheels_voltage").getEntry(0);
 
@@ -42,8 +42,7 @@ public class IntakeWheels extends SubsystemABC {
     // This method will be called once per scheduler run
     writePeriodicOutputs();
 
-    SmartDashboard.putNumber("intake bus voltage", intakeWheel.getBusVoltage());
-    SmartDashboard.putNumber("intake motor temperature", intakeWheel.getMotorTemperature());
+    SmartDashboard.putNumber("Intake bus voltage", intakeWheel.getBusVoltage());
   }
 
   @Override
@@ -62,7 +61,7 @@ public class IntakeWheels extends SubsystemABC {
     return intakeVoltage.get();
   }
 
-  private DoubleLogEntry intakeVoltageLog = new DoubleLogEntry(log, "/intake/target");
+  private DoubleLogEntry intakeVoltageLog = new DoubleLogEntry(log, "/Intake/target");
 
   // SETTERS
   public void setIntakeWheels(double voltage) {

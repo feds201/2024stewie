@@ -1,4 +1,4 @@
-package frc.robot.commands.swerve;
+package frc.robot.commands.vision;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.controller.PIDController;
@@ -13,7 +13,7 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision_sys.VisionVariables;
 import frc.robot.utils.LimelightUtils;
 
-public class AimToAprilTag extends Command {
+public class AlignWithNOteCommand extends Command {
         private final CommandSwerveDrivetrain c_swerve;
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
                 .withDeadband(SwerveConstants.MaxSpeed * 0.1)
@@ -23,12 +23,12 @@ public class AimToAprilTag extends Command {
         private final DoubleSupplier c_leftX, c_leftY;
         private double startTime;
         private final double timeout = 2.0; // Time limit in seconds
-        private final double rangeTolerance = 0.3; // Range within which to consider aligned
+        private final double rangeTolerance = 3; // Range within which to consider aligned
         private double lastOutput = 1;
         private double axisofinit;
         private DoubleSupplier c_limelightDistance;
 
-        public AimToAprilTag(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY, DoubleSupplier limelightDistance) {
+        public AlignWithNOteCommand(CommandSwerveDrivetrain swerve, DoubleSupplier leftX, DoubleSupplier leftY, DoubleSupplier limelightDistance) {
                 c_swerve = swerve;
                 c_leftX = leftX;
                 c_leftY = leftY;
@@ -37,8 +37,14 @@ public class AimToAprilTag extends Command {
                 addRequirements(swerve);
         }
 
+		public AlignWithNOteCommand(CommandSwerveDrivetrain cSwerve, DoubleSupplier cLeftX, DoubleSupplier cLeftY) {
+				c_swerve = cSwerve;
+				c_leftX = cLeftX;
+				c_leftY = cLeftY;
+		}
+
 		public void initialize() {
-                SmartDashboard.putBoolean("AimToAPrilTagCommand", true);
+                SmartDashboard.putBoolean("AlignWithNote", true);
                 c_swerve.resetPID();
                 c_swerve.setTarget(LimelightUtils.MapDistanceToOffset(c_limelightDistance.getAsDouble()));
         }
@@ -51,7 +57,7 @@ public class AimToAprilTag extends Command {
 
         public void execute() {
 
-                double output = c_swerve.getPIDRotation(VisionVariables.BackCam.target.getX());
+                double output = c_swerve.getPIDRotation(VisionVariables.FrontCam.target.getX());
 
                 SmartDashboard.putNumber("errorVal", VisionVariables.BackCam.target.getX());
                 SmartDashboard.putNumber("Output", output);
@@ -63,15 +69,15 @@ public class AimToAprilTag extends Command {
                         .withRotationalRate(output));
                 lastOutput = output;
 
-				if (Math.abs(output) <= 0.37)  {
-						SmartDashboard.putBoolean("AimToAPrilTagCommand", false);
-				}
+                if (Math.abs(output) <= 0.37)  {
+                        SmartDashboard.putBoolean("AlignWithNote", false);
+                }
         }
 
-		public void end(boolean interrupted) {
-		        SmartDashboard.putBoolean("AimToAPrilTagCommand", false);
-		        // Additional logic for timeout or completion here if needed
-		}
+        public void end(boolean interrupted) {
+                SmartDashboard.putBoolean("AlignWithNote", false);
+                // Additional logic for timeout or completion here if needed
+        }
 }
 
 

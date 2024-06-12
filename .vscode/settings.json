@@ -7,22 +7,12 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "**/Thumbs.db": true,
     "bin/": true,
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
     "**/.factorypath": true,
-    "**/*~": true,
-    ".github": true,
-    ".Glass": true,
-    ".gradle": true,
-    ".idea": true,
-    ".OutlineViewer": true,
-    ".pathplanner": true,
-    ".run": true,
-    ".vscode": true,
-    ".wpilib": true
+    "**/*~": true
   },
   "java.test.config": [
     {
@@ -36,16 +26,5 @@
     },
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
-  "workbench.colorTheme": "Default Dark+",
-  "hide-files.files": [
-    ".github",
-    ".Glass",
-    ".gradle",
-    ".idea",
-    ".OutlineViewer",
-    ".pathplanner",
-    ".run",
-    ".vscode",
-    ".wpilib"
-  ]
+  "workbench.colorTheme": "Default Dark+"
 }

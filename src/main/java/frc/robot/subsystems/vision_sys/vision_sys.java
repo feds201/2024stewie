@@ -16,37 +16,24 @@
  *
  */
 
-package frc.robot.subsystems.Vision;
+package frc.robot.subsystems.vision_sys;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.SubsystemABC;
-import frc.robot.subsystems.Vision.utils.VisionObject;
+import frc.robot.subsystems.vision_sys.utils.VisionObject;
 
-public abstract class VisionABC extends SubsystemBase {
-
+public abstract class vision_sys extends SubsystemBase {
 
 
-  public VisionABC() {}
+
+  public vision_sys() {
+
+  }
 
   public abstract void periodic();
+
   public abstract boolean CheckTarget();
+
   public abstract Translation2d GetTarget(VisionObject object);
-  public abstract void setPipeline(int pipeline);
-  public abstract void setLEDMode(int mode);
-  public abstract void setCamMode(int mode);
-  public abstract Command BlinkLED();
-  public abstract Command TurnOffLED();
 
-  /**
-   * This method is called periodically by the {@link CommandScheduler}. Useful for updating
-   * subsystem-specific state that needs to be maintained for simulations, such as for updating
-   * {@link edu.wpi.first.wpilibj.simulation} classes and setting simulated sensor readings.
-   */
-  @Override
-  public abstract void simulationPeriodic();
-
-  public Boolean enabled;
 }

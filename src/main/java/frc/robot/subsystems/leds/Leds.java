@@ -16,7 +16,7 @@ public class Leds extends SubsystemBase {
   private final Spark leds;
 
   private double currentColor;
-  private static DriverStation.Alliance currentAlliance = null;
+  private DriverStation.Alliance currentAlliance = null;
 
   public Leds() {
     leds = new Spark(0); // We treat the Leds as a servo which is coming in from PWM port 5
@@ -45,7 +45,7 @@ public class Leds extends SubsystemBase {
     }
   }
 
-  public static double getAllianceColor() {
+  public double getAllianceColor() {
     if(currentAlliance != null && currentAlliance.equals(DriverStation.Alliance.Red)) {
       return LedColors.RED;
     } else if (currentAlliance != null && currentAlliance.equals(DriverStation.Alliance.Blue)) {
@@ -80,27 +80,14 @@ public class Leds extends SubsystemBase {
   }
 
   public static class LedColors {
-    public final static double HotPink = 0.57;
-    public final static double DarkRed = 0.59;
     public final static double RED = 0.61;
-    public final static double RedOrange = 0.63;
     public final static double ORANGE = 0.65;
-    public final static double Gold = 0.67;
     public final static double YELLOW = 0.69;
-    public final static double LawnGreen = 0.71;
-    public final static double Lime = 0.73;
-    public final static double DarkGreen = 0.75;
     public final static double GREEN = 0.77;
-    public final static double BlueGreen = 0.79;
-    public final static double Aqua = 0.81;
-    public final static double SkyBlue = 0.83;
-    public final static double DarkBlue = 0.85;
     public final static double BLUE = 0.87;
-    public final static double BlueViolet = 0.89;
     public final static double VIOLET = 0.91;
     public final static double WHITE = 0.93;
     public final static double GRAY  = 0.95;
-    public final static double DarkGray = 0.97;
     public final static double BLACK = 0.99;
     public final static double NEUTRAL = -0.45; // Strobe color rainbow
     public final static double FOREST = -0.47; // FOREST!!

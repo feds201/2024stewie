@@ -9,11 +9,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 
 public class ArmConstants {
-
-   public static boolean DidJuiliaNotPressButton = true;
-
    public static class ArmPIDForExternalEncoder {
-      public static final double kP = 0.195;
+      public static final double kP = 0.175;
       public static final double kI = 0.015;
       public static final double kD = 0;
       public static final double kF = 0;
@@ -42,8 +39,6 @@ public class ArmConstants {
    public static final double kArmGearReduction = 50;
    public static final double kHoldThreshold = 0.01;
    public static final double kArmSpeedScaler = 4;
-   
-   public static final double kArmClimbLimit = 78;
 
 
    public static TalonFXConfiguration GetArmMotorConfiguration() {

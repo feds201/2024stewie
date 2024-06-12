@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -13,18 +13,19 @@ import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.DIOConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.SubsystemABC;
+import frc.robot.subsystems.leds.Leds;
 
 public class Wrist extends SubsystemABC {
   private final CANSparkMax wristRotation;
   private final DutyCycleEncoder wristRotationEncoder;
 
   private final PIDController pid = IntakeConstants.WristPID.GetWristPID();
-  private final PIDController pidAmp = IntakeConstants.WristPID.GetWristAmpPID();
 
   private DoubleEntry wristVoltage;
   private DoubleEntry rotationEncoderValue;
@@ -34,14 +35,14 @@ public class Wrist extends SubsystemABC {
   private BooleanEntry failure;
   private BooleanEntry towardShooter;
 
-  /** Creates a new intake. */
+  /** Creates a new Intake. */
   public Wrist() {
     super();
 
     wristRotation = new CANSparkMax(CANConstants.Intake.kIntakeWrist, MotorType.kBrushless);
     wristRotationEncoder = new DutyCycleEncoder(DIOConstants.Intake.kIntakeRotateEncoder);
 
-    setupNetworkTables("intake");
+    setupNetworkTables("Intake");
 
     wristVoltage = ntTable.getDoubleTopic("wrist_voltage").getEntry(0);
     rotationEncoderValue = ntTable.getDoubleTopic("rotation_value").getEntry(0);
@@ -63,9 +64,7 @@ public class Wrist extends SubsystemABC {
 
   @Override
   public void setupShuffleboard() {
-    
     tab.add("PID Controller", pid);
-    tab.add("AMP Pid Controller", pidAmp);
   }
 
   @Override
@@ -95,18 +94,10 @@ public class Wrist extends SubsystemABC {
     double output = pid.calculate(getWristAngle());
     setWristVoltage(output);
   }
-  public void rotateWristPIDAMP() {
-    double output = pidAmp.calculate(getWristAngle());
-    setWristVoltage(output);
-  }
 
   public void setPIDTarget(double target) {
     setTarget(target);
     pid.setSetpoint(target);
-  }
-  public void setPIDTargetAMP(double target) {
-    setTargetAMP(target);
-    pidAmp.setSetpoint(target);
   }
 
   public boolean pidAtSetpoint() {
@@ -134,12 +125,12 @@ public class Wrist extends SubsystemABC {
     return failure.get();
   }
 
-  private DoubleLogEntry wristVoltageLog = new DoubleLogEntry(log, "/intake/output");
-  private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/intake/rotationValue");
-  private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/intake/rotationAngle");
-  private DoubleLogEntry rotationTargetLog = new DoubleLogEntry(log, "/intake/rotationTarget");
-  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/intake/failure");
-  private BooleanLogEntry towardShooterLog = new BooleanLogEntry(log, "/intake/towardShooter");
+  private DoubleLogEntry wristVoltageLog = new DoubleLogEntry(log, "/Intake/output");
+  private DoubleLogEntry rotationEncoderValueLog = new DoubleLogEntry(log, "/Intake/rotationValue");
+  private DoubleLogEntry rotationAngleLog = new DoubleLogEntry(log, "/Intake/rotationAngle");
+  private DoubleLogEntry rotationTargetLog = new DoubleLogEntry(log, "/Intake/rotationTarget");
+  private BooleanLogEntry failureLog = new BooleanLogEntry(log, "/Intake/failure");
+  private BooleanLogEntry towardShooterLog = new BooleanLogEntry(log, "/Intake/towardShooter");
 
   // SETTERS
   public void setWristVoltage(double voltage) {
@@ -199,10 +190,6 @@ public class Wrist extends SubsystemABC {
   }
 
   public void setTarget(double target) {
-    rotationTarget.set(target);
-    rotationTargetLog.append(target);
-  }
-  public void setTargetAMP(double target) {
     rotationTarget.set(target);
     rotationTargetLog.append(target);
   }
