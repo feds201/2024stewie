@@ -432,7 +432,7 @@ public class RobotContainer {
             .onTrue(new RotateShooterToPosition(shooterRotation,
                 () -> ShooterConstants.RotationPIDForExternalEncoder.kShooterRotationFeederSetpoint));
         
-        driverController.x()
+        driverController.rightTrigger()
             .onTrue(
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
